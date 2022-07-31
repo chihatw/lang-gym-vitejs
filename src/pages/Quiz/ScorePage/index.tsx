@@ -1,5 +1,4 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { SkeletonPage } from '@chihatw/lang-gym-h.page.skeleton-page';
 import React, { useEffect } from 'react';
 
 import { Container } from '@mui/material';
@@ -15,6 +14,7 @@ import QuizPageHeader from '../commons/QuizHeader';
 import Score from './Score';
 import RhythmsAnswer from './RhythmsAnswer';
 import ScoreFooter from './ScoreFooter';
+import SkeletonPage from '../../../components/SkeletonPage';
 
 const ScorePage = ({
   state,

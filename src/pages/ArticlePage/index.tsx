@@ -1,6 +1,4 @@
 import { Container } from '@mui/material';
-import { SkeletonPage } from '@chihatw/lang-gym-h.page.skeleton-page';
-import { ArticleSkeleton } from '@chihatw/lang-gym-h.pane.article-skeleton';
 import { Navigate, useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
 
@@ -9,6 +7,7 @@ import ArticleHeader from './ArticleHeader';
 import { Action, ActionTypes } from '../../Update';
 import { getArticleState } from '../../services/article';
 import { State } from '../../Model';
+import SkeletonPage from '../../components/SkeletonPage';
 
 const ArticlePage = ({
   state,
@@ -44,21 +43,17 @@ const ArticlePage = ({
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16 }}>
-        {!!article.id && !!sentences.length ? (
-          <div style={{ display: 'grid', rowGap: 8 }}>
-            <ArticleHeader state={state} />
-            {sentences.map((_, sentenceIndex) => (
-              <SentencePane
-                key={sentenceIndex}
-                sentenceIndex={sentenceIndex}
-                state={state}
-                dispatch={dispatch}
-              />
-            ))}
-          </div>
-        ) : (
-          <ArticleSkeleton />
-        )}
+        <div style={{ display: 'grid', rowGap: 8 }}>
+          <ArticleHeader state={state} />
+          {sentences.map((_, sentenceIndex) => (
+            <SentencePane
+              key={sentenceIndex}
+              sentenceIndex={sentenceIndex}
+              state={state}
+              dispatch={dispatch}
+            />
+          ))}
+        </div>
       </div>
     </Container>
   );

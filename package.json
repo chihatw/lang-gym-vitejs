@@ -10,10 +10,7 @@
     "upgrade-interactive": "npm-check --update"
   },
   "dependencies": {
-    "@chihatw/blob-slider.blob-slider": "^1.0.0",
     "@chihatw/lang-gym-h.page.sentence-parse-page": "^1.0.15",
-    "@chihatw/lang-gym-h.page.skeleton-page": "^1.0.7",
-    "@chihatw/lang-gym-h.pane.article-skeleton": "^1.0.7",
     "@chihatw/lang-gym-h.ui.pitch-line": "^1.0.2",
     "@chihatw/lang-gym-h.ui.sentence-pitch-line": "^1.0.2",
     "@chihatw/sentence-form.sentence-form-pane": "^1.0.22",

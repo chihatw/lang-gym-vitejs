@@ -1,6 +1,6 @@
-import { BlobSlider } from '@chihatw/blob-slider.blob-slider';
 import { useTheme } from '@mui/material';
 import React from 'react';
+import BlobSlider from '../../../../../../components/BlobSlider';
 import { State } from '../../../../../../Model';
 import { Action } from '../../../../../../Update';
 
