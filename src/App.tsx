@@ -1,32 +1,126 @@
-import { Button } from '@mui/material';
-import React, { useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
+
+import AppComponent from './routes/AppRoutes';
+import { ActionTypes, reducer } from './Update';
+import { INITIAL_STATE, LayoutState, User } from './Model';
 import { auth } from './repositories/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { AUTH_LOCAL_STORAGE } from './constants';
+import { getArticleCards } from './services/article';
+import { getUnansweredQuizList } from './services/quiz';
+import { getUsers } from './services/auth';
 
 const App = () => {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+
+  const { auth: _auth } = state;
+  const { users, uid: _uid, initializing } = _auth;
+
+  // 認証判定
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged((user) => {
-      console.log(user);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      let _users: User[] = [];
+      let uid = user?.uid || '';
+      let isAdmin = false;
+      if (uid === import.meta.env.VITE_ADMIN_UID) {
+        isAdmin = true;
+
+        _users = users.length ? users : await getUsers();
+
+        const localStorageUid = localStorage.getItem(AUTH_LOCAL_STORAGE);
+
+        if (localStorageUid) {
+          uid = localStorageUid;
+        } else {
+          const firstUid = _users[0].id;
+          localStorage.setItem(AUTH_LOCAL_STORAGE, firstUid);
+          uid = firstUid;
+        }
+      }
+      if (_uid !== uid || initializing) {
+        dispatch({
+          type: ActionTypes.authenticate,
+          payload: { uid, isAdmin, initializing: false, users: _users }, // initializing どこで使っている？
+        });
+      }
     });
-    return () => {
-      unsub();
+
+    // layout
+    let layout: LayoutState = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      isBrave: false,
     };
-  }, []);
 
-  return (
-    <div>
-      hello
-      <Button
-        onClick={() => {
-          signInWithEmailAndPassword(auth, '', '')
-            .then(() => console.log('done'))
-            .catch((e) => console.log(e));
-        }}
-      >
-        sign in
-      </Button>
-    </div>
-  );
+    const onResize = () => {
+      layout = {
+        ...layout,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      };
+      dispatch({ type: ActionTypes.setLayout, payload: layout });
+    };
+    window.addEventListener('resize', onResize);
+
+    const checkBrowser = async () => {
+      layout.isBrave =
+        ((navigator as any).brave &&
+          (await (navigator as any).brave.isBrave())) ||
+        false;
+      dispatch({ type: ActionTypes.setLayout, payload: layout });
+    };
+    checkBrowser();
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('resize', onResize);
+    };
+  }, [dispatch, users, _uid, initializing]);
+
+  // topPage の作文を取得
+  // 未回答の問題も取得
+  useEffect(() => {
+    const { auth, topPage } = state;
+    const { uid } = auth;
+    const { cards } = topPage;
+
+    if (!uid || !!cards.length) return;
+
+    const fetchData = async () => {
+      const articles = await getArticleCards(uid, 3);
+      const quizzes = await getUnansweredQuizList(uid);
+      dispatch({
+        type: ActionTypes.setTopPage,
+        payload: { articles, quizzes },
+      });
+    };
+    fetchData();
+
+    const { audioContext } = state;
+    const createAudioContext = () => {
+      const factory = new AudioContextFactory();
+      const _audioContext = factory.create();
+      dispatch({ type: ActionTypes.setAudioContext, payload: _audioContext });
+      window.removeEventListener('click', createAudioContext);
+    };
+    if (!audioContext) {
+      window.addEventListener('click', createAudioContext);
+    }
+  }, [state]);
+
+  return <AppComponent state={state} dispatch={dispatch} />;
 };
-
 export default App;
+
+class AudioContextFactory {
+  create() {
+    const audioContext = new window.AudioContext();
+    const osc = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    gainNode.gain.value = 0;
+    osc.start(audioContext.currentTime);
+    osc.stop(audioContext.currentTime + 0.1);
+    return audioContext;
+  }
+}
