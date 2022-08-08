@@ -3,7 +3,7 @@ import { useEffect, useReducer } from 'react';
 import AppComponent from './routes/AppRoutes';
 import { ActionTypes, reducer } from './Update';
 import { INITIAL_STATE, LayoutState, User } from './Model';
-import { auth } from './repositories/firebase';
+import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleCards } from './services/article';
 import { getUnansweredQuizList } from './services/quiz';
@@ -12,16 +12,16 @@ import { getUsers } from './services/auth';
 const App = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
-  const { auth: _auth } = state;
-  const { users, uid: _uid, initializing } = _auth;
+  const { auth } = state;
+  const { users, uid, initializing } = auth;
 
   // 認証判定
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
       let _users: User[] = [];
-      let uid = user?.uid || '';
+      let _uid = user?.uid || '';
       let isAdmin = false;
-      if (uid === import.meta.env.VITE_ADMIN_UID) {
+      if (_uid === import.meta.env.VITE_ADMIN_UID) {
         isAdmin = true;
 
         _users = users.length ? users : await getUsers();
@@ -29,17 +29,17 @@ const App = () => {
         const localStorageUid = localStorage.getItem(AUTH_LOCAL_STORAGE);
 
         if (localStorageUid) {
-          uid = localStorageUid;
+          _uid = localStorageUid;
         } else {
           const firstUid = _users[0].id;
           localStorage.setItem(AUTH_LOCAL_STORAGE, firstUid);
-          uid = firstUid;
+          _uid = firstUid;
         }
       }
-      if (_uid !== uid || initializing) {
+      if (uid !== _uid || initializing) {
         dispatch({
           type: ActionTypes.authenticate,
-          payload: { uid, isAdmin, initializing: false, users: _users }, // initializing どこで使っている？
+          payload: { uid: _uid, isAdmin, initializing: false, users: _users }, // initializing どこで使っている？
         });
       }
     });
@@ -74,7 +74,7 @@ const App = () => {
       unsubscribe();
       window.removeEventListener('resize', onResize);
     };
-  }, [dispatch, users, _uid, initializing]);
+  }, [dispatch, users, uid, initializing]);
 
   // topPage の作文を取得
   // 未回答の問題も取得

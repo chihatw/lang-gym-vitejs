@@ -66,8 +66,15 @@ export const getArticleState = async (
   });
 
   // articleBlob
-  const { downloadURL } = article;
+  let { downloadURL } = article;
+  if (downloadURL) {
+    const header = downloadURL.slice(0, 4);
+    if (header !== 'http') {
+      downloadURL = await getDownloadURL(ref(storage, downloadURL));
+    }
+  }
   console.log('create article audio');
+
   let response = await fetch(downloadURL);
   const articleBlob = await response.blob();
 

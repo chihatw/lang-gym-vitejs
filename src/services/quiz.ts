@@ -30,7 +30,8 @@ import {
   Syllable,
   UnansweredQuiz,
 } from '../Model';
-import { db } from '../repositories/firebase';
+import { db, storage } from '../repositories/firebase';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 export const SPECIAL_MORAS = ['っ', 'ん', 'ー', 'ーん', 'ーっ'];
 
@@ -63,6 +64,7 @@ export const getQuestionSet = async (
 
   const questionGroupId = questionGroups[0];
   console.log('get question group');
+  // questionIds を　questionGroups から取得
   snapshot = await getDoc(doc(db, COLLECTIONS.questionGroups, questionGroupId));
   if (!snapshot.exists()) return INITIAL_QUIZ_STATE;
   const questionIds: string[] = snapshot.data().questions;
@@ -71,6 +73,7 @@ export const getQuestionSet = async (
   const questions: Question[] = [];
   await Promise.all(
     questionIds.map(async (questionId) => {
+      console.log('get question');
       snapshot = await getDoc(doc(db, COLLECTIONS.questions, questionId));
       const question = snapshot.exists()
         ? buildQuestion(snapshot)
@@ -80,8 +83,12 @@ export const getQuestionSet = async (
   );
 
   let quizBlob: Blob | null = null;
-  const downloadURL = questions[0].downloadURL;
+  let downloadURL = questions[0].downloadURL;
   if (downloadURL) {
+    const header = downloadURL.slice(0, 4);
+    if (header !== 'http') {
+      downloadURL = await getDownloadURL(ref(storage, downloadURL));
+    }
     console.log('create quiz blob');
     const response = await fetch(downloadURL);
     quizBlob = await response.blob();
