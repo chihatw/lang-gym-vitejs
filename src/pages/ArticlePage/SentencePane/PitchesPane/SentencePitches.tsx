@@ -4,7 +4,6 @@ import React, { useContext } from 'react';
 
 import AudioSlider from '../../../../components/AudioSlider';
 
-import { State } from '../../../../Model';
 import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../services/article';
 import { AppContext } from '../../../../App';
 
@@ -27,8 +26,8 @@ const SentencePitches = ({
   const sentence = isAssignment ? assignmentSentence : articleSentence;
 
   const blob = isAssignment ? assignmentBlob : articleBlob;
-
   const { start, end, pitchesArray } = sentence;
+
   return (
     <div
       style={{

@@ -1,8 +1,8 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 
-import { ArticleCardsState, State } from '../../Model';
-import { Action, ActionTypes } from '../../Update';
+import { ArticleCardsState } from '../../Model';
+import { ActionTypes } from '../../Update';
 import { Container } from '@mui/material';
 import ArticleCardList from '../../components/ArticleCardList';
 import { getArticleCards } from '../../services/article';
@@ -46,24 +46,19 @@ const ArticlesPage = () => {
     dispatch({ type: ActionTypes.setMoreArticles, payload: updated });
   };
 
-  if (!!uid) {
-    return (
-      <>
-        <div style={{ height: 48 }} className='dummyHeader' />
-        <Container maxWidth='sm' sx={{ paddingTop: 2 }}>
-          <ArticleCardList
-            cards={cards}
-            label='作文一覧'
-            handleShowList={hasMore ? showMore : undefined}
-            showListButtonLabel='もっと表示'
-            handleClick={handleClick}
-          />
-        </Container>
-      </>
-    );
-  } else {
-    return <Navigate to='/login' />;
-  }
+  if (!uid) return <Navigate to='/login' />;
+  return (
+    <Container maxWidth='sm' sx={{ paddingTop: 2 }}>
+      <div style={{ height: 48 }} className='dummyHeader' />
+      <ArticleCardList
+        cards={cards}
+        label='作文一覧'
+        handleShowList={hasMore ? showMore : undefined}
+        showListButtonLabel='もっと表示'
+        handleClick={handleClick}
+      />
+    </Container>
+  );
 };
 
 export default ArticlesPage;

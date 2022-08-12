@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Badge, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { css } from '@emotion/css';
 
@@ -8,6 +9,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../App';
+import { ActionTypes } from '../Update';
 
 const PageFooter = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -25,11 +27,14 @@ const PageFooter = () => {
       case '/':
         navItemIndex = 0;
         break;
-      case '/quizzes':
+      case '/workout/list':
         navItemIndex = 1;
         break;
-      case '/account':
+      case '/quizzes':
         navItemIndex = 2;
+        break;
+      case '/account':
+        navItemIndex = 3;
         break;
       default:
         navItemIndex = -1;
@@ -38,6 +43,7 @@ const PageFooter = () => {
   }, [pathname]);
 
   const handleClick = (event: any, value: number) => {
+    if (!dispatch) return;
     setValue(value);
     let path = '';
     switch (value) {
@@ -46,10 +52,15 @@ const PageFooter = () => {
         break;
       }
       case 1: {
-        path = '/quizzes';
+        dispatch({ type: ActionTypes.startFetching });
+        path = '/workout/list';
         break;
       }
       case 2: {
+        path = '/quizzes';
+        break;
+      }
+      case 3: {
         path = '/account';
         break;
       }
@@ -80,6 +91,7 @@ const PageFooter = () => {
       onChange={handleClick}
     >
       <BottomNavigationAction label='ホーム' icon={<ImportContactsIcon />} />
+      <BottomNavigationAction label='練習' icon={<AutoAwesomeIcon />} />
       <BottomNavigationAction
         label='小テスト'
         icon={

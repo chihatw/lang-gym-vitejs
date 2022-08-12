@@ -15,6 +15,8 @@ import MailPage from '../pages/Auth/Setting/MailPage';
 import PasswordPage from '../pages/Auth/Setting/PasswordPage';
 
 import Layout from '../Layout';
+import WorkoutListPage from '../pages/Workout/WorkoutListPage';
+import WorkoutPage from '../pages/Workout/WorkoutPage';
 
 const AppComponent = () => {
   const { pathname } = useLocation();
@@ -36,18 +38,24 @@ const AppComponent = () => {
   return (
     <Layout>
       <Routes>
-        <Route path='/' element={<TopPage />} />
+        <Route index element={<TopPage />} />
         <Route path='/articles' element={<ArticlesPage />} />
-        <Route path='/article/:id/parse' element={<SentenceParsePage />} />
-        <Route path='/article/:id' element={<ArticlePage />} />
-        <Route path='/quizzes/*'>
-          <Route path={``} element={<UnAnsweredPage />} />
+        <Route path='/article'>
+          <Route path=':id/parse' element={<SentenceParsePage />} />
+          <Route path=':id' element={<ArticlePage />} />
+        </Route>
+        <Route path='/quizzes'>
+          <Route index element={<UnAnsweredPage />} />
           <Route path={'answered'} element={<AnsweredPage />} />
         </Route>
         <Route path='/quiz/:id' element={<QuizPage />} />
         <Route path='/score/:id/quiz/:quizId' element={<ScorePage />} />
-        <Route path='/account/*'>
-          <Route path={''} element={<AccountPage />} />
+        <Route path='workout'>
+          <Route path='list' element={<WorkoutListPage />} />
+          <Route path=':workoutId' element={<WorkoutPage />} />
+        </Route>
+        <Route path='/account'>
+          <Route index element={<AccountPage />} />
           <Route path={'mail'} element={<MailPage />} />
           <Route path={`password`} element={<PasswordPage />} />
         </Route>

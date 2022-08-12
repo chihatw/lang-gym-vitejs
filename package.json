@@ -31,7 +31,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
-    "sentence-parse-new2sentence-parse-props": "^1.0.8"
+    "sentence-parse-new2sentence-parse-props": "^1.0.8",
+    "string2pitches-array": "^1.0.1"
   },
   "devDependencies": {
     "@types/ramda": "^0.28.15",

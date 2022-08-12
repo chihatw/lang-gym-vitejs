@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../App';
 import { State } from '../../../Model';
-import { Action } from '../../../Update';
+import { Action, ActionTypes } from '../../../Update';
 import LogoButton from '../../commons/LogoButton';
 import SearchField from '../../commons/SearchField';
 import BadgeButton from './BadgeButton';
@@ -28,6 +28,14 @@ const PCContent = () => {
           gridTemplateColumns: 'auto auto auto 1fr',
         }}
       >
+        <LabelButton
+          handleClick={() => {
+            if (!dispatch) return;
+            dispatch({ type: ActionTypes.startFetching });
+            navigate('/workout/list');
+          }}
+          label='練習'
+        />
         <BadgeButton
           label='小テスト'
           handleClick={() => navigate('/quizzes')}

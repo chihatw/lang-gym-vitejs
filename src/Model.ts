@@ -375,6 +375,74 @@ export const INITIAL_QUIZ_STATE: QuizState = {
   userDisplayname: '',
 };
 
+export type RandomWorkoutCue = {
+  id: string;
+  label: string;
+  pitchStr: string;
+  imagePath: string;
+};
+
+export const INITIAL_CUE: RandomWorkoutCue = {
+  id: '',
+  label: '',
+  pitchStr: '',
+  imagePath: '',
+};
+
+export type RandomWorkout = {
+  id: string;
+  uid: string;
+  cues: RandomWorkoutCue[];
+  cueIds: string[];
+  title: string;
+  beatCount: number;
+  targetBpm: number;
+  resultBpm: number;
+  resultSeconds: number;
+  roundCount: number;
+  storagePath: string;
+};
+
+export const INITIAL_RANDOM_WORKOUT: RandomWorkout = {
+  id: '',
+  uid: '',
+  cues: [],
+  title: '',
+  cueIds: [],
+  beatCount: 0,
+  targetBpm: 0,
+  resultBpm: 0,
+  resultSeconds: 0,
+  roundCount: 1,
+  storagePath: '',
+};
+
+export type RandomWorkoutParams = {
+  miliSeconds: number;
+  isRunning: boolean;
+  currentIndex: number;
+  isChecking: boolean;
+};
+
+export const INITIAL_RANDOM_WORKOUT_PARAMS: RandomWorkoutParams = {
+  miliSeconds: 0,
+  isRunning: false,
+  currentIndex: 0,
+  isChecking: false,
+};
+
+export type RandomWorkoutState = {
+  blobs: { [workoutId: string]: Blob | null };
+  params: RandomWorkoutParams;
+  workouts: { [workoutId: string]: RandomWorkout };
+};
+
+export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
+  blobs: {},
+  params: INITIAL_RANDOM_WORKOUT_PARAMS,
+  workouts: {},
+};
+
 export type State = {
   auth: AuthState;
   isFetching: boolean;
@@ -387,6 +455,10 @@ export type State = {
   quiz: QuizState;
   score: ScoreState;
   quizzes: QuizListState;
+  workout: RandomWorkoutState;
+  blobURLs: {
+    [imagePath: string]: string;
+  };
   memo: {
     articlePages: { [articleId: string]: ArticleState };
     hitItems: { [keywords: string]: Sentence[] };
@@ -407,5 +479,7 @@ export const INITIAL_STATE: State = {
   quiz: INITIAL_QUIZ_STATE,
   score: INITIAL_SCORE_STATE,
   quizzes: INITIAL_QUIZ_LIST_STATE,
+  workout: INITIAL_RANDOM_WORKOUT_STATE,
+  blobURLs: {},
   memo: { articlePages: {}, hitItems: {}, quizzes: {}, scores: {} },
 };

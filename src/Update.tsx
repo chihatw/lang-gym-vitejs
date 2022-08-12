@@ -15,24 +15,32 @@ import {
   QuizState,
   ScoreState,
   QuizListState,
+  RandomWorkout,
+  RandomWorkoutParams,
 } from './Model';
 
 export const ActionTypes = {
   signOut: 'signOut',
   setQuiz: 'setQuiz',
   setScore: 'setScore',
+  setState: 'setState',
   changeUid: 'changeUid',
   setLayout: 'setLayout',
   setTopPage: 'setTopPage',
   setArticle: 'setArticle',
   submitQuiz: 'submitQuiz',
+  stopWorkout: 'stopWorkout',
+  saveWorkout: 'saveWorkout',
   inputSearch: 'inputSearch',
   clearSearch: 'clearSearch',
+  setWorkouts: 'setWorkouts',
+  startWorkout: 'startWorkout',
   authenticate: 'authenticate',
   startFetching: 'startFetching',
   setArticleList: 'setArticleList',
   setMoreArticles: 'setMoreArticles',
   setAudioContext: 'setAudioContext',
+  setWorkoutParams: 'setWorkoutParams',
   inputSpecialMora: 'inputSpecialMora',
   inputPitchesArray: 'inputPitchesArray',
   setAssignmentBlob: 'setAssignmentBlob',
@@ -44,6 +52,7 @@ export const ActionTypes = {
 export type Action = {
   type: string;
   payload?:
+    | State
     | string
     | QuizState
     | AuthState
@@ -54,7 +63,10 @@ export type Action = {
     | AnsweredQuiz[]
     | ArticleCardsState
     | UnansweredQuiz[]
+    | RandomWorkoutParams
+    | { [key: string]: RandomWorkout }
     | { quiz: QuizState; score: ScoreState }
+    | { params: RandomWorkoutParams; workout: RandomWorkout }
     | {
         score: ScoreState;
         quizzes: QuizListState;
@@ -78,10 +90,47 @@ export type Action = {
 
 export const reducer = (state: State, action: Action): State => {
   const { type, payload } = action;
-  const { articlePage, auth, audioContext, layout, quiz } = state;
+  const { articlePage, auth, audioContext, layout, quiz, blobURLs } = state;
   const { sentences } = articlePage;
   const { questions } = quiz;
   switch (type) {
+    case ActionTypes.setState: {
+      const newState = payload as State;
+      return newState;
+    }
+    case ActionTypes.setWorkoutParams: {
+      const params = payload as RandomWorkoutParams;
+      return R.compose(
+        R.assocPath<RandomWorkoutParams, State>(['workout', 'params'], params)
+      )(state);
+    }
+    case ActionTypes.saveWorkout:
+    case ActionTypes.stopWorkout:
+    case ActionTypes.startWorkout: {
+      const { params, workout } = payload as {
+        params: RandomWorkoutParams;
+        workout: RandomWorkout;
+      };
+      return R.compose(
+        R.assocPath<RandomWorkoutParams, State>(['workout', 'params'], params),
+        R.assocPath<RandomWorkout, State>(
+          ['workout', 'workouts', workout.id],
+          workout
+        )
+      )(state);
+    }
+    case ActionTypes.setWorkouts: {
+      const workouts = payload as {
+        [key: string]: RandomWorkout;
+      };
+      return R.compose(
+        R.assocPath(['isFetching'], false),
+        R.assocPath<{ [key: string]: RandomWorkout }, State>(
+          ['workout', 'workouts'],
+          workouts
+        )
+      )(state);
+    }
     case ActionTypes.signOut: {
       return INITIAL_STATE;
     }
