@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Container } from '@mui/material';
 
@@ -15,14 +15,10 @@ import Score from './Score';
 import RhythmsAnswer from './RhythmsAnswer';
 import ScoreFooter from './ScoreFooter';
 import SkeletonPage from '../../../components/SkeletonPage';
+import { AppContext } from '../../../App';
 
-const ScorePage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const ScorePage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { pathname } = useLocation();
   const items = pathname.split('/');
   // 先頭を破棄
@@ -33,7 +29,8 @@ const ScorePage = ({
   const { uid } = auth;
 
   useEffect(() => {
-    if (!isFetching || !questionSetScoreId || !questionSetId) return;
+    if (!isFetching || !questionSetScoreId || !questionSetId || !dispatch)
+      return;
     const fetchData = async () => {
       const memorizedScore = memo.scores[questionSetScoreId];
       const memorizedQuiz = memo.quizzes[questionSetId];
@@ -81,7 +78,7 @@ const ScorePage = ({
           </div>
         </div>
         <div style={{ height: 80 }} />
-        <ScoreFooter dispatch={dispatch} />
+        <ScoreFooter />
       </div>
     </Container>
   );

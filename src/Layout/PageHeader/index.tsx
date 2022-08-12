@@ -1,18 +1,14 @@
 import { AppBar, Toolbar, useMediaQuery } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../App';
 import { State } from '../../Model';
 import { Action } from '../../Update';
 import LogoButton from '../commons/LogoButton';
 import SearchField from '../commons/SearchField';
 import PCContent from './PCContent';
 
-const PageHeader = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const PageHeader = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { auth } = state;
   const { uid, initializing } = auth;
   const matches = useMediaQuery('(min-width:600px)');
@@ -28,9 +24,9 @@ const PageHeader = ({
       <Toolbar variant='dense' sx={{ display: 'grid' }}>
         {!initializing && !!uid ? (
           matches ? (
-            <PCContent state={state} dispatch={dispatch} />
+            <PCContent />
           ) : (
-            <SearchField state={state} dispatch={dispatch} />
+            <SearchField />
           )
         ) : (
           <div>

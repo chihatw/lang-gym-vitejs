@@ -1,18 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { SignInPageComponent } from './SignInPageComponent';
 import { signIn } from '../../../services/auth';
-import { State } from '../../../Model';
-import { Action } from '../../../Update';
+import { AppContext } from '../../../App';
 
-const SignInPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const SignInPage = () => {
+  const { state } = useContext(AppContext);
   const { auth } = state;
   const { uid, initializing } = auth;
   const [emailErrMsg, setEmailErrMsg] = useState<string>('');

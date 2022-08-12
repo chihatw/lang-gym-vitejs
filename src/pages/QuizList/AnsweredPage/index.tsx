@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Container } from '@mui/material';
 import StyledButton from '../commons/StyledButton';
@@ -7,14 +7,10 @@ import QuizList from '../commons/QuizList';
 import { getAnsweredQuizList } from '../../../services/quiz';
 import { Action, ActionTypes } from '../../../Update';
 import { State } from '../../../Model';
+import { AppContext } from '../../../App';
 
-const AnsweredPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const AnsweredPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
   const { auth, isFetching, quizzes } = state;
@@ -22,7 +18,7 @@ const AnsweredPage = ({
   const { answeredList } = quizzes;
 
   useEffect(() => {
-    if (!isFetching) return;
+    if (!isFetching || !dispatch) return;
     const fetchData = async () => {
       const _answeredList = !!answeredList.length
         ? answeredList
@@ -47,7 +43,7 @@ const AnsweredPage = ({
         />
         <StyledButton color='#ccc' disabled label='回答済' />
       </div>
-      <QuizList isAnswered dispatch={dispatch} state={state} />
+      <QuizList isAnswered />
     </Container>
   );
 };

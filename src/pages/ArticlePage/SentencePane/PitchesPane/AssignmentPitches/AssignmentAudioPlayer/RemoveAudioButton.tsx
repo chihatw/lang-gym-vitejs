@@ -1,21 +1,15 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../../App';
 import { State } from '../../../../../../Model';
 import { deleteStorage } from '../../../../../../repositories/storage';
 import { updateSentence } from '../../../../../../services/article';
 
 import { Action, ActionTypes } from '../../../../../../Update';
 
-const RemoveAudioButton = ({
-  sentenceIndex,
-  state,
-  dispatch,
-}: {
-  sentenceIndex: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { articlePage } = state;
   const { sentences } = articlePage;
 
@@ -23,6 +17,7 @@ const RemoveAudioButton = ({
   const { id, storagePath } = sentence;
 
   const handleDelete = () => {
+    if (!dispatch) return;
     if (window.confirm('音声ファイルを削除しますか')) {
       dispatch({ type: ActionTypes.removeAssignmentBlob, payload: id });
       // storage

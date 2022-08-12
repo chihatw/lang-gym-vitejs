@@ -1,19 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { State } from '../../../../Model';
 import { Action } from '../../../../Update';
 import RhythmMonitor from './RhythmMonitor';
 import SpeakerButton from '../../commons/SpeakerButton';
 import SpecialMoraSelector from './SpecialMoraSelector';
+import { AppContext } from '../../../../App';
 
-const RhythmQuiz = ({
-  state,
-  questionIndex,
-  dispatch,
-}: {
-  state: State;
-  questionIndex: number;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const RhythmQuiz = ({ questionIndex }: { questionIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -30,8 +24,6 @@ const RhythmQuiz = ({
               {syllablesArray[wordIndex].map((_, syllableIndex) => (
                 <SpecialMoraSelector
                   key={syllableIndex}
-                  state={state}
-                  dispatch={dispatch}
                   questionIndex={questionIndex}
                   wordIndex={wordIndex}
                   syllableIndex={syllableIndex}

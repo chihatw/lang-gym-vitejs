@@ -1,29 +1,26 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Container } from '@mui/material';
-import { Action, ActionTypes } from '../../Update';
+import { ActionTypes } from '../../Update';
 import ArticleCardList from '../../components/ArticleCardList';
-import { State } from '../../Model';
+import { AppContext } from '../../App';
 
-const TopPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const TopPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { auth, topPage } = state;
   const { uid } = auth;
   const { cards, hasMore } = topPage;
 
   const handleClick = async (articleId: string) => {
+    if (!dispatch) return;
     dispatch({ type: ActionTypes.startFetching });
     navigate(`/article/${articleId}`);
   };
 
   const handleShowList = async () => {
+    if (!dispatch) return;
     dispatch({ type: ActionTypes.startFetching });
     navigate('/articles');
   };

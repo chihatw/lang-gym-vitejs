@@ -4,19 +4,13 @@ import { css } from '@emotion/css';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Action } from '../Update';
-import { State } from '../Model';
+import { AppContext } from '../App';
 
-const PageFooter = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const PageFooter = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 

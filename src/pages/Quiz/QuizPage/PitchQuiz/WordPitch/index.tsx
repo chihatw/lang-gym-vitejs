@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../App';
 import { State } from '../../../../../Model';
 import { Action } from '../../../../../Update';
 import MoraPitch from './MoraPitch';
 
 const WordPitch = ({
-  state,
   questionIndex,
   wordIndex,
-  dispatch,
 }: {
-  state: State;
   questionIndex: number;
   wordIndex: number;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -34,11 +32,9 @@ const WordPitch = ({
         {wordPitches.map((_, moraIndex) => (
           <MoraPitch
             key={moraIndex}
-            state={state}
             questionIndex={questionIndex}
             wordIndex={wordIndex}
             moraIndex={moraIndex}
-            dispatch={dispatch}
           />
         ))}
       </div>

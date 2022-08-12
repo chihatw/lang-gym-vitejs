@@ -1,13 +1,15 @@
 import { Divider } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import CreatedAt from './CreatedAt';
 import Title from './Title';
 import LinkButton from './LinkButton';
 import AudioSlider from '../../../components/AudioSlider';
 import { State } from '../../../Model';
+import { AppContext } from '../../../App';
 
-const ArticleHeader = ({ state }: { state: State }) => {
+const ArticleHeader = () => {
+  const { state } = useContext(AppContext);
   const { articlePage, audioContext } = state;
   const { article, sentences, articleBlob } = articlePage;
   const { isShowParse } = article;

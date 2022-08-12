@@ -1,25 +1,22 @@
 import LabelIcon from '@mui/icons-material/Label';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
-import React from 'react';
-import { State } from '../../../../../../Model';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../../App';
 import { changePitchesArray } from '../../../../../../services/quiz';
-import { Action, ActionTypes } from '../../../../../../Update';
+import { ActionTypes } from '../../../../../../Update';
 import MoraSeparater from './MoraSeparater';
 
 const TouchIcon = ({
-  state,
   questionIndex,
   wordIndex,
   moraIndex,
-  dispatch,
 }: {
-  state: State;
   questionIndex: number;
   wordIndex: number;
   moraIndex: number;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -32,6 +29,7 @@ const TouchIcon = ({
   const isAccent = !!next && next.length === 1 && mora.length === 2;
 
   const handleClick = () => {
+    if (!dispatch) return;
     const updated: string[][][] = changePitchesArray(
       inputPitchesArray,
       wordIndex,

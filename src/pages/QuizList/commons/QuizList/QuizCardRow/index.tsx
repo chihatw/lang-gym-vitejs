@@ -1,22 +1,20 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../App';
 import { State, UnansweredQuiz } from '../../../../../Model';
 import { deleteQuestionSet } from '../../../../../services/quiz';
 import { Action, ActionTypes } from '../../../../../Update';
 import QuizCard from './QuizCard';
 
 const QuizCardRow = ({
-  state,
   isAnswered,
   cardIndex,
-  dispatch,
 }: {
-  state: State;
   cardIndex: number;
   isAnswered?: boolean;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quizzes } = state;
   const { answeredList, unansweredList } = quizzes;
   const cards = isAnswered ? answeredList : unansweredList;
@@ -27,6 +25,7 @@ const QuizCardRow = ({
   const isDeletable = !isAnswered && ['再', '々'].includes(lastChar);
 
   const handleDelete = async () => {
+    if (!dispatch) return;
     if (window.confirm(`${title}を削除しますか？`)) {
       await deleteQuestionSet(id);
       const updatedList: UnansweredQuiz[] = unansweredList.filter(
@@ -39,24 +38,12 @@ const QuizCardRow = ({
     }
   };
   if (!isDeletable) {
-    return (
-      <QuizCard
-        state={state}
-        cardIndex={cardIndex}
-        isAnswered={isAnswered}
-        dispatch={dispatch}
-      />
-    );
+    return <QuizCard cardIndex={cardIndex} isAnswered={isAnswered} />;
   }
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 43px' }}>
-      <QuizCard
-        state={state}
-        cardIndex={cardIndex}
-        isAnswered={isAnswered}
-        dispatch={dispatch}
-      />
+      <QuizCard cardIndex={cardIndex} isAnswered={isAnswered} />
       <div
         style={{
           display: 'flex',

@@ -1,6 +1,7 @@
 import { Button, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
 import { State } from '../../../Model';
 import {
   answeredQuestionSet,
@@ -13,19 +14,15 @@ import {
 } from '../../../services/quiz';
 import { Action, ActionTypes } from '../../../Update';
 
-const QuizPageFooter = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const QuizPageFooter = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { quiz, auth, quizzes } = state;
   const { uid } = auth;
   const { id, type, questions, questionCount } = quiz;
 
   const handleSubmit = async () => {
+    if (!dispatch) return;
     if (!['articleAccents', 'articleRhythms'].includes(type)) return;
 
     const points =

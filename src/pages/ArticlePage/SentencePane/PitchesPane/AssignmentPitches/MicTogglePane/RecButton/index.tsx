@@ -1,20 +1,14 @@
 import MicIcon from '@mui/icons-material/Mic';
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import { IconButton } from '@mui/material';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
+import { AppContext } from '../../../../../../../App';
 import { State } from '../../../../../../../Model';
 import { Action } from '../../../../../../../Update';
 import CheckPane from './CheckPane';
 
-const RecButton = ({
-  state,
-  sentenceIndex,
-  dispatch,
-}: {
-  state: State;
-  sentenceIndex: number;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const RecButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { audioContext } = state;
   const [isRecording, setIsRecording] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
@@ -91,9 +85,7 @@ const RecButton = ({
           isChecking={isChecking}
           handleChecked={handleChecked}
           blob={blob}
-          state={state}
           sentenceIndex={sentenceIndex}
-          dispatch={dispatch}
         />
       )}
     </div>

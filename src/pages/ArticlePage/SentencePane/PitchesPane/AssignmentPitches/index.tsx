@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import SentencePitches from '../SentencePitches';
@@ -7,16 +7,10 @@ import MicTogglePane from './MicTogglePane';
 import { State } from '../../../../../Model';
 import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../services/article';
 import { Action } from '../../../../../Update';
+import { AppContext } from '../../../../../App';
 
-const AssignmentPitches = ({
-  sentenceIndex,
-  state,
-  dispatch,
-}: {
-  sentenceIndex: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { articlePage } = state;
   const {
     sentences,
@@ -36,13 +30,7 @@ const AssignmentPitches = ({
   if (assignmentDownloadURL) {
     // 旧式
     if (!!assignmentSentence.pitchesArray.length && assignmentBlob) {
-      return (
-        <SentencePitches
-          state={state}
-          isAssignment
-          sentenceIndex={sentenceIndex}
-        />
-      );
+      return <SentencePitches isAssignment sentenceIndex={sentenceIndex} />;
     }
     return <></>;
   }
@@ -51,22 +39,10 @@ const AssignmentPitches = ({
   // 新式
   // storage の blob がある場合は、プレイヤーを表示
   if (!!storagePath && !!blob) {
-    return (
-      <AssignmentAudioPlayer
-        sentenceIndex={sentenceIndex}
-        state={state}
-        dispatch={dispatch}
-      />
-    );
+    return <AssignmentAudioPlayer sentenceIndex={sentenceIndex} />;
   }
   // storage がない場合は、マイクを表示
-  return (
-    <MicTogglePane
-      state={state}
-      sentenceIndex={sentenceIndex}
-      dispatch={dispatch}
-    />
-  );
+  return <MicTogglePane sentenceIndex={sentenceIndex} />;
 };
 
 export default AssignmentPitches;

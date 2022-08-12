@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { State } from '../../../Model';
 import { Action, ActionTypes } from '../../../Update';
@@ -11,14 +11,10 @@ import QuestionIndex from '../commons/QuestionIndex';
 import PitchQuiz from './PitchQuiz';
 import RhythmQuiz from './RhythmQuiz';
 import SkeletonPage from '../../../components/SkeletonPage';
+import { AppContext } from '../../../App';
 
-const QuizPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const QuizPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { pathname } = useLocation();
   const questionSetId = pathname.split('/').slice(-1)[0];
 
@@ -26,7 +22,7 @@ const QuizPage = ({
   const { uid } = auth;
 
   useEffect(() => {
-    if (!isFetching) return;
+    if (!isFetching || !dispatch) return;
     const fetchData = async () => {
       const memorizedQuiz = memo.quizzes[questionSetId];
       const quiz = memorizedQuiz || (await getQuestionSet(questionSetId));
@@ -52,24 +48,16 @@ const QuizPage = ({
             <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
               <QuestionIndex index={questionIndex + 1} />
               {type === 'articleAccents' && (
-                <PitchQuiz
-                  state={state}
-                  questionIndex={questionIndex}
-                  dispatch={dispatch}
-                />
+                <PitchQuiz questionIndex={questionIndex} />
               )}
               {type === 'articleRhythms' && (
-                <RhythmQuiz
-                  state={state}
-                  questionIndex={questionIndex}
-                  dispatch={dispatch}
-                />
+                <RhythmQuiz questionIndex={questionIndex} />
               )}
             </div>
           ))}
         </div>
         <div style={{ height: 32 }} />
-        <QuizPageFooter state={state} dispatch={dispatch} />
+        <QuizPageFooter />
       </div>
     </Container>
   );

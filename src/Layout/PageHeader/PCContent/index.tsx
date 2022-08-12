@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
 import { State } from '../../../Model';
 import { Action } from '../../../Update';
 import LogoButton from '../../commons/LogoButton';
@@ -8,13 +9,8 @@ import SearchField from '../../commons/SearchField';
 import BadgeButton from './BadgeButton';
 import LabelButton from './LabelButton';
 
-const PCContent = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const PCContent = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { quizzes } = state;
   const { unansweredList } = quizzes;
@@ -55,7 +51,7 @@ const PCContent = ({
             },
           })}
         >
-          <SearchField state={state} dispatch={dispatch} />
+          <SearchField />
         </div>
       </div>
     </div>

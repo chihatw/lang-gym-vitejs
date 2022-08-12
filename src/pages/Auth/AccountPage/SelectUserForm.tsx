@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Select,
   MenuItem,
@@ -10,14 +10,10 @@ import { State } from '../../../Model';
 import { AUTH_LOCAL_STORAGE } from '../../../constants';
 import { Action, ActionTypes } from '../../../Update';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
 
-const SelectUserForm = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const SelectUserForm = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const theme = useTheme();
   const { auth } = state;
@@ -26,6 +22,7 @@ const SelectUserForm = ({
   const [selectedUid, setSelectedUid] = useState(uid);
 
   const handleSelectUid = (selectedUid: string) => {
+    if (!dispatch) return;
     setSelectedUid(selectedUid);
     localStorage.setItem(AUTH_LOCAL_STORAGE, selectedUid);
     dispatch({ type: ActionTypes.changeUid, payload: selectedUid });

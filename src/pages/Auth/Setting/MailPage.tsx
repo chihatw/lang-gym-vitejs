@@ -1,21 +1,15 @@
 import { Navigate } from 'react-router-dom';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 
 import { Container, TextField } from '@mui/material';
 import { handleUpdateEmail } from '../../../services/auth';
 import CancelButton from '../commons/CancelButton';
 import StyledMessage from '../commons/StyledMessage';
 import SubmitButton from '../commons/SubmitButton';
-import { State } from '../../../Model';
-import { Action } from '../../../Update';
+import { AppContext } from '../../../App';
 
-const MailPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const MailPage = () => {
+  const { state } = useContext(AppContext);
   const { auth } = state;
   const { uid } = auth;
 

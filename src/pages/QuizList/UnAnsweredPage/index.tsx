@@ -1,6 +1,8 @@
 import { Container } from '@mui/material';
+import { useContext } from 'react';
 
 import { Navigate, useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
 import { State } from '../../../Model';
 
 import { Action, ActionTypes } from '../../../Update';
@@ -8,13 +10,8 @@ import { Action, ActionTypes } from '../../../Update';
 import QuizList from '../commons/QuizList';
 import StyledButton from '../commons/StyledButton';
 
-const UnAnsweredPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const UnAnsweredPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
   const { auth } = state;
@@ -28,6 +25,7 @@ const UnAnsweredPage = ({
         <StyledButton disabled color='#ccc' label='未回答' />
         <StyledButton
           handleClick={() => {
+            if (!dispatch) return;
             dispatch({ type: ActionTypes.startFetching });
             navigate('/quizzes/answered');
           }}
@@ -35,7 +33,7 @@ const UnAnsweredPage = ({
           label='回答済'
         />
       </div>
-      <QuizList dispatch={dispatch} state={state} />
+      <QuizList />
     </Container>
   );
 };

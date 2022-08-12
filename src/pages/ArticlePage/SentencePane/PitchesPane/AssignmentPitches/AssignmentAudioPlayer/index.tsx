@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../../App';
 import BlobSlider from '../../../../../../components/BlobSlider';
 import { State } from '../../../../../../Model';
 import { Action } from '../../../../../../Update';
@@ -7,14 +8,11 @@ import { Action } from '../../../../../../Update';
 import RemoveAudioButton from './RemoveAudioButton';
 
 const AssignmentAudioPlayer = ({
-  state,
   sentenceIndex,
-  dispatch,
 }: {
-  state: State;
   sentenceIndex: number;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const theme = useTheme();
   const { articlePage, audioContext } = state;
   const { assignmentBlobs, sentences } = articlePage;
@@ -66,11 +64,7 @@ const AssignmentAudioPlayer = ({
           )}
         </div>
       </div>
-      <RemoveAudioButton
-        sentenceIndex={sentenceIndex}
-        dispatch={dispatch}
-        state={state}
-      />
+      <RemoveAudioButton sentenceIndex={sentenceIndex} />
     </div>
   );
 };

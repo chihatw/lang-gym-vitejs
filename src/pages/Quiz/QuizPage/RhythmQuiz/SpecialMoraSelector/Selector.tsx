@@ -1,5 +1,6 @@
 import { IconButton } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../App';
 import { Question, State } from '../../../../../Model';
 import {
   getKanaSpecialMora,
@@ -8,18 +9,15 @@ import {
 import { Action, ActionTypes } from '../../../../../Update';
 
 const Selector = ({
-  state,
-  dispatch,
   questionIndex,
   wordIndex,
   syllableIndex,
 }: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
   questionIndex: number;
   wordIndex: number;
   syllableIndex: number;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -31,6 +29,7 @@ const Selector = ({
   const syllable = syllablesArray[wordIndex][syllableIndex];
   const { syllable: mora, longVowel } = syllable;
   const handleClick = (specialMora: string) => {
+    if (!dispatch) return;
     const monitorString = getKanaSpecialMora({
       mora,
       fixedVowel: longVowel,

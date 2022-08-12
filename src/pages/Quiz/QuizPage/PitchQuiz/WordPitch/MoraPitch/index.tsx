@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../../App';
 import { State } from '../../../../../../Model';
 import { Action } from '../../../../../../Update';
 import Mora from './Mora';
@@ -6,18 +7,15 @@ import Sokuon from './Sokuon';
 import TouchIcon from './TouchIcon';
 
 const MoraPitch = ({
-  state,
   questionIndex,
   wordIndex,
   moraIndex,
-  dispatch,
 }: {
   questionIndex: number;
   wordIndex: number;
   moraIndex: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -36,11 +34,9 @@ const MoraPitch = ({
           <Sokuon />
         ) : (
           <TouchIcon
-            state={state}
             questionIndex={questionIndex}
             wordIndex={wordIndex}
             moraIndex={moraIndex}
-            dispatch={dispatch}
           />
         ))}
     </div>

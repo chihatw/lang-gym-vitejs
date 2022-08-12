@@ -5,21 +5,19 @@ import { Action, ActionTypes } from '../../../Update';
 import { Button, Container, useTheme } from '@mui/material';
 import SelectUserForm from './SelectUserForm';
 import { State } from '../../../Model';
+import { useContext } from 'react';
+import { AppContext } from '../../../App';
 
 const VERSION = '1.2.6';
 
-const AccountPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const AccountPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { auth } = state;
   const { uid, users } = auth;
   const navigate = useNavigate();
 
   const handleSignOut = () => {
+    if (!dispatch) return;
     signOut();
     dispatch({ type: ActionTypes.signOut });
   };
@@ -33,7 +31,7 @@ const AccountPage = ({
       <div>
         {!!users.length && (
           <div style={{ margin: '16px 0' }}>
-            <SelectUserForm state={state} dispatch={dispatch} />
+            <SelectUserForm />
           </div>
         )}
         <div style={{ display: 'grid', rowGap: 32 }}>

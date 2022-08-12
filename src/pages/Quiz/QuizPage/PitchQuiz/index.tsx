@@ -1,19 +1,11 @@
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import WordPitch from './WordPitch';
-import { State } from '../../../../Model';
-import { Action } from '../../../../Update';
+import { AppContext } from '../../../../App';
 
-const PitchQuiz = ({
-  state,
-  questionIndex,
-  dispatch,
-}: {
-  state: State;
-  questionIndex: number;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const PitchQuiz = ({ questionIndex }: { questionIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const theme = useTheme();
   const { quiz } = state;
   const { questions } = quiz;
@@ -34,10 +26,8 @@ const PitchQuiz = ({
         {inputPitchesArray.map((_, index) => (
           <WordPitch
             key={index}
-            state={state}
             wordIndex={index}
             questionIndex={questionIndex}
-            dispatch={dispatch}
           />
         ))}
       </div>

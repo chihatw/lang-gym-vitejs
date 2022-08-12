@@ -1,21 +1,21 @@
 import { useTheme } from '@mui/material';
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import AudioSlider from '../../../../components/AudioSlider';
 
 import { State } from '../../../../Model';
 import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../services/article';
+import { AppContext } from '../../../../App';
 
 const SentencePitches = ({
-  state,
   sentenceIndex,
   isAssignment,
 }: {
-  state: State;
   sentenceIndex: number;
   isAssignment?: boolean;
 }) => {
+  const { state } = useContext(AppContext);
   const theme = useTheme();
   const { articlePage, audioContext } = state;
   const { sentences, articleAssignmentSentences, articleBlob, assignmentBlob } =

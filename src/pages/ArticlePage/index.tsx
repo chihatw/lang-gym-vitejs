@@ -1,21 +1,17 @@
 import { Container } from '@mui/material';
 import { Navigate, useLocation } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
-import { Action, ActionTypes } from '../../Update';
+import { ActionTypes } from '../../Update';
 import { getArticleState } from '../../services/article';
-import { State } from '../../Model';
-import SkeletonPage from '../../components/SkeletonPage';
 
-const ArticlePage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+import SkeletonPage from '../../components/SkeletonPage';
+import { AppContext } from '../../App';
+
+const ArticlePage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { pathname } = useLocation();
 
   const articleId = pathname.split('/').slice(-1)[0];
@@ -26,7 +22,7 @@ const ArticlePage = ({
   const { id } = article;
 
   useEffect(() => {
-    if (!isFetching) return;
+    if (!isFetching || !dispatch) return;
     const fetchData = async () => {
       const memorizedArticlePage = memo.articlePages[articleId];
       const articlePage =
@@ -44,14 +40,9 @@ const ArticlePage = ({
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
-          <ArticleHeader state={state} />
+          <ArticleHeader />
           {sentences.map((_, sentenceIndex) => (
-            <SentencePane
-              key={sentenceIndex}
-              sentenceIndex={sentenceIndex}
-              state={state}
-              dispatch={dispatch}
-            />
+            <SentencePane key={sentenceIndex} sentenceIndex={sentenceIndex} />
           ))}
         </div>
       </div>

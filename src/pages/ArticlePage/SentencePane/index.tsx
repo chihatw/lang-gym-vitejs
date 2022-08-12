@@ -1,21 +1,13 @@
 import { Divider } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import Index from './StyledIndex';
 
 import TextLines from './TextLines';
 import PitchesPane from './PitchesPane';
-import { State } from '../../../Model';
-import { Action } from '../../../Update';
+import { AppContext } from '../../../App';
 
-const SentencePane = ({
-  sentenceIndex,
-  state,
-  dispatch,
-}: {
-  sentenceIndex: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { articlePage } = state;
   const { article, sentences } = articlePage;
   const { isShowAccents } = article;
@@ -35,13 +27,7 @@ const SentencePane = ({
     >
       <Index label={sentenceIndex + 1} />
       <TextLines sentenceIndex={sentenceIndex} state={state} />
-      {isShowAccents && (
-        <PitchesPane
-          sentenceIndex={sentenceIndex}
-          state={state}
-          dispatch={dispatch}
-        />
-      )}
+      {isShowAccents && <PitchesPane sentenceIndex={sentenceIndex} />}
       <Divider />
     </div>
   );

@@ -1,16 +1,12 @@
 import { Container, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../App';
 import { State } from '../../Model';
 import { Action } from '../../Update';
 import HitItem from './HitItem';
 
-const HitList = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const HitList = () => {
+  const { state, dispatch } = useContext(AppContext);
   const theme = useTheme();
   const { search, layout } = state;
   const { hitItems } = search;
@@ -48,7 +44,7 @@ const HitList = ({
         </Container>
       )}
       {hitItems.map((_, index) => (
-        <HitItem key={index} index={index} state={state} dispatch={dispatch} />
+        <HitItem key={index} index={index} />
       ))}
     </div>
   );

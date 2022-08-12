@@ -1,12 +1,15 @@
 import { Button, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../App';
 import { Action, ActionTypes } from '../../../Update';
 
-const ScoreFooter = ({ dispatch }: { dispatch: React.Dispatch<Action> }) => {
+const ScoreFooter = () => {
+  const { dispatch } = useContext(AppContext);
   const theme = useTheme();
   const navigate = useNavigate();
   const handleClick = () => {
+    if (!dispatch) return;
     dispatch({ type: ActionTypes.startFetching });
     navigate('/quizzes/answered');
   };

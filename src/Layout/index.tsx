@@ -1,6 +1,6 @@
 import { Collapse, Hidden } from '@mui/material';
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { State } from '../Model';
 import BraveCaution from './BraveCaution';
@@ -9,18 +9,12 @@ import PageFooter from './PageFooter';
 import HitList from './HitList';
 import PageHeader from './PageHeader';
 import { Action } from '../Update';
+import { AppContext } from '../App';
 
 const HEIGHT_THRESHOLD = 480;
 
-const Layout = ({
-  state,
-  dispatch,
-  children,
-}: {
-  state: State;
-  children: React.ReactNode;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { state, dispatch } = useContext(AppContext);
   const location = useLocation();
   const [isParse, setIsPase] = useState(false);
   const [isHideAppBar, setIsHideAppBar] = useState(false);
@@ -69,9 +63,9 @@ const Layout = ({
 
         {!isHideAppBar && (
           <>
-            <PageHeader state={state} dispatch={dispatch} />
+            <PageHeader />
             <Collapse in={!!hitItems.length}>
-              <HitList state={state} dispatch={dispatch} />
+              <HitList />
             </Collapse>
           </>
         )}
@@ -84,11 +78,7 @@ const Layout = ({
             width: '100vw',
           }}
         >
-          <Hidden smUp>
-            {!!uid && !isHideAppBar && (
-              <PageFooter dispatch={dispatch} state={state} />
-            )}
-          </Hidden>
+          <Hidden smUp>{!!uid && !isHideAppBar && <PageFooter />}</Hidden>
         </div>
       </div>
     </>

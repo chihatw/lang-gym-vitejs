@@ -1,18 +1,10 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
-import { State } from '../../../../../../../Model';
-import { Action } from '../../../../../../../Update';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../../../../App';
 import ScoreRow from './ScoreRow';
 
-const ScoreList = ({
-  state,
-  cardIndex,
-  dispatch,
-}: {
-  state: State;
-  cardIndex: number;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const ScoreList = ({ cardIndex }: { cardIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quizzes } = state;
   const { answeredList } = quizzes;
   const card = answeredList[cardIndex];
@@ -31,14 +23,8 @@ const ScoreList = ({
       >
         結果
       </div>
-      {scores.map((score, index) => (
-        <ScoreRow
-          key={index}
-          state={state}
-          cardIndex={cardIndex}
-          scoreIndex={index}
-          dispatch={dispatch}
-        />
+      {scores.map((_, index) => (
+        <ScoreRow key={index} cardIndex={cardIndex} scoreIndex={index} />
       ))}
     </div>
   );

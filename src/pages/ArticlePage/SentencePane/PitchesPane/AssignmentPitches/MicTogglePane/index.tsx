@@ -1,19 +1,12 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import { Button, IconButton, useTheme } from '@mui/material';
-import React, { useState } from 'react';
-import { State } from '../../../../../../Model';
-import { Action } from '../../../../../../Update';
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../../../../../../App';
+
 import RecButton from './RecButton';
 
-const MicTogglePane = ({
-  state,
-  sentenceIndex,
-  dispatch,
-}: {
-  state: State;
-  sentenceIndex: number;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const MicTogglePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
@@ -27,11 +20,7 @@ const MicTogglePane = ({
           position: 'relative',
         }}
       >
-        <RecButton
-          state={state}
-          sentenceIndex={sentenceIndex}
-          dispatch={dispatch}
-        />
+        <RecButton sentenceIndex={sentenceIndex} />
         <div style={{ position: 'absolute', top: 0, right: 0 }}>
           <IconButton onClick={handleOpen} sx={{ color: '#52a2aa' }}>
             <ClearIcon />

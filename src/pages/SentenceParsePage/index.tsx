@@ -1,20 +1,14 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useContext } from 'react';
 import { SentenceParsePage as SentenceParsePageComponent } from '@chihatw/lang-gym-h.page.sentence-parse-page';
 import Cursor from '../../images/cursor.png';
 
 import SentenceParsePageNewComponent from './components/SentenceParsePageNewComponent';
-import { State } from '../../Model';
-import { Action } from '../../Update';
 import SkeletonPage from '../../components/SkeletonPage';
+import { AppContext } from '../../App';
 
-const SentenceParsePage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const SentenceParsePage = () => {
+  const { state } = useContext(AppContext);
   const navigate = useNavigate();
 
   const { auth, articlePage, isFetching } = state;

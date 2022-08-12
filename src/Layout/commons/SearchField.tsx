@@ -1,19 +1,15 @@
 import { css } from '@emotion/css';
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton, InputBase } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { State } from '../../Model';
 import { Action, ActionTypes } from '../../Update';
 import { getSentencesByTags } from '../../services/article';
+import { AppContext } from '../../App';
 
-const SearchField = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const SearchField = () => {
+  const { state, dispatch } = useContext(AppContext);
   const [input, setInput] = useState('');
 
   const { memo, auth } = state;
@@ -21,6 +17,7 @@ const SearchField = ({
   const { hitItems: memoHitItems } = memo;
 
   const handleChange = async (input: string) => {
+    if (!dispatch) return;
     setInput(input);
     const keywords = input
       .replace(/[a-zA-Z]/g, '')
@@ -38,6 +35,7 @@ const SearchField = ({
   };
 
   const handleClick = () => {
+    if (!dispatch) return;
     setInput('');
     dispatch({ type: ActionTypes.clearSearch });
   };

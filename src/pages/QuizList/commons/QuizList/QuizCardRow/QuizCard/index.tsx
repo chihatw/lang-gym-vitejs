@@ -1,22 +1,20 @@
 import { Card, CardContent } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../../../../App';
 import { AnsweredQuiz, State } from '../../../../../../Model';
 import { Action, ActionTypes } from '../../../../../../Update';
 import DateDisplay from './DateDisplay';
 import ScoreList from './ScoreList';
 
 const QuizCard = ({
-  state,
   cardIndex,
   isAnswered,
-  dispatch,
 }: {
-  state: State;
   isAnswered?: boolean;
   cardIndex: number;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quizzes } = state;
   const { answeredList, unansweredList } = quizzes;
   const cards = isAnswered ? answeredList : unansweredList;
@@ -33,6 +31,7 @@ const QuizCard = ({
         '&:active,&:focus': { background: '#EAF4F5' },
       }}
       onClick={() => {
+        if (!dispatch) return;
         dispatch({ type: ActionTypes.startFetching });
         navigate(`/quiz/${id}`);
       }}
@@ -41,13 +40,7 @@ const QuizCard = ({
       <CardContent>
         <div style={{ display: 'grid', rowGap: 8 }}>
           <DateDisplay title={title} createdAt={createdAt} />
-          {!!scores && (
-            <ScoreList
-              state={state}
-              cardIndex={cardIndex}
-              dispatch={dispatch}
-            />
-          )}
+          {!!scores && <ScoreList cardIndex={cardIndex} />}
         </div>
       </CardContent>
     </Card>

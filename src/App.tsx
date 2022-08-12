@@ -1,13 +1,18 @@
-import { useEffect, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 
 import AppComponent from './routes/AppRoutes';
-import { ActionTypes, reducer } from './Update';
-import { INITIAL_STATE, LayoutState, User } from './Model';
+import { Action, ActionTypes, reducer } from './Update';
+import { INITIAL_STATE, LayoutState, State, User } from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleCards } from './services/article';
 import { getUnansweredQuizList } from './services/quiz';
 import { getUsers } from './services/auth';
+
+export const AppContext = createContext<{
+  state: State;
+  dispatch: React.Dispatch<Action> | null;
+}>({ state: INITIAL_STATE, dispatch: null });
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
@@ -107,7 +112,11 @@ const App = () => {
     }
   }, [state]);
 
-  return <AppComponent state={state} dispatch={dispatch} />;
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      <AppComponent />
+    </AppContext.Provider>
+  );
 };
 export default App;
 

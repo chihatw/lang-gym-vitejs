@@ -1,7 +1,7 @@
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Button, Collapse, Container, IconButton, Modal } from '@mui/material';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 
 import Japanese from '../../../../TextLines/Japanese';
 import SentencePitches from '../../../SentencePitches';
@@ -14,22 +14,21 @@ import { State } from '../../../../../../../Model';
 import { uploadStorage } from '../../../../../../../repositories/storage';
 import { updateSentence } from '../../../../../../../services/article';
 import { Action, ActionTypes } from '../../../../../../../Update';
+import { AppContext } from '../../../../../../../App';
 
 const CheckPane = ({
   blob,
-  state,
   sentenceIndex,
   isChecking,
   handleChecked,
-  dispatch,
 }: {
   blob: Blob;
   sentenceIndex: number;
-  state: State;
+
   isChecking: boolean;
   handleChecked: () => void;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { articlePage, audioContext } = state;
   const { sentences, articleBlob } = articlePage;
   const sentence = sentences[sentenceIndex];
@@ -43,6 +42,7 @@ const CheckPane = ({
   const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
 
   const handleSave = async () => {
+    if (!dispatch) return;
     handleChecked();
     setPlayed(false);
     if (!audioContext) return;
@@ -110,9 +110,7 @@ const CheckPane = ({
               録音をチェックしてください
             </div>
             <Japanese japanese={japanese} />
-            {articleBlob && (
-              <SentencePitches state={state} sentenceIndex={sentenceIndex} />
-            )}
+            {articleBlob && <SentencePitches sentenceIndex={sentenceIndex} />}
 
             <div style={{ textAlign: 'center' }}>
               <IconButton color='primary' onClick={handlePlay}>

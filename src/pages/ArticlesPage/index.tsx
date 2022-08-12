@@ -1,19 +1,15 @@
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { ArticleCardsState, State } from '../../Model';
 import { Action, ActionTypes } from '../../Update';
 import { Container } from '@mui/material';
 import ArticleCardList from '../../components/ArticleCardList';
 import { getArticleCards } from '../../services/article';
+import { AppContext } from '../../App';
 
-const ArticlesPage = ({
-  state,
-  dispatch,
-}: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const ArticlesPage = () => {
+  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
   const { auth, articlesPage, isFetching } = state;
@@ -21,7 +17,7 @@ const ArticlesPage = ({
   const { cards, hasMore, startAfter } = articlesPage;
 
   useEffect(() => {
-    if (!isFetching) return;
+    if (!isFetching || !dispatch) return;
     const fetchData = async () => {
       const articleCards = !!cards.length
         ? articlesPage
@@ -35,11 +31,13 @@ const ArticlesPage = ({
   }, [isFetching, cards, uid, articlesPage, dispatch]);
 
   const handleClick = async (articleId: string) => {
+    if (!dispatch) return;
     dispatch({ type: ActionTypes.startFetching });
     navigate(`/article/${articleId}`);
   };
 
   const showMore = async () => {
+    if (!dispatch) return;
     const result = await getArticleCards(uid, 10, startAfter);
     const updated: ArticleCardsState = {
       ...result,

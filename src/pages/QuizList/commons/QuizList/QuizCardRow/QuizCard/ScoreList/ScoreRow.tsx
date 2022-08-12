@@ -2,25 +2,22 @@ import 'dayjs/locale/ja';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Button, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { State } from '../../../../../../../Model';
-import { Action, ActionTypes } from '../../../../../../../Update';
+import { ActionTypes } from '../../../../../../../Update';
+import { AppContext } from '../../../../../../../App';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
 
 const ScoreRow = ({
-  state,
   cardIndex,
   scoreIndex,
-  dispatch,
 }: {
-  state: State;
   cardIndex: number;
   scoreIndex: number;
-  dispatch: React.Dispatch<Action>;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quizzes } = state;
   const { answeredList } = quizzes;
   const card = answeredList[cardIndex];
@@ -41,6 +38,7 @@ const ScoreRow = ({
         gridTemplateColumns: 'auto 1fr auto',
       }}
       onClick={(e) => {
+        if (!dispatch) return;
         e.stopPropagation();
         dispatch({ type: ActionTypes.startFetching });
         navigate(`/score/${id}/quiz/${questionSetId}`);

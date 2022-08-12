@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../../../../../App';
 import { State } from '../../../../../Model';
 import { Action, ActionTypes } from '../../../../../Update';
 import Monitor from './Monitor';
@@ -7,18 +8,15 @@ import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
 
 const SpecialMoraSelector = ({
-  state,
-  dispatch,
   questionIndex,
   wordIndex,
   syllableIndex,
 }: {
-  state: State;
-  dispatch: React.Dispatch<Action>;
   questionIndex: number;
   wordIndex: number;
   syllableIndex: number;
 }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { quiz } = state;
   const { questions } = quiz;
   const question = questions[questionIndex];
@@ -33,6 +31,7 @@ const SpecialMoraSelector = ({
 
   const [selected, setSelected] = useState(false);
   const handleToggle = () => {
+    if (!dispatch) return;
     setSelected(!selected);
     const updatedInput = [...inputSpecialMoraArray];
     const updatedMonitor = [...monitorSpecialMoraArray];
@@ -77,8 +76,6 @@ const SpecialMoraSelector = ({
       {!inputSpecialMora && selected && (
         <div style={{ paddingLeft: 16 }}>
           <Selector
-            state={state}
-            dispatch={dispatch}
             questionIndex={questionIndex}
             wordIndex={wordIndex}
             syllableIndex={syllableIndex}

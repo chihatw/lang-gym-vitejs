@@ -1,20 +1,14 @@
 import { css } from '@emotion/css';
 import { Container, Divider, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { State } from '../../../Model';
-import { Action, ActionTypes } from '../../../Update';
+import { AppContext } from '../../../App';
+
+import { ActionTypes } from '../../../Update';
 import Highlight from './Highlight';
 
-const HitItem = ({
-  index,
-  state,
-  dispatch,
-}: {
-  index: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const HitItem = ({ index }: { index: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   const { search } = state;
   const { keywords, hitItems } = search;
   const { createdAt, article, japanese, kana, chinese, original, title, line } =
@@ -27,6 +21,7 @@ const HitItem = ({
   const day = date.getDate();
 
   const handleClick = () => {
+    if (!dispatch) return;
     dispatch({ type: ActionTypes.clearSearch });
     dispatch({ type: ActionTypes.startFetching });
     navigate(`/article/${article}`);

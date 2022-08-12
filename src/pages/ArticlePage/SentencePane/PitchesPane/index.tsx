@@ -1,26 +1,14 @@
-import React from 'react';
-import { State } from '../../../../Model';
-import { Action } from '../../../../Update';
+import React, { useContext } from 'react';
+import { AppContext } from '../../../../App';
 import AssignmentPitches from './AssignmentPitches';
 import SentencePitches from './SentencePitches';
 
-const PitchesPane = ({
-  sentenceIndex,
-  state,
-  dispatch,
-}: {
-  sentenceIndex: number;
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}) => {
+const PitchesPane = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { state, dispatch } = useContext(AppContext);
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
-      <SentencePitches state={state} sentenceIndex={sentenceIndex} />
-      <AssignmentPitches
-        state={state}
-        sentenceIndex={sentenceIndex}
-        dispatch={dispatch}
-      />
+      <SentencePitches sentenceIndex={sentenceIndex} />
+      <AssignmentPitches sentenceIndex={sentenceIndex} />
     </div>
   );
 };
