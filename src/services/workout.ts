@@ -96,7 +96,8 @@ export const calcBpm = (
     Math.floor((miliSeconds % 1000) / 100) / 10;
 
   const readTime = cueCount * 0.5; // 1問を 0.5秒で把握する
-  const bps = totalBeatCount / (seconds - readTime);
+
+  const bps = totalBeatCount / (seconds > readTime ? seconds - readTime : 0.1);
 
   const bpm = Math.round(bps * 60);
   return bpm;
