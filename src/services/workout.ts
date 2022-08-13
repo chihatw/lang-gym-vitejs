@@ -86,15 +86,19 @@ const buildRandomWorkout = (doc: DocumentData) => {
 export const calcBpm = (
   miliSeconds: number,
   beatCount: number,
-  roundCount: number
+  roundCount: number,
+  cueCount: number
 ) => {
   if (!miliSeconds) return 0;
   const totalBeatCount = roundCount * beatCount;
   const seconds =
     Math.floor(miliSeconds / 1000) +
     Math.floor((miliSeconds % 1000) / 100) / 10;
-  const bps = totalBeatCount / seconds;
-  const bpm = Math.round(bps * 60 * 2);
+
+  const readTime = cueCount * 0.5; // 1問を 0.5秒で把握する
+  const bps = totalBeatCount / (seconds - readTime);
+
+  const bpm = Math.round(bps * 60);
   return bpm;
 };
 

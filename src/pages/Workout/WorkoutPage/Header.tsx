@@ -11,10 +11,12 @@ const Header = () => {
 
   if (!workoutId) return <></>;
   const workout = workouts[workoutId];
-  const { title, targetBpm, beatCount, roundCount } = workout;
+  const { title, targetBpm, beatCount, roundCount, cueIds } = workout;
 
+  const readTime = cueIds.length * 0.5;
   const targetTimeTenTimes =
-    Math.round(((beatCount * roundCount) / (targetBpm / 60)) * 10) * 2;
+    Math.round(((beatCount * roundCount) / (targetBpm / 60)) * 10) +
+    readTime * 10;
   const targetTimeSecond = Math.floor(targetTimeTenTimes / 10);
   const targetTimePoints = targetTimeTenTimes % 10;
   return (

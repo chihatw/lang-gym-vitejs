@@ -1,7 +1,7 @@
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Badge, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { css } from '@emotion/css';
 
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
@@ -91,7 +91,7 @@ const PageFooter = () => {
       onChange={handleClick}
     >
       <BottomNavigationAction label='ホーム' icon={<ImportContactsIcon />} />
-      <BottomNavigationAction label='練習' icon={<AutoAwesomeIcon />} />
+      <BottomNavigationAction label='練習' icon={<AccessTimeIcon />} />
       <BottomNavigationAction
         label='小テスト'
         icon={

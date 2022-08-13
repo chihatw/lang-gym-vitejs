@@ -1,22 +1,15 @@
-import { Button, Container, Modal, useTheme } from '@mui/material';
+import * as R from 'ramda';
+import { Container, useTheme } from '@mui/material';
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../../App';
 import { shuffle } from '../../../services/utils';
 import Header from './Header';
 import {
-  INITIAL_CUE,
-  INITIAL_RANDOM_WORKOUT,
   RandomWorkout,
-  RandomWorkoutCue,
   RandomWorkoutParams,
+  RandomWorkoutState,
   State,
 } from '../../../Model';
 import { ActionTypes } from '../../../Update';
@@ -29,13 +22,11 @@ import {
 import TimeDisplay from './TimeDisplay';
 import PlayButton from './PlayButton';
 import ResetButton from './ResetButton';
-import BlobSlider from '../../../components/BlobSlider';
-import string2PitchesArray from 'string2pitches-array';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
-import { uploadStorage } from '../../../repositories/storage';
+
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../../repositories/firebase';
 import CueCard from './CueCard';
+import CheckPane from './CheckPane';
 
 const WorkoutPage = () => {
   const theme = useTheme();
@@ -118,18 +109,24 @@ const WorkoutPage = () => {
     for (let i = 0; i < roundCount; i++) {
       shuffledCueIds = shuffledCueIds.concat(shuffle(cueIds));
     }
-
-    const updatedParams: RandomWorkoutParams = {
-      ...params,
-      isRunning: true,
-    };
     const updatedWorkout: RandomWorkout = {
       ...workout,
       cueIds: shuffledCueIds,
     };
+    const updatedWorkoutState = R.compose(
+      R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
+        ...params,
+        isRunning: true,
+      }),
+      R.assocPath<RandomWorkout, RandomWorkoutState>(
+        ['workouts', workoutId],
+        updatedWorkout
+      )
+    )(stateWorkout);
+
     dispatch({
-      type: ActionTypes.startWorkout,
-      payload: { params: updatedParams, workout: updatedWorkout },
+      type: ActionTypes.setWorkout,
+      payload: updatedWorkoutState,
     });
     // remote
     await setRandomWorkout(updatedWorkout);
@@ -145,34 +142,41 @@ const WorkoutPage = () => {
 
   const next = () => {
     if (!dispatch) return;
-    const updated: RandomWorkoutParams = {
-      ...params,
-      currentIndex: currentIndex + 1,
-    };
-    dispatch({ type: ActionTypes.setWorkoutParams, payload: updated });
+    const updatedWorkoutState = R.compose(
+      R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
+        ...params,
+        currentIndex: currentIndex + 1,
+      })
+    )(stateWorkout);
+
+    dispatch({ type: ActionTypes.setWorkout, payload: updatedWorkoutState });
   };
 
   const stop = async () => {
     if (!dispatch) return;
     window.cancelAnimationFrame(loopIdRef.current);
     const elapsedTime = Math.floor(performance.now() - startAtRef.current);
-    const bpm = calcBpm(elapsedTime, beatCount, roundCount);
+    const bpm = calcBpm(elapsedTime, beatCount, roundCount, cueIds.length);
     const seconds = miliSecondsToSeconds(elapsedTime);
-    const updatedWorkout: RandomWorkout = {
-      ...workout,
-      resultBpm: bpm,
-      resultSeconds: seconds,
-    };
-    const updatedParams: RandomWorkoutParams = {
-      ...params,
-      isRunning: true,
-      isChecking: true,
-      miliSeconds: elapsedTime,
-    };
+
+    const updatedWorkoutState = R.compose(
+      R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
+        ...params,
+        isRunning: true,
+        isChecking: true,
+        miliSeconds: elapsedTime,
+      }),
+      R.assocPath<RandomWorkout, RandomWorkoutState>(['workouts', workoutId], {
+        ...workout,
+        resultBpm: bpm,
+        resultSeconds: seconds,
+      })
+    )(stateWorkout);
+
     // ここはローカルだけ変更
     dispatch({
-      type: ActionTypes.stopWorkout,
-      payload: { params: updatedParams, workout: updatedWorkout },
+      type: ActionTypes.setWorkout,
+      payload: updatedWorkoutState,
     });
     setMiliSeconds(0);
 
@@ -195,12 +199,16 @@ const WorkoutPage = () => {
   const reset = () => {
     if (!dispatch) return;
     window.cancelAnimationFrame(loopIdRef.current);
-    const updated: RandomWorkoutParams = {
-      ...params,
-      isRunning: false,
-      currentIndex: 0,
-    };
-    dispatch({ type: ActionTypes.setWorkoutParams, payload: updated });
+
+    const updatedWorkoutState: RandomWorkoutState = R.compose(
+      R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
+        ...params,
+        isRunning: false,
+        currentIndex: 0,
+      })
+    )(stateWorkout);
+
+    dispatch({ type: ActionTypes.setWorkout, payload: updatedWorkoutState });
     setMiliSeconds(0);
 
     let mediaRecorder = mediaRecorderRef.current;
@@ -253,155 +261,3 @@ const WorkoutPage = () => {
 };
 
 export default WorkoutPage;
-
-const CheckPane = React.memo(
-  ({ blob, clearBlob }: { blob: Blob | null; clearBlob: () => void }) => {
-    const navigate = useNavigate();
-    const { workoutId } = useParams();
-    const theme = useTheme();
-    const { state, dispatch } = useContext(AppContext);
-    const { workout: stateWorkout, audioContext } = state;
-    const { params, workouts } = stateWorkout;
-
-    if (!workoutId) return <></>;
-
-    const workout = workouts[workoutId];
-    const { cues, cueIds, resultBpm } = workout;
-    const { isChecking, miliSeconds } = params;
-
-    const storagePath = `/randomWorkout/${workoutId}`;
-
-    const handleSave = async () => {
-      if (!blob || !dispatch) return;
-      await uploadStorage(blob, storagePath);
-      const updatedWorkout: RandomWorkout = {
-        ...workout,
-        storagePath,
-      };
-      const updatedParams: RandomWorkoutParams = {
-        miliSeconds: 0,
-        isRunning: false,
-        isChecking: false,
-        currentIndex: 0,
-      };
-
-      await setRandomWorkout(updatedWorkout);
-      navigate('/workout/list');
-
-      // リストへ遷移してから、変更
-      setTimeout(() => {
-        dispatch({
-          type: ActionTypes.saveWorkout,
-          payload: { params: updatedParams, workout: updatedWorkout },
-        });
-      }, 200);
-    };
-    const handleCancel = () => {
-      if (!dispatch) return;
-      clearBlob();
-      const updated: RandomWorkoutParams = {
-        miliSeconds: 0,
-        isRunning: false,
-        isChecking: false,
-        currentIndex: 0,
-      };
-      dispatch({ type: ActionTypes.setWorkoutParams, payload: updated });
-    };
-
-    return (
-      <Modal open={isChecking}>
-        <div
-          style={{
-            width: '100vw',
-            minHeight: '100vh',
-            background: '#fafafa',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Container maxWidth='sm'>
-            <div style={{ display: 'grid', rowGap: 16 }}>
-              <TimeDisplay miliSeconds={miliSeconds} />
-              <div
-                style={{
-                  ...(theme.typography as any).mRounded300,
-                  fontSize: 48,
-                  marginTop: -32,
-                  marginBottom: -16,
-                  textAlign: 'center',
-                }}
-              >
-                <span style={{ fontSize: 16 }}>BPM: </span>
-                <span>{resultBpm}</span>
-              </div>
-              <div
-                style={{
-                  color: '#52a2aa',
-                  textAlign: 'center',
-                  padding: '8px 0',
-                  userSelect: 'none',
-                }}
-              >
-                録音をチェックしてください
-              </div>
-              {!!blob && !!audioContext && (
-                <BlobSlider
-                  blob={blob}
-                  spacer={5}
-                  duration={miliSeconds / 1000 + 0.3}
-                  audioContext={audioContext}
-                />
-              )}
-              <div
-                style={{
-                  display: 'grid',
-                  rowGap: 8,
-                  height: 320,
-                  overflowY: 'scroll',
-                  background: 'white',
-                  borderRadius: 8,
-                }}
-              >
-                <div style={{ padding: '24px 0' }}>
-                  {cueIds.map((cueId, index) => {
-                    const cue =
-                      cues.find((item) => item.id === cueId) || INITIAL_CUE;
-                    const { pitchStr } = cue;
-                    const pitchesArray = string2PitchesArray(pitchStr);
-                    return (
-                      <div
-                        key={index}
-                        style={{ display: 'flex', justifyContent: 'center' }}
-                      >
-                        <SentencePitchLine pitchesArray={pitchesArray} />
-                      </div>
-                    );
-                  })}
-                </div>
-                <div style={{ display: 'grid', rowGap: 16 }}>
-                  <Button
-                    onClick={handleSave}
-                    variant='contained'
-                    color='primary'
-                    sx={{ color: 'white' }}
-                  >
-                    きれいに読めました
-                  </Button>
-                  <Button
-                    onClick={handleCancel}
-                    variant='outlined'
-                    color='primary'
-                  >
-                    もう一度録音します
-                  </Button>
-                </div>
-                <div style={{ height: 180 }} />
-              </div>
-            </div>
-          </Container>
-        </div>
-      </Modal>
-    );
-  }
-);

@@ -15,8 +15,7 @@ import {
   QuizState,
   ScoreState,
   QuizListState,
-  RandomWorkout,
-  RandomWorkoutParams,
+  RandomWorkoutState,
 } from './Model';
 
 export const ActionTypes = {
@@ -28,19 +27,15 @@ export const ActionTypes = {
   setLayout: 'setLayout',
   setTopPage: 'setTopPage',
   setArticle: 'setArticle',
+  setWorkout: 'setWorkout',
   submitQuiz: 'submitQuiz',
-  stopWorkout: 'stopWorkout',
-  saveWorkout: 'saveWorkout',
   inputSearch: 'inputSearch',
   clearSearch: 'clearSearch',
-  setWorkouts: 'setWorkouts',
-  startWorkout: 'startWorkout',
   authenticate: 'authenticate',
   startFetching: 'startFetching',
   setArticleList: 'setArticleList',
   setMoreArticles: 'setMoreArticles',
   setAudioContext: 'setAudioContext',
-  setWorkoutParams: 'setWorkoutParams',
   inputSpecialMora: 'inputSpecialMora',
   inputPitchesArray: 'inputPitchesArray',
   setAssignmentBlob: 'setAssignmentBlob',
@@ -63,10 +58,8 @@ export type Action = {
     | AnsweredQuiz[]
     | ArticleCardsState
     | UnansweredQuiz[]
-    | RandomWorkoutParams
-    | { [key: string]: RandomWorkout }
+    | RandomWorkoutState
     | { quiz: QuizState; score: ScoreState }
-    | { params: RandomWorkoutParams; workout: RandomWorkout }
     | {
         score: ScoreState;
         quizzes: QuizListState;
@@ -90,45 +83,20 @@ export type Action = {
 
 export const reducer = (state: State, action: Action): State => {
   const { type, payload } = action;
-  const { articlePage, auth, audioContext, layout, quiz, blobURLs } = state;
+  const { articlePage, auth, audioContext, layout, quiz, workout } = state;
   const { sentences } = articlePage;
   const { questions } = quiz;
+
   switch (type) {
     case ActionTypes.setState: {
       const newState = payload as State;
       return newState;
     }
-    case ActionTypes.setWorkoutParams: {
-      const params = payload as RandomWorkoutParams;
+    case ActionTypes.setWorkout: {
+      const workout = payload as RandomWorkoutState;
       return R.compose(
-        R.assocPath<RandomWorkoutParams, State>(['workout', 'params'], params)
-      )(state);
-    }
-    case ActionTypes.saveWorkout:
-    case ActionTypes.stopWorkout:
-    case ActionTypes.startWorkout: {
-      const { params, workout } = payload as {
-        params: RandomWorkoutParams;
-        workout: RandomWorkout;
-      };
-      return R.compose(
-        R.assocPath<RandomWorkoutParams, State>(['workout', 'params'], params),
-        R.assocPath<RandomWorkout, State>(
-          ['workout', 'workouts', workout.id],
-          workout
-        )
-      )(state);
-    }
-    case ActionTypes.setWorkouts: {
-      const workouts = payload as {
-        [key: string]: RandomWorkout;
-      };
-      return R.compose(
-        R.assocPath(['isFetching'], false),
-        R.assocPath<{ [key: string]: RandomWorkout }, State>(
-          ['workout', 'workouts'],
-          workouts
-        )
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<RandomWorkoutState, State>(['workout'], workout)
       )(state);
     }
     case ActionTypes.signOut: {
