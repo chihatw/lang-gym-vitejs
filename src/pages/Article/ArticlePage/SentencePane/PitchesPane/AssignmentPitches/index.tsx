@@ -4,10 +4,10 @@ import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import SentencePitches from '../SentencePitches';
 import MicTogglePane from './MicTogglePane';
 
-import { State } from '../../../../../Model';
-import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../services/article';
-import { Action } from '../../../../../Update';
-import { AppContext } from '../../../../../App';
+import { State } from '../../../../../../Model';
+import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../../services/article';
+import { Action } from '../../../../../../Update';
+import { AppContext } from '../../../../../../App';
 
 const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state, dispatch } = useContext(AppContext);

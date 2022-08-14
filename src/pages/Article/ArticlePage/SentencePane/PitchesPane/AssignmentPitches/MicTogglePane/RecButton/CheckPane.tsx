@@ -9,12 +9,12 @@ import SentencePitches from '../../../SentencePitches';
 import {
   blobToAudioBuffer,
   createSourceNode,
-} from '../../../../../../../services/utils';
-import { State } from '../../../../../../../Model';
-import { uploadStorage } from '../../../../../../../repositories/storage';
-import { updateSentence } from '../../../../../../../services/article';
-import { Action, ActionTypes } from '../../../../../../../Update';
-import { AppContext } from '../../../../../../../App';
+} from '../../../../../../../../services/utils';
+import { State } from '../../../../../../../../Model';
+import { uploadStorage } from '../../../../../../../../repositories/storage';
+import { updateSentence } from '../../../../../../../../services/article';
+import { Action, ActionTypes } from '../../../../../../../../Update';
+import { AppContext } from '../../../../../../../../App';
 
 const CheckPane = ({
   blob,

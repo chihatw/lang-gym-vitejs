@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { State } from '../../../Model';
+import { State } from '../../../../Model';
 
 const Title = ({ state }: { state: State }) => {
   const theme = useTheme();

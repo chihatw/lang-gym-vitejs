@@ -2,10 +2,10 @@ import { useTheme } from '@mui/material';
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import React, { useContext } from 'react';
 
-import AudioSlider from '../../../../components/AudioSlider';
+import AudioSlider from '../../../../../components/AudioSlider';
 
-import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../services/article';
-import { AppContext } from '../../../../App';
+import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../services/article';
+import { AppContext } from '../../../../../App';
 
 const SentencePitches = ({
   sentenceIndex,

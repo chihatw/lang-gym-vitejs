@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../../../../App';
 import AssignmentPitches from './AssignmentPitches';
 import SentencePitches from './SentencePitches';
 

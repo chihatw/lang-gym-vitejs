@@ -1,14 +1,14 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 
-import { ArticleCardsState } from '../../Model';
-import { ActionTypes } from '../../Update';
+import { ArticleCardsState } from '../../../Model';
+import { ActionTypes } from '../../../Update';
 import { Container } from '@mui/material';
-import ArticleCardList from '../../components/ArticleCardList';
-import { getArticleCards } from '../../services/article';
-import { AppContext } from '../../App';
+import ArticleCardList from '../../../components/ArticleCardList';
+import { getArticleCards } from '../../../services/article';
+import { AppContext } from '../../../App';
 
-const ArticlesPage = () => {
+const ArticleListPage = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -61,4 +61,4 @@ const ArticlesPage = () => {
   );
 };
 
-export default ArticlesPage;
+export default ArticleListPage;

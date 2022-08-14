@@ -4,7 +4,7 @@ import Index from './StyledIndex';
 
 import TextLines from './TextLines';
 import PitchesPane from './PitchesPane';
-import { AppContext } from '../../../App';
+import { AppContext } from '../../../../App';
 
 const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state, dispatch } = useContext(AppContext);

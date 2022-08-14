@@ -22,7 +22,7 @@ const TopPage = () => {
   const handleShowList = async () => {
     if (!dispatch) return;
     dispatch({ type: ActionTypes.startFetching });
-    navigate('/articles');
+    navigate('/article/list');
   };
 
   if (!uid) return <Navigate to='/login' />;

@@ -4,11 +4,11 @@ import React, { useContext, useEffect } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
-import { ActionTypes } from '../../Update';
-import { getArticleState } from '../../services/article';
+import { ActionTypes } from '../../../Update';
+import { getArticleState } from '../../../services/article';
 
-import SkeletonPage from '../../components/SkeletonPage';
-import { AppContext } from '../../App';
+import SkeletonPage from '../../../components/SkeletonPage';
+import { AppContext } from '../../../App';
 
 const ArticlePage = () => {
   const { state, dispatch } = useContext(AppContext);

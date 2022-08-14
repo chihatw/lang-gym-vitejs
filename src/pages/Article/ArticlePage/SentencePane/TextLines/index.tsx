@@ -1,5 +1,5 @@
 import React from 'react';
-import { State } from '../../../../Model';
+import { State } from '../../../../../Model';
 
 import Chinese from './Chinese';
 import Japanese from './Japanese';

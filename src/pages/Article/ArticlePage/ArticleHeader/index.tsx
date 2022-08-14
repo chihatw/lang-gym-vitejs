@@ -4,9 +4,9 @@ import React, { useContext, useMemo } from 'react';
 import CreatedAt from './CreatedAt';
 import Title from './Title';
 import LinkButton from './LinkButton';
-import AudioSlider from '../../../components/AudioSlider';
-import { State } from '../../../Model';
-import { AppContext } from '../../../App';
+import AudioSlider from '../../../../components/AudioSlider';
+import { State } from '../../../../Model';
+import { AppContext } from '../../../../App';
 
 const ArticleHeader = () => {
   const { state } = useContext(AppContext);

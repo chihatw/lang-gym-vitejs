@@ -5,8 +5,8 @@ import TopPage from '../pages/TopPage';
 import QuizPage from '../pages/Quiz/QuizPage';
 import ScorePage from '../pages/Quiz/ScorePage';
 import SignInPage from '../pages/Auth/SingInPage';
-import ArticlePage from '../pages/ArticlePage';
-import ArticlesPage from '../pages/ArticlesPage';
+import ArticlePage from '../pages/Article/ArticlePage';
+import ArticleListPage from '../pages/Article/ArticleListPage';
 import SentenceParsePage from '../pages/SentenceParsePage';
 import AnsweredPage from '../pages/QuizList/AnsweredPage';
 import UnAnsweredPage from '../pages/QuizList/UnAnsweredPage';
@@ -39,8 +39,8 @@ const AppComponent = () => {
     <Layout>
       <Routes>
         <Route index element={<TopPage />} />
-        <Route path='/articles' element={<ArticlesPage />} />
         <Route path='/article'>
+          <Route path='list' element={<ArticleListPage />} />
           <Route path=':id/parse' element={<SentenceParsePage />} />
           <Route path=':id' element={<ArticlePage />} />
         </Route>

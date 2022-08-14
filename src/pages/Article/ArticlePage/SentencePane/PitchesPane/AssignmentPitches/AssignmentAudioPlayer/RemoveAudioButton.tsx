@@ -1,12 +1,12 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../App';
-import { State } from '../../../../../../Model';
-import { deleteStorage } from '../../../../../../repositories/storage';
-import { updateSentence } from '../../../../../../services/article';
+import { AppContext } from '../../../../../../../App';
+import { State } from '../../../../../../../Model';
+import { deleteStorage } from '../../../../../../../repositories/storage';
+import { updateSentence } from '../../../../../../../services/article';
 
-import { Action, ActionTypes } from '../../../../../../Update';
+import { Action, ActionTypes } from '../../../../../../../Update';
 
 const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state, dispatch } = useContext(AppContext);

@@ -1,7 +1,7 @@
 import { Button, useTheme } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { State } from '../../../Model';
+import { State } from '../../../../Model';
 
 const LinkButton = ({ state }: { state: State }) => {
   const theme = useTheme();

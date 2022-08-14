@@ -1,9 +1,9 @@
 import { useTheme } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../App';
-import BlobSlider from '../../../../../../components/BlobSlider';
-import { State } from '../../../../../../Model';
-import { Action } from '../../../../../../Update';
+import { AppContext } from '../../../../../../../App';
+import BlobSlider from '../../../../../../../components/BlobSlider';
+import { State } from '../../../../../../../Model';
+import { Action } from '../../../../../../../Update';
 
 import RemoveAudioButton from './RemoveAudioButton';
 
