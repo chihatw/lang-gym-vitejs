@@ -17,9 +17,6 @@ export const AppContext = createContext<{
 const App = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
-  const { auth } = state;
-  const { users, uid, initializing } = auth;
-
   // 認証判定
   useEffect(() => {
     const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
@@ -29,7 +26,7 @@ const App = () => {
       if (_uid === import.meta.env.VITE_ADMIN_UID) {
         isAdmin = true;
 
-        _users = users.length ? users : await getUsers();
+        _users = state.auth.users.length ? state.auth.users : await getUsers();
 
         const localStorageUid = localStorage.getItem(AUTH_LOCAL_STORAGE);
 
@@ -41,7 +38,7 @@ const App = () => {
           _uid = firstUid;
         }
       }
-      if (uid !== _uid || initializing) {
+      if (state.auth.uid !== _uid || state.auth.initializing) {
         dispatch({
           type: ActionTypes.authenticate,
           payload: { uid: _uid, isAdmin, initializing: false, users: _users }, // initializing どこで使っている？
@@ -79,20 +76,18 @@ const App = () => {
       unsubscribe();
       window.removeEventListener('resize', onResize);
     };
-  }, [dispatch, users, uid, initializing]);
+  }, [dispatch, state.auth.users, state.auth.uid, state.auth.initializing]);
 
   // topPage の作文を取得
   // 未回答の問題も取得
   useEffect(() => {
-    const { auth, topPage } = state;
-    const { uid } = auth;
-    const { cards } = topPage;
-
-    if (!uid || !!cards.length) return;
+    if (!state.auth.uid) return;
 
     const fetchData = async () => {
-      const articles = await getArticleCards(uid, 3);
-      const quizzes = await getUnansweredQuizList(uid);
+      const articles = !!state.topPage.cards.length
+        ? state.topPage
+        : await getArticleCards(state.auth.uid, 3);
+      const quizzes = await getUnansweredQuizList(state.auth.uid);
       dispatch({
         type: ActionTypes.setTopPage,
         payload: { articles, quizzes },
@@ -100,17 +95,16 @@ const App = () => {
     };
     fetchData();
 
-    const { audioContext } = state;
     const createAudioContext = () => {
       const factory = new AudioContextFactory();
       const _audioContext = factory.create();
       dispatch({ type: ActionTypes.setAudioContext, payload: _audioContext });
       window.removeEventListener('click', createAudioContext);
     };
-    if (!audioContext) {
+    if (!state.audioContext) {
       window.addEventListener('click', createAudioContext);
     }
-  }, [state]);
+  }, [state.audioContext, state.topPage.cards, state.auth.uid]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

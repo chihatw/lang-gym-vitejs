@@ -1,28 +1,5 @@
 import { FSentences } from 'fsentence-types';
 
-export const PATH = {
-  sentences: ['articlePage', 'sentences'],
-  isFetching: ['isFetching'],
-  articlePage: ['articlePage'],
-  assignmentBlobs: ['articlePage', 'assignmentBlobs'],
-  articlesPage: ['articlesPage'],
-  search: ['search'],
-  layout: ['layout'],
-  workouts: ['workouts'],
-  topPage: ['topPage'],
-  unansweredList: ['quizzes', 'unansweredList'],
-  answeredList: ['quizzes', 'answeredList'],
-  uid: ['auth', 'uid'],
-  quiz: ['quiz'],
-  quizzes: ['quizzes'],
-  score: ['score'],
-  questions: ['quiz', 'questions'],
-  memoQuiz: ['memo', 'quizzes'],
-  memoHitItems: ['memo', 'hitItems'],
-  memoArticlePage: ['memo', 'articlePages'],
-  memoScore: ['memo', 'scores'],
-};
-
 export type User = {
   id: string;
   displayname: string;

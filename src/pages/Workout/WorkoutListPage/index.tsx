@@ -17,7 +17,6 @@ const WorkoutListPage = () => {
   const { auth, workout, isFetching } = state;
   const { uid } = auth;
   const { workouts, blobs } = workout;
-  console.log({ workouts, isFetching });
   useEffect(() => {
     if (!isFetching || !dispatch) return;
     const fetchData = async () => {

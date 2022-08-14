@@ -4,7 +4,6 @@ import {
   State,
   ArticleCardsState,
   ArticleState,
-  PATH,
   Sentence,
   SearchState,
   INITIAL_SEARCH_STATE,
@@ -121,15 +120,18 @@ export const reducer = (state: State, action: Action): State => {
         quizzes: UnansweredQuiz[];
       };
       return R.compose(
-        R.assocPath<ArticleCardsState, State>(PATH.topPage, articles),
-        R.assocPath<UnansweredQuiz[], State>(PATH.unansweredList, quizzes)
+        R.assocPath<ArticleCardsState, State>(['topPage'], articles),
+        R.assocPath<UnansweredQuiz[], State>(
+          ['quizzes', 'unansweredList'],
+          quizzes
+        )
       )(state);
     }
     case ActionTypes.setArticleList: {
       const articlesPage = payload as ArticleCardsState;
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, false),
-        R.assocPath<ArticleCardsState, State>(PATH.articlesPage, articlesPage)
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<ArticleCardsState, State>(['articlesPage'], articlesPage)
       )(state);
     }
     case ActionTypes.setMoreArticles: {
@@ -142,10 +144,10 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.setArticle: {
       const articlePage = payload as ArticleState;
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, false),
-        R.assocPath<ArticleState, State>(PATH.articlePage, articlePage),
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<ArticleState, State>(['articlePage'], articlePage),
         R.assocPath<ArticleState, State>(
-          [...PATH.memoArticlePage, articlePage.article.id],
+          ['memo', 'articlePages', articlePage.article.id],
           articlePage
         )
       )(state);
@@ -165,8 +167,14 @@ export const reducer = (state: State, action: Action): State => {
       );
 
       return R.compose(
-        R.assocPath<Blob | null, State>([...PATH.assignmentBlobs, id], blob),
-        R.assocPath<Sentence[], State>([...PATH.sentences], updatedSentences)
+        R.assocPath<Blob | null, State>(
+          ['articlePage', 'assignmentBlobs', id],
+          blob
+        ),
+        R.assocPath<Sentence[], State>(
+          ['articlePage', 'sentences'],
+          updatedSentences
+        )
       )(state);
     }
     case ActionTypes.removeAssignmentBlob: {
@@ -177,55 +185,61 @@ export const reducer = (state: State, action: Action): State => {
       );
 
       return R.compose(
-        R.dissocPath<State>([...PATH.assignmentBlobs, sentenceId]),
-        R.assocPath<Sentence[], State>([...PATH.sentences], updatedSentences)
+        R.dissocPath<State>(['articlePage', 'assignmentBlobs', sentenceId]),
+        R.assocPath<Sentence[], State>(
+          ['articlePage', 'sentences'],
+          updatedSentences
+        )
       )(state);
     }
     case ActionTypes.inputSearch: {
       const search = payload as SearchState;
       const { keywords, hitItems } = search;
       return R.compose(
-        R.assocPath<SearchState, State>(PATH.search, search),
+        R.assocPath<SearchState, State>(['search'], search),
         R.assocPath<Sentence[], State>(
-          [...PATH.memoHitItems, keywords.join(',')],
+          ['memo', 'hitItems', keywords.join(',')],
           hitItems
         )
       )(state);
     }
     case ActionTypes.clearSearch: {
       return R.compose(
-        R.assocPath<SearchState, State>(PATH.search, INITIAL_SEARCH_STATE)
+        R.assocPath<SearchState, State>(['search'], INITIAL_SEARCH_STATE)
       )(state);
     }
     case ActionTypes.setLayout: {
       const layout = payload as LayoutState;
-      return R.compose(R.assocPath<LayoutState, State>(PATH.layout, layout))(
+      return R.compose(R.assocPath<LayoutState, State>(['layout'], layout))(
         state
       );
     }
     case ActionTypes.setAnsweredQuizList: {
       const answeredQuizList = payload as AnsweredQuiz[];
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, false),
-        R.assocPath<AnsweredQuiz[], State>(PATH.answeredList, answeredQuizList)
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<AnsweredQuiz[], State>(
+          ['quizzes', 'answeredList'],
+          answeredQuizList
+        )
       )(state);
     }
     case ActionTypes.setQuiz: {
       const quiz = payload as QuizState;
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, false),
-        R.assocPath<QuizState, State>(PATH.quiz, quiz),
-        R.assocPath<QuizState, State>([...PATH.memoQuiz, quiz.id], quiz)
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<QuizState, State>(['quiz'], quiz),
+        R.assocPath<QuizState, State>(['memo', 'quizzes', quiz.id], quiz)
       )(state);
     }
     case ActionTypes.setScore: {
       const { quiz, score } = payload as { quiz: QuizState; score: ScoreState };
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, false),
-        R.assocPath<QuizState, State>(PATH.quiz, quiz),
-        R.assocPath<QuizState, State>([...PATH.memoQuiz, quiz.id], quiz),
-        R.assocPath<ScoreState, State>(PATH.score, score),
-        R.assocPath<ScoreState, State>([...PATH.memoScore, score.id], score)
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<QuizState, State>(['quiz'], quiz),
+        R.assocPath<QuizState, State>(['memo', 'quizzes', quiz.id], quiz),
+        R.assocPath<ScoreState, State>(['score'], score),
+        R.assocPath<ScoreState, State>(['memo', 'scores', score.id], score)
       )(state);
     }
     case ActionTypes.inputPitchesArray: {
@@ -235,7 +249,7 @@ export const reducer = (state: State, action: Action): State => {
       };
       return R.compose(
         R.assocPath<string[][][], State>(
-          [...PATH.questions, questionIndex, 'inputPitchesArray'],
+          ['quiz', 'questions', questionIndex, 'inputPitchesArray'],
           pitchesArray
         )
       )(state);
@@ -255,11 +269,11 @@ export const reducer = (state: State, action: Action): State => {
       });
       const initialQuiz: QuizState = { ...quiz, questions: initialQuestions };
       return R.compose(
-        R.assocPath<boolean, State>(PATH.isFetching, true),
-        R.assocPath<QuizState, State>(PATH.memoQuiz, initialQuiz),
-        R.assocPath<ScoreState, State>(PATH.score, score),
-        R.assocPath<ScoreState, State>([...PATH.memoScore, score.id], score),
-        R.assocPath<QuizListState, State>(PATH.quizzes, quizzes)
+        R.assocPath<boolean, State>(['isFetching'], true),
+        R.assocPath<QuizState, State>(['memo', 'quizzes'], initialQuiz),
+        R.assocPath<ScoreState, State>(['score'], score),
+        R.assocPath<ScoreState, State>(['memo', 'scores', score.id], score),
+        R.assocPath<QuizListState, State>(['quizzes'], quizzes)
       )(state);
     }
     case ActionTypes.inputSpecialMora: {
@@ -271,11 +285,11 @@ export const reducer = (state: State, action: Action): State => {
         };
       return R.compose(
         R.assocPath<string[][], State>(
-          [...PATH.questions, questionIndex, 'inputSpecialMoraArray'],
+          ['quiz', 'questions', questionIndex, 'inputSpecialMoraArray'],
           inputSpecialMoraArray
         ),
         R.assocPath<string[][], State>(
-          [...PATH.questions, questionIndex, 'monitorSpecialMoraArray'],
+          ['quiz', 'questions', questionIndex, 'monitorSpecialMoraArray'],
           monitorSpecialMoraArray
         )
       )(state);
@@ -285,7 +299,7 @@ export const reducer = (state: State, action: Action): State => {
 
       return R.compose(
         R.assocPath<UnansweredQuiz[], State>(
-          PATH.unansweredList,
+          ['quizzes', 'unansweredList'],
           unansweredList
         )
       )(state);
