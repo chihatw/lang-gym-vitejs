@@ -1,7 +1,7 @@
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { IconButton, Slider, useTheme } from '@mui/material';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TimePane from './TimePane';
 import {
   createSourceNode,
@@ -32,6 +32,12 @@ const BlobSlider = ({
   const startTimeRef = useRef(0);
   const offsetTimeRef = useRef(0);
   const pausedRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      pause();
+    };
+  }, []);
 
   const play = async () => {
     if (!blob || !audioContext) return;
