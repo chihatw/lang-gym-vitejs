@@ -40,7 +40,7 @@ const WorkoutPage = () => {
   if (!uid || !workoutId) return <Navigate to='/login' />;
 
   const workout = workouts[workoutId];
-  const { cues, roundCount, cueIds, beatCount } = workout;
+  const { cues, roundCount, cueIds, beatCount, recordCount } = workout;
 
   const [loaded, setLoaded] = useState(false);
   const [miliSeconds, setMiliSeconds] = useState(0);
@@ -112,6 +112,7 @@ const WorkoutPage = () => {
     const updatedWorkout: RandomWorkout = {
       ...workout,
       cueIds: shuffledCueIds,
+      recordCount: recordCount + 1,
     };
     const updatedWorkoutState = R.compose(
       R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {

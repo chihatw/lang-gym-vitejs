@@ -134,6 +134,7 @@ export const reducer = (state: State, action: Action): State => {
         R.assocPath<ArticleCardsState, State>(['articlesPage'], articlesPage)
       )(state);
     }
+    // debug 上とまとめる？
     case ActionTypes.setMoreArticles: {
       const articlesPage = payload as ArticleCardsState;
       return { ...state, articlesPage };

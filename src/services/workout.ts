@@ -2,14 +2,9 @@ import {
   collection,
   doc,
   DocumentData,
-  getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
   setDoc,
-  startAfter,
-  updateDoc,
   where,
 } from 'firebase/firestore';
 import { RandomWorkout } from '../Model';
@@ -66,6 +61,7 @@ const buildRandomWorkout = (doc: DocumentData) => {
     roundCount,
     resultSeconds,
     storagePath,
+    recordCount,
   } = doc.data();
   const randomWorkout: RandomWorkout = {
     id: doc.id,
@@ -77,8 +73,9 @@ const buildRandomWorkout = (doc: DocumentData) => {
     resultBpm: resultBpm || 0,
     beatCount: beatCount || 0,
     roundCount: roundCount || 0,
-    resultSeconds: resultSeconds || 0,
     storagePath: storagePath || '',
+    recordCount: recordCount || 0,
+    resultSeconds: resultSeconds || 0,
   };
   return randomWorkout;
 };

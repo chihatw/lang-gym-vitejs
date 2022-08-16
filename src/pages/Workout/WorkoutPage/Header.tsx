@@ -21,7 +21,7 @@ const Header = () => {
   const targetTimePoints = targetTimeTenTimes % 10;
   return (
     <>
-      <div style={{ fontSize: 24 }}>{title}</div>
+      <div style={{ fontSize: 24 }}>{`${title} - ${roundCount}周`}</div>
       <div style={{ height: 8 }} />
       <div>
         <div>

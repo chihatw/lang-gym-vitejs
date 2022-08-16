@@ -8,6 +8,7 @@ import ArticleCardList from '../../../components/ArticleCardList';
 import { getArticleCards } from '../../../services/article';
 import { AppContext } from '../../../App';
 
+// debug
 const ArticleListPage = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();

@@ -99,8 +99,9 @@ export type ArticleCard = {
   date: string;
 };
 
+// debug
 export type ArticleCardsState = {
-  cards: ArticleCard[];
+  cards: ArticleCard[]; // Article[] にして、表示への調整は View 側で行う？
   hasMore: boolean;
   startAfter: number;
 };
@@ -375,9 +376,10 @@ export type RandomWorkout = {
   beatCount: number;
   targetBpm: number;
   resultBpm: number;
-  resultSeconds: number;
   roundCount: number;
   storagePath: string;
+  recordCount: number;
+  resultSeconds: number;
 };
 
 export const INITIAL_RANDOM_WORKOUT: RandomWorkout = {
@@ -392,6 +394,7 @@ export const INITIAL_RANDOM_WORKOUT: RandomWorkout = {
   resultSeconds: 0,
   roundCount: 1,
   storagePath: '',
+  recordCount: 0,
 };
 
 export type RandomWorkoutParams = {
