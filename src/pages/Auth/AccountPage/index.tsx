@@ -4,7 +4,7 @@ import { signOut } from '../../../services/auth';
 import { Action, ActionTypes } from '../../../Update';
 import { Button, Container, useTheme } from '@mui/material';
 import SelectUserForm from './SelectUserForm';
-import { State } from '../../../Model';
+import { INITIAL_STATE, State } from '../../../Model';
 import { useContext } from 'react';
 import { AppContext } from '../../../App';
 
@@ -19,7 +19,7 @@ const AccountPage = () => {
   const handleSignOut = () => {
     if (!dispatch) return;
     signOut();
-    dispatch({ type: ActionTypes.signOut });
+    dispatch({ type: ActionTypes.setState, payload: INITIAL_STATE });
   };
 
   if (!uid) return <Navigate to='/login' />;

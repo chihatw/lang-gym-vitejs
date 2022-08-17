@@ -49,6 +49,7 @@ const App = () => {
           _uid = firstUid;
         }
       }
+
       // 初期化が true の時、または uid が変更された時
       if (state.auth.initializing || state.auth.uid !== _uid) {
         dispatch({
@@ -83,6 +84,9 @@ const App = () => {
   // 初期値取得
   // 作文、未回答の問題
   useEffect(() => {
+    if (state.auth.initializing) {
+      isFetched.current = false;
+    }
     if (!state.auth.uid || isFetched.current) return;
     const fetchData = async () => {
       let _articles: Article[] = [];
@@ -103,6 +107,7 @@ const App = () => {
       isFetched.current = true;
 
       const updatedState: State = R.compose(
+        R.assocPath<boolean, State>(['auth', 'initializing'], false),
         R.assocPath<Article[], State>(['articleList'], _articles),
         R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
         R.assocPath<UnansweredQuiz[], State>(

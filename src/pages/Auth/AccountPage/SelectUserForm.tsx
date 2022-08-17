@@ -6,7 +6,7 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
-import { State } from '../../../Model';
+import { INITIAL_STATE, State } from '../../../Model';
 import { AUTH_LOCAL_STORAGE } from '../../../constants';
 import { Action, ActionTypes } from '../../../Update';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ const SelectUserForm = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const theme = useTheme();
-  const { auth } = state;
+  const { auth, audioContext, layout } = state;
   const { uid, users } = auth;
 
   const [selectedUid, setSelectedUid] = useState(uid);
@@ -25,7 +25,14 @@ const SelectUserForm = () => {
     if (!dispatch) return;
     setSelectedUid(selectedUid);
     localStorage.setItem(AUTH_LOCAL_STORAGE, selectedUid);
-    dispatch({ type: ActionTypes.changeUid, payload: selectedUid });
+
+    const updatedState: State = {
+      ...INITIAL_STATE,
+      auth: { ...auth, uid: selectedUid, initializing: true },
+      audioContext,
+      layout,
+    };
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
     navigate('/');
   };
 

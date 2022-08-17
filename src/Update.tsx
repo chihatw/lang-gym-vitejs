@@ -1,27 +1,24 @@
 import * as R from 'ramda';
 import {
-  AuthState,
   State,
-  ArticleState,
   Sentence,
-  LayoutState,
-  UnansweredQuiz,
-  AnsweredQuiz,
-  INITIAL_STATE,
   QuizState,
+  AuthState,
   ScoreState,
+  LayoutState,
+  AnsweredQuiz,
+  ArticleState,
   QuizListState,
+  UnansweredQuiz,
   RandomWorkoutState,
 } from './Model';
 
 export const ActionTypes = {
-  signOut: 'signOut',
   setQuiz: 'setQuiz',
   setScore: 'setScore',
   setState: 'setState',
-  changeUid: 'changeUid',
   setLayout: 'setLayout',
-  setArticle: 'setArticle',
+  setArticle: 'setArticle', // will delete
   setWorkout: 'setWorkout',
   submitQuiz: 'submitQuiz',
   authenticate: 'authenticate',
@@ -71,7 +68,7 @@ export type Action = {
 
 export const reducer = (state: State, action: Action): State => {
   const { type, payload } = action;
-  const { articlePage, auth, audioContext, layout, quiz, workout } = state;
+  const { articlePage, quiz } = state;
   const { sentences } = articlePage;
   const { questions } = quiz;
 
@@ -87,18 +84,6 @@ export const reducer = (state: State, action: Action): State => {
         R.assocPath<RandomWorkoutState, State>(['workout'], workout)
       )(state);
     }
-    case ActionTypes.signOut: {
-      return INITIAL_STATE;
-    }
-    case ActionTypes.changeUid: {
-      const uid = payload as string;
-      return {
-        ...INITIAL_STATE,
-        auth: { ...auth, uid },
-        audioContext,
-        layout,
-      };
-    }
     case ActionTypes.authenticate: {
       const auth = payload as AuthState;
       return { ...state, auth };
@@ -106,6 +91,7 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.startFetching: {
       return { ...state, isFetching: true };
     }
+    // will delete
     case ActionTypes.setArticle: {
       const articlePage = payload as ArticleState;
       return R.compose(
@@ -245,7 +231,6 @@ export const reducer = (state: State, action: Action): State => {
     }
     case ActionTypes.removeUnAnsweredQuiz: {
       const unansweredList = payload as UnansweredQuiz[];
-
       return R.compose(
         R.assocPath<UnansweredQuiz[], State>(
           ['quizzes', 'unansweredList'],

@@ -6,7 +6,7 @@ import {
   getKanaSpecialMora,
   SPECIAL_MORAS,
 } from '../../../../../services/quiz';
-import { Action, ActionTypes } from '../../../../../Update';
+import { ActionTypes } from '../../../../../Update';
 
 const Selector = ({
   questionIndex,
