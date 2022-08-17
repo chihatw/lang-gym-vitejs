@@ -14,8 +14,6 @@ import {
 } from 'firebase/firestore';
 import {
   Article,
-  ArticleCard,
-  ArticleCardsState,
   ArticleListParams,
   ArticleState,
   AssignmentBlobs,
@@ -34,8 +32,6 @@ const COLLECTIONS = {
   sentenceParseNews: 'sentenceParseNews',
   articleSentenceForms: 'articleSentenceForms',
 };
-
-const HIT_MAX = 20;
 
 export const getArticleState = async (
   uid: string,
@@ -117,17 +113,14 @@ export const updateSentence = async (
   }
 };
 
-export const getArticleCards = async (
+export const getArticleList = async (
   uid: string,
   rows: number,
   _startAfter?: number
 ): Promise<{
-  articleCards: ArticleCardsState;
   articles: Article[];
   params: ArticleListParams;
 }> => {
-  const cards: ArticleCard[] = [];
-  const createdAts: number[] = [];
   let q = query(
     collection(db, COLLECTIONS.articles),
     where('uid', '==', uid),
@@ -143,29 +136,19 @@ export const getArticleCards = async (
   const articles: Article[] = [];
   querySnapshot.forEach((doc) => {
     articles.push(buildArticle(doc));
-    const { id } = doc;
-    const { title, createdAt } = doc.data();
-    const card = buildCard(id, title, createdAt);
-    cards.push(card);
-    createdAts.push(createdAt);
   });
 
   const params = {
     ...INITIAL_ARTICLE_LIST_PARAMS,
-    hasMore: cards.length === rows + 1,
-    startAfter: cards.length === rows + 1 ? createdAts.slice(-2)[0] : 0,
+    hasMore: articles.length === rows + 1,
   };
 
-  const hasMore = cards.length === rows + 1;
-  params.hasMore = cards.length === rows + 1;
-  if (hasMore) {
-    cards.pop();
-    createdAts.pop();
+  if (params.hasMore) {
     articles.pop();
   }
+  params.startAfter = [...articles].slice(-1)[0].createdAt;
 
   return {
-    articleCards: { cards, hasMore, startAfter: createdAts.slice(-1)[0] },
     articles,
     params,
   };
@@ -220,17 +203,4 @@ const buildSentence = (doc: DocumentData) => {
     storageDuration: storageDuration || 0,
   };
   return sentence;
-};
-
-const buildCard = (id: string, title: string, createdAt: number) => {
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const card: ArticleCard = {
-    id,
-    title: title || '',
-    date: `${year}年${month}月${day}日`,
-  };
-  return card;
 };

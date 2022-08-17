@@ -39,6 +39,16 @@ const INITIAL_ARTICLE: Article = {
   isShowAccents: false,
 };
 
+export type ArticleListParams = {
+  hasMore: boolean;
+  startAfter: number;
+};
+
+export const INITIAL_ARTICLE_LIST_PARAMS: ArticleListParams = {
+  hasMore: false,
+  startAfter: 0,
+};
+
 export type Sentence = {
   id: string;
   end: number;
@@ -75,37 +85,6 @@ export const INITIAL_SENTENCE: Sentence = {
 
 export type AssignmentBlobs = { [key: string]: Blob | null };
 
-// will delete
-export type ArticleCard = {
-  id: string;
-  title: string;
-  date: string;
-};
-
-// debug
-export type ArticleCardsState = {
-  cards: ArticleCard[]; // Article[] にして、表示への調整は View 側で行う？
-  hasMore: boolean;
-  startAfter: number;
-};
-
-export type ArticleListParams = {
-  hasMore: boolean;
-  startAfter: number;
-};
-
-export const INITIAL_ARTICLE_LIST_PARAMS: ArticleListParams = {
-  hasMore: false,
-  startAfter: 0,
-};
-
-export const INITIAL_ARICLE_CARDS: ArticleCardsState = {
-  cards: [],
-  hasMore: false,
-  startAfter: 0,
-};
-
-// いずれ firestore 側をこれにまとめる
 export type ArticleState = {
   article: Article;
   sentences: Sentence[];
@@ -340,9 +319,7 @@ export type State = {
   auth: AuthState;
   isFetching: boolean;
   audioContext: AudioContext | null;
-  topPage: ArticleCardsState; // will delete
   articlePage: ArticleState; // メモと統合して articlePages に一本化、useParams() から articleId を取得して、値を抽出
-  articlesPage: ArticleCardsState; // will delete
   articleList: Article[];
   articleListParams: ArticleListParams;
   layout: LayoutState;
@@ -365,9 +342,7 @@ export const INITIAL_STATE: State = {
   isFetching: false,
   articleList: [],
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
-  topPage: INITIAL_ARICLE_CARDS,
   articlePage: INITIAL_ARTICLE_STATE,
-  articlesPage: INITIAL_ARICLE_CARDS,
   audioContext: null,
   layout: INITIAL_LAYOUT_STATE,
   quiz: INITIAL_QUIZ_STATE,

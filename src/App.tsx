@@ -5,9 +5,7 @@ import AppComponent from './routes/AppRoutes';
 import { Action, ActionTypes, reducer } from './Update';
 import {
   Article,
-  ArticleCardsState,
   ArticleListParams,
-  INITIAL_ARICLE_CARDS,
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
   LayoutState,
@@ -17,7 +15,7 @@ import {
 } from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
-import { getArticleCards } from './services/article';
+import { getArticleList } from './services/article';
 import { getUnansweredQuizList } from './services/quiz';
 import { getUsers } from './services/auth';
 
@@ -83,27 +81,21 @@ const App = () => {
   }, [dispatch, state.auth.users, state.auth.uid]);
 
   // 初期値取得
-  // topPage、未回答の問題
+  // 作文、未回答の問題
   useEffect(() => {
     if (!state.auth.uid || isFetched.current) return;
     const fetchData = async () => {
-      let articles = INITIAL_ARICLE_CARDS;
       let _articles: Article[] = [];
-      let params = INITIAL_ARTICLE_LIST_PARAMS;
-      if (!!state.topPage.cards.length && !!state.articleList.length) {
-        articles = state.topPage;
+      let _params = INITIAL_ARTICLE_LIST_PARAMS;
+      if (!!state.articleList.length) {
         _articles = state.articleList;
-        params = state.articleListParams;
+        _params = state.articleListParams;
       } else {
-        const {
-          articleCards,
-          articles: gotArticles,
-          params: gotParams,
-        } = await getArticleCards(state.auth.uid, 10);
-        articles = articleCards;
-        _articles = gotArticles;
-        params = gotParams;
+        const { articles, params } = await getArticleList(state.auth.uid, 10);
+        _articles = articles;
+        _params = params;
       }
+
       const quizzes = !!state.quizzes.unansweredList.length
         ? state.quizzes.unansweredList
         : await getUnansweredQuizList(state.auth.uid);
@@ -111,24 +103,17 @@ const App = () => {
       isFetched.current = true;
 
       const updatedState: State = R.compose(
-        R.assocPath<ArticleCardsState, State>(['topPage'], articles),
         R.assocPath<Article[], State>(['articleList'], _articles),
-        R.assocPath<ArticleListParams, State>(['articleListParams'], params),
+        R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
         R.assocPath<UnansweredQuiz[], State>(
           ['quizzes', 'unansweredList'],
           quizzes
         )
       )(state);
-
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [
-    state.topPage.cards,
-    state.auth.uid,
-    state.quizzes.unansweredList,
-    state.articleList.length,
-  ]);
+  }, [state.auth.uid, state.quizzes.unansweredList, state.articleList.length]);
 
   useEffect(() => {
     const createAudioContext = () => {

@@ -2,7 +2,6 @@ import * as R from 'ramda';
 import {
   AuthState,
   State,
-  ArticleCardsState,
   ArticleState,
   Sentence,
   LayoutState,
@@ -27,8 +26,6 @@ export const ActionTypes = {
   submitQuiz: 'submitQuiz',
   authenticate: 'authenticate',
   startFetching: 'startFetching',
-  setArticleList: 'setArticleList',
-  setMoreArticles: 'setMoreArticles',
   setAudioContext: 'setAudioContext',
   inputSpecialMora: 'inputSpecialMora',
   inputPitchesArray: 'inputPitchesArray',
@@ -49,7 +46,6 @@ export type Action = {
     | ArticleState
     | AudioContext
     | AnsweredQuiz[]
-    | ArticleCardsState
     | UnansweredQuiz[]
     | RandomWorkoutState
     | { quiz: QuizState; score: ScoreState }
@@ -57,7 +53,6 @@ export type Action = {
         score: ScoreState;
         quizzes: QuizListState;
       }
-    | { articles: ArticleCardsState; quizzes: UnansweredQuiz[] }
     | {
         blob: Blob | null;
         sentence: Sentence;
@@ -107,19 +102,6 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.authenticate: {
       const auth = payload as AuthState;
       return { ...state, auth };
-    }
-
-    case ActionTypes.setArticleList: {
-      const articlesPage = payload as ArticleCardsState;
-      return R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<ArticleCardsState, State>(['articlesPage'], articlesPage)
-      )(state);
-    }
-    // debug 上とまとめる？
-    case ActionTypes.setMoreArticles: {
-      const articlesPage = payload as ArticleCardsState;
-      return { ...state, articlesPage };
     }
     case ActionTypes.startFetching: {
       return { ...state, isFetching: true };
