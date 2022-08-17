@@ -5,8 +5,6 @@ import {
   ArticleCardsState,
   ArticleState,
   Sentence,
-  SearchState,
-  INITIAL_SEARCH_STATE,
   LayoutState,
   UnansweredQuiz,
   AnsweredQuiz,
@@ -24,12 +22,9 @@ export const ActionTypes = {
   setState: 'setState',
   changeUid: 'changeUid',
   setLayout: 'setLayout',
-  setTopPage: 'setTopPage',
   setArticle: 'setArticle',
   setWorkout: 'setWorkout',
   submitQuiz: 'submitQuiz',
-  inputSearch: 'inputSearch',
-  clearSearch: 'clearSearch',
   authenticate: 'authenticate',
   startFetching: 'startFetching',
   setArticleList: 'setArticleList',
@@ -50,7 +45,6 @@ export type Action = {
     | string
     | QuizState
     | AuthState
-    | SearchState
     | LayoutState
     | ArticleState
     | AudioContext
@@ -114,19 +108,7 @@ export const reducer = (state: State, action: Action): State => {
       const auth = payload as AuthState;
       return { ...state, auth };
     }
-    case ActionTypes.setTopPage: {
-      const { articles, quizzes } = payload as {
-        articles: ArticleCardsState;
-        quizzes: UnansweredQuiz[];
-      };
-      return R.compose(
-        R.assocPath<ArticleCardsState, State>(['topPage'], articles),
-        R.assocPath<UnansweredQuiz[], State>(
-          ['quizzes', 'unansweredList'],
-          quizzes
-        )
-      )(state);
-    }
+
     case ActionTypes.setArticleList: {
       const articlesPage = payload as ArticleCardsState;
       return R.compose(
@@ -191,22 +173,6 @@ export const reducer = (state: State, action: Action): State => {
           ['articlePage', 'sentences'],
           updatedSentences
         )
-      )(state);
-    }
-    case ActionTypes.inputSearch: {
-      const search = payload as SearchState;
-      const { keywords, hitItems } = search;
-      return R.compose(
-        R.assocPath<SearchState, State>(['search'], search),
-        R.assocPath<Sentence[], State>(
-          ['memo', 'hitItems', keywords.join(',')],
-          hitItems
-        )
-      )(state);
-    }
-    case ActionTypes.clearSearch: {
-      return R.compose(
-        R.assocPath<SearchState, State>(['search'], INITIAL_SEARCH_STATE)
       )(state);
     }
     case ActionTypes.setLayout: {

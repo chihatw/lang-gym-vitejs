@@ -25,7 +25,6 @@ export type Article = {
   embedID: string;
   createdAt: number;
   downloadURL: string;
-  isShowParse: boolean;
   isShowAccents: boolean;
 };
 
@@ -37,7 +36,6 @@ const INITIAL_ARTICLE: Article = {
   embedID: '',
   createdAt: 0,
   downloadURL: '',
-  isShowParse: false,
   isShowAccents: false,
 };
 
@@ -78,13 +76,6 @@ export const INITIAL_SENTENCE: Sentence = {
 export type AssignmentBlobs = { [key: string]: Blob | null };
 
 // will delete
-export type AssignmentSentence = {
-  end: number;
-  start: number;
-  pitchesArray: string[][][];
-};
-
-// will delete
 export type ArticleCard = {
   id: string;
   title: string;
@@ -98,12 +89,23 @@ export type ArticleCardsState = {
   startAfter: number;
 };
 
+export type ArticleListParams = {
+  hasMore: boolean;
+  startAfter: number;
+};
+
+export const INITIAL_ARTICLE_LIST_PARAMS: ArticleListParams = {
+  hasMore: false,
+  startAfter: 0,
+};
+
 export const INITIAL_ARICLE_CARDS: ArticleCardsState = {
   cards: [],
   hasMore: false,
   startAfter: 0,
 };
 
+// いずれ firestore 側をこれにまとめる
 export type ArticleState = {
   article: Article;
   sentences: Sentence[];
@@ -116,16 +118,6 @@ export const INITIAL_ARTICLE_STATE: ArticleState = {
   sentences: [],
   articleBlob: null,
   assignmentBlobs: {},
-};
-
-export type SearchState = {
-  keywords: string[];
-  hitItems: Sentence[];
-};
-
-export const INITIAL_SEARCH_STATE: SearchState = {
-  keywords: [],
-  hitItems: [],
 };
 
 export type LayoutState = {
@@ -144,6 +136,7 @@ export type UnansweredQuiz = {
   createdAt: number;
 };
 
+// quiz にまとめる
 export type Score = {
   id: string;
   score: number;
@@ -211,6 +204,8 @@ export type Syllable = {
   longVowel?: string;
 };
 
+// quiz にまとめる
+// form で使う変数は quizParams にする
 export type Question = {
   id: string;
   question: string;
@@ -346,13 +341,13 @@ export type State = {
   isFetching: boolean;
   audioContext: AudioContext | null;
   topPage: ArticleCardsState; // will delete
-  articlePage: ArticleState;
+  articlePage: ArticleState; // メモと統合して articlePages に一本化、useParams() から articleId を取得して、値を抽出
   articlesPage: ArticleCardsState; // will delete
   articleList: Article[];
-  search: SearchState;
+  articleListParams: ArticleListParams;
   layout: LayoutState;
-  quiz: QuizState;
-  score: ScoreState;
+  quiz: QuizState; // quiz と score はまとめる
+  score: ScoreState; // quiz と score はまとめる
   quizzes: QuizListState;
   workout: RandomWorkoutState;
   blobURLs: {
@@ -360,7 +355,6 @@ export type State = {
   };
   memo: {
     articlePages: { [articleId: string]: ArticleState };
-    hitItems: { [keywords: string]: Sentence[] };
     quizzes: { [questionSetId: string]: QuizState };
     scores: { [scoreId: string]: ScoreState };
   };
@@ -370,16 +364,16 @@ export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
   isFetching: false,
   articleList: [],
+  articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   topPage: INITIAL_ARICLE_CARDS,
   articlePage: INITIAL_ARTICLE_STATE,
   articlesPage: INITIAL_ARICLE_CARDS,
   audioContext: null,
-  search: INITIAL_SEARCH_STATE,
   layout: INITIAL_LAYOUT_STATE,
   quiz: INITIAL_QUIZ_STATE,
   score: INITIAL_SCORE_STATE,
   quizzes: INITIAL_QUIZ_LIST_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   blobURLs: {},
-  memo: { articlePages: {}, hitItems: {}, quizzes: {}, scores: {} },
+  memo: { articlePages: {}, quizzes: {}, scores: {} },
 };

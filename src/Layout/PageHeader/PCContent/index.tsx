@@ -1,11 +1,8 @@
-import { css } from '@emotion/css';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../App';
-import { State } from '../../../Model';
-import { Action, ActionTypes } from '../../../Update';
+import { ActionTypes } from '../../../Update';
 import LogoButton from '../../commons/LogoButton';
-import SearchField from '../../commons/SearchField';
 import BadgeButton from './BadgeButton';
 import LabelButton from './LabelButton';
 
@@ -45,22 +42,6 @@ const PCContent = () => {
           handleClick={() => navigate('/account')}
           label='個人資料'
         />
-        <div
-          className={css({
-            width: '100%',
-            display: 'flex',
-            transition: 'width 0.3s',
-            alignItems: 'center',
-            '@media (min-width: 600px)': {
-              width: 240,
-            },
-            '@media (min-width: 680px)': {
-              width: 320,
-            },
-          })}
-        >
-          <SearchField />
-        </div>
       </div>
     </div>
   );

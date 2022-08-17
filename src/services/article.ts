@@ -16,9 +16,10 @@ import {
   Article,
   ArticleCard,
   ArticleCardsState,
+  ArticleListParams,
   ArticleState,
   AssignmentBlobs,
-  AssignmentSentence,
+  INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_ARTICLE_STATE,
   Sentence,
 } from '../Model';
@@ -120,7 +121,11 @@ export const getArticleCards = async (
   uid: string,
   rows: number,
   _startAfter?: number
-): Promise<ArticleCardsState> => {
+): Promise<{
+  articleCards: ArticleCardsState;
+  articles: Article[];
+  params: ArticleListParams;
+}> => {
   const cards: ArticleCard[] = [];
   const createdAts: number[] = [];
   let q = query(
@@ -135,7 +140,9 @@ export const getArticleCards = async (
   }
   console.log('get articles');
   const querySnapshot = await getDocs(q);
+  const articles: Article[] = [];
   querySnapshot.forEach((doc) => {
+    articles.push(buildArticle(doc));
     const { id } = doc;
     const { title, createdAt } = doc.data();
     const card = buildCard(id, title, createdAt);
@@ -143,26 +150,30 @@ export const getArticleCards = async (
     createdAts.push(createdAt);
   });
 
+  const params = {
+    ...INITIAL_ARTICLE_LIST_PARAMS,
+    hasMore: cards.length === rows + 1,
+    startAfter: cards.length === rows + 1 ? createdAts.slice(-2)[0] : 0,
+  };
+
   const hasMore = cards.length === rows + 1;
+  params.hasMore = cards.length === rows + 1;
   if (hasMore) {
     cards.pop();
     createdAts.pop();
+    articles.pop();
   }
 
-  return { cards, hasMore, startAfter: createdAts.slice(-1)[0] };
+  return {
+    articleCards: { cards, hasMore, startAfter: createdAts.slice(-1)[0] },
+    articles,
+    params,
+  };
 };
 
 const buildArticle = (doc: DocumentData) => {
-  const {
-    uid,
-    marks,
-    title,
-    embedID,
-    createdAt,
-    isShowParse,
-    downloadURL,
-    isShowAccents,
-  } = doc.data();
+  const { uid, marks, title, embedID, createdAt, downloadURL, isShowAccents } =
+    doc.data();
   const article: Article = {
     id: doc.id,
     uid: uid || '',
@@ -170,7 +181,6 @@ const buildArticle = (doc: DocumentData) => {
     title: title || '',
     embedID: embedID || '',
     createdAt: createdAt || 0,
-    isShowParse: isShowParse || false,
     downloadURL: downloadURL || '',
     isShowAccents: isShowAccents || false,
   };
@@ -212,22 +222,6 @@ const buildSentence = (doc: DocumentData) => {
   return sentence;
 };
 
-const buildAssignmentSentence = (doc: DocumentData) => {
-  const { end, start, accents } = doc.data();
-  const assignmentSentence: AssignmentSentence = {
-    end: end || 0,
-    start: start || 0,
-    pitchesArray: accentsForPitchesArray(accents),
-  };
-  return assignmentSentence;
-};
-
-export const INITIAL_ASSIGNMENT_SENTENCE: AssignmentSentence = {
-  end: 0,
-  start: 0,
-  pitchesArray: [],
-};
-
 const buildCard = (id: string, title: string, createdAt: number) => {
   const date = new Date(createdAt);
   const year = date.getFullYear();
@@ -239,37 +233,4 @@ const buildCard = (id: string, title: string, createdAt: number) => {
     date: `${year}年${month}月${day}日`,
   };
   return card;
-};
-
-export const getSentencesByTags = async (
-  uid: string,
-  keywords: string[]
-): Promise<Sentence[]> => {
-  const sentences: Sentence[] = [];
-  const tags: string[] = [];
-  keywords.forEach((keyword) => {
-    if (keyword.length === 1) {
-      tags.push(keyword);
-    } else {
-      Array.from(keyword).forEach((_, i) => {
-        if (i + 1 < keyword.length) {
-          tags.push(keyword.slice(i, i + 2));
-        }
-      });
-    }
-  });
-  if (!tags.length) return [];
-  let q = query(collection(db, COLLECTIONS.sentences));
-  tags.forEach((tag) => {
-    q = query(q, where(`tags.${tag}`, '==', true));
-  });
-  q = query(q, where('uid', '==', uid), limit(HIT_MAX));
-
-  console.log('get sentences');
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    sentences.push(buildSentence(doc));
-  });
-
-  return sentences;
 };

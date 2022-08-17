@@ -1,8 +1,20 @@
+import * as R from 'ramda';
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
 import AppComponent from './routes/AppRoutes';
 import { Action, ActionTypes, reducer } from './Update';
-import { INITIAL_STATE, LayoutState, State, User } from './Model';
+import {
+  Article,
+  ArticleCardsState,
+  ArticleListParams,
+  INITIAL_ARICLE_CARDS,
+  INITIAL_ARTICLE_LIST_PARAMS,
+  INITIAL_STATE,
+  LayoutState,
+  State,
+  UnansweredQuiz,
+  User,
+} from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleCards } from './services/article';
@@ -75,22 +87,48 @@ const App = () => {
   useEffect(() => {
     if (!state.auth.uid || isFetched.current) return;
     const fetchData = async () => {
-      const articles = !!state.topPage.cards.length
-        ? state.topPage
-        : await getArticleCards(state.auth.uid, 3);
+      let articles = INITIAL_ARICLE_CARDS;
+      let _articles: Article[] = [];
+      let params = INITIAL_ARTICLE_LIST_PARAMS;
+      if (!!state.topPage.cards.length && !!state.articleList.length) {
+        articles = state.topPage;
+        _articles = state.articleList;
+        params = state.articleListParams;
+      } else {
+        const {
+          articleCards,
+          articles: gotArticles,
+          params: gotParams,
+        } = await getArticleCards(state.auth.uid, 10);
+        articles = articleCards;
+        _articles = gotArticles;
+        params = gotParams;
+      }
       const quizzes = !!state.quizzes.unansweredList.length
         ? state.quizzes.unansweredList
         : await getUnansweredQuizList(state.auth.uid);
 
       isFetched.current = true;
 
-      dispatch({
-        type: ActionTypes.setTopPage,
-        payload: { articles, quizzes },
-      });
+      const updatedState: State = R.compose(
+        R.assocPath<ArticleCardsState, State>(['topPage'], articles),
+        R.assocPath<Article[], State>(['articleList'], _articles),
+        R.assocPath<ArticleListParams, State>(['articleListParams'], params),
+        R.assocPath<UnansweredQuiz[], State>(
+          ['quizzes', 'unansweredList'],
+          quizzes
+        )
+      )(state);
+
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [state.topPage.cards, state.auth.uid, state.quizzes.unansweredList]);
+  }, [
+    state.topPage.cards,
+    state.auth.uid,
+    state.quizzes.unansweredList,
+    state.articleList.length,
+  ]);
 
   useEffect(() => {
     const createAudioContext = () => {

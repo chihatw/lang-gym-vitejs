@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation, Routes, Route } from 'react-router-dom';
 
-import TopPage from '../pages/TopPage';
 import QuizPage from '../pages/Quiz/QuizPage';
 import ScorePage from '../pages/Quiz/ScorePage';
 import SignInPage from '../pages/Auth/SingInPage';
@@ -37,7 +36,7 @@ const AppComponent = () => {
   return (
     <Layout>
       <Routes>
-        <Route index element={<TopPage />} />
+        <Route index element={<ArticleListPage />} />
         <Route path='/article'>
           <Route path='list' element={<ArticleListPage />} />
           <Route path=':id' element={<ArticlePage />} />
