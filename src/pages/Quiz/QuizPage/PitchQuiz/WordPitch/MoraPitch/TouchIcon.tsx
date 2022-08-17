@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import LabelIcon from '@mui/icons-material/Label';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
@@ -6,6 +7,7 @@ import { AppContext } from '../../../../../../App';
 import { changePitchesArray } from '../../../../../../services/quiz';
 import { ActionTypes } from '../../../../../../Update';
 import MoraSeparater from './MoraSeparater';
+import { State } from '../../../../../../Model';
 
 const TouchIcon = ({
   questionIndex,
@@ -35,10 +37,13 @@ const TouchIcon = ({
       wordIndex,
       moraIndex
     );
-    dispatch({
-      type: ActionTypes.inputPitchesArray,
-      payload: { questionIndex, pitchesArray: updated },
-    });
+    const updatedState = R.compose(
+      R.assocPath<string[][][], State>(
+        ['quiz', 'questions', questionIndex, 'inputPitchesArray'],
+        updated
+      )
+    )(state);
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
 
   return (

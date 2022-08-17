@@ -1,12 +1,13 @@
+import * as R from 'ramda';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
 import { AppContext } from '../../../../../../../App';
-import { State } from '../../../../../../../Model';
 import { deleteStorage } from '../../../../../../../repositories/storage';
 import { updateSentence } from '../../../../../../../services/article';
 
-import { Action, ActionTypes } from '../../../../../../../Update';
+import { ActionTypes } from '../../../../../../../Update';
+import { Sentence, State } from '../../../../../../../Model';
 
 const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state, dispatch } = useContext(AppContext);
@@ -19,7 +20,19 @@ const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const handleDelete = () => {
     if (!dispatch) return;
     if (window.confirm('音声ファイルを削除しますか')) {
-      dispatch({ type: ActionTypes.removeAssignmentBlob, payload: id });
+      const updatedSentences = sentences.map((s) =>
+        s.id !== id ? s : { ...s, storageDuration: 0, storagePath: '' }
+      );
+
+      const updatedState = R.compose(
+        R.dissocPath<State>(['articlePage', 'assignmentBlobs', id]),
+        R.assocPath<Sentence[], State>(
+          ['articlePage', 'sentences'],
+          updatedSentences
+        )
+      )(state);
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
+
       // storage
       deleteStorage(storagePath);
       // firestore

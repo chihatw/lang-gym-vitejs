@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
 import { AppContext } from '../../../../../App';
@@ -39,14 +40,18 @@ const Selector = ({
     const updatedMonitor = [...monitorSpecialMoraArray];
     updatedInput[wordIndex][syllableIndex] = specialMora;
     updatedMonitor[wordIndex][syllableIndex] = monitorString;
-    dispatch({
-      type: ActionTypes.inputSpecialMora,
-      payload: {
-        questionIndex,
-        inputSpecialMoraArray: updatedInput,
-        monitorSpecialMoraArray: updatedMonitor,
-      },
-    });
+
+    const updatedState = R.compose(
+      R.assocPath<string[][], State>(
+        ['quiz', 'questions', questionIndex, 'inputSpecialMoraArray'],
+        updatedInput
+      ),
+      R.assocPath<string[][], State>(
+        ['quiz', 'questions', questionIndex, 'monitorSpecialMoraArray'],
+        updatedMonitor
+      )
+    )(state);
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
   return (
     <div style={{ marginTop: -4 }}>

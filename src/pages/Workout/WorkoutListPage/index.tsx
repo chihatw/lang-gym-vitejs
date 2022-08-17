@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { Container } from '@mui/material';
 import { getDownloadURL, ref } from 'firebase/storage';
 import React, { useContext, useEffect } from 'react';
@@ -6,6 +7,7 @@ import CustomLabel from '../../../components/CustomLabel';
 import {
   INITIAL_RANDOM_WORKOUT_PARAMS,
   RandomWorkoutState,
+  State,
 } from '../../../Model';
 import { storage } from '../../../repositories/firebase';
 import { getRandomWorkouts } from '../../../services/workout';
@@ -48,10 +50,13 @@ const WorkoutListPage = () => {
         blobs: { ...blobs, ...gotBlobs },
         params: INITIAL_RANDOM_WORKOUT_PARAMS,
       };
-      dispatch({
-        type: ActionTypes.setWorkout,
-        payload: initialWorkoutState,
-      });
+
+      const updatedState = R.compose(
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<RandomWorkoutState, State>(['workout'], initialWorkoutState)
+      )(state);
+
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
   }, [isFetching, blobs]);

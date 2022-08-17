@@ -1,8 +1,9 @@
+import * as R from 'ramda';
 import { useTheme } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../../../../../App';
 import { State } from '../../../../../Model';
-import { Action, ActionTypes } from '../../../../../Update';
+import { ActionTypes } from '../../../../../Update';
 import Monitor from './Monitor';
 import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
@@ -37,14 +38,18 @@ const SpecialMoraSelector = ({
     const updatedMonitor = [...monitorSpecialMoraArray];
     updatedInput[wordIndex][syllableIndex] = '';
     updatedMonitor[wordIndex][syllableIndex] = '';
-    dispatch({
-      type: ActionTypes.inputSpecialMora,
-      payload: {
-        questionIndex,
-        inputSpecialMoraArray: updatedInput,
-        monitorSpecialMoraArray: updatedMonitor,
-      },
-    });
+
+    const updatedState = R.compose(
+      R.assocPath<string[][], State>(
+        ['quiz', 'questions', questionIndex, 'inputSpecialMoraArray'],
+        updatedInput
+      ),
+      R.assocPath<string[][], State>(
+        ['quiz', 'questions', questionIndex, 'monitorSpecialMoraArray'],
+        updatedMonitor
+      )
+    )(state);
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
   const theme = useTheme();
 

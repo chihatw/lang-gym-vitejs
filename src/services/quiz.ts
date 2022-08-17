@@ -462,7 +462,7 @@ export const updateQuizzes = (
 
   const updatedUnanswered = unansweredList.filter(({ id }) => id !== quiz.id);
 
-  let updatedAnswered: AnsweredQuiz[] = [];
+  let updatedAnswered: AnsweredQuiz[] = answeredList;
   const answeredQuizIds = answeredList.map(({ id }) => id);
 
   const newScore = {

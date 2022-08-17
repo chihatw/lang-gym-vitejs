@@ -1,10 +1,11 @@
+import * as R from 'ramda';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
 import { AppContext } from '../../../../../App';
 import { State, UnansweredQuiz } from '../../../../../Model';
 import { deleteQuestionSet } from '../../../../../services/quiz';
-import { Action, ActionTypes } from '../../../../../Update';
+import { ActionTypes } from '../../../../../Update';
 import QuizCard from './QuizCard';
 
 const QuizCardRow = ({
@@ -31,10 +32,13 @@ const QuizCardRow = ({
       const updatedList: UnansweredQuiz[] = unansweredList.filter(
         (item) => item.id !== id
       );
-      dispatch({
-        type: ActionTypes.removeUnAnsweredQuiz,
-        payload: updatedList,
-      });
+      const updatedState = R.compose(
+        R.assocPath<UnansweredQuiz[], State>(
+          ['quizzes', 'unansweredList'],
+          updatedList
+        )
+      )(state);
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     }
   };
   if (!isDeletable) {

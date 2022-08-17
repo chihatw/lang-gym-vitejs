@@ -67,10 +67,8 @@ export const getArticleState = async (
     }
   }
   console.log('create article audio');
-
   let response = await fetch(downloadURL);
   const articleBlob = await response.blob();
-
   // assignmentBlobs
   const assignmentBlobs: AssignmentBlobs = {};
   await Promise.all(

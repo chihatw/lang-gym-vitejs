@@ -1,8 +1,9 @@
+import * as R from 'ramda';
 import { Button, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../App';
-import { State } from '../../../Model';
+import { QuizListState, QuizState, ScoreState, State } from '../../../Model';
 import {
   answeredQuestionSet,
   buildNewScore,
@@ -49,10 +50,25 @@ const QuizPageFooter = () => {
 
     const updatedQuizzes = updateQuizzes(quiz, score, quizzes, questionCount);
 
-    dispatch({
-      type: ActionTypes.submitQuiz,
-      payload: { score, quizzes: updatedQuizzes },
+    const initialQuestions = questions.map((question) => {
+      const { initialPitchesArray, initialSpecialMoraArray } = question;
+      return {
+        ...question,
+        inputPitchesArray: initialPitchesArray,
+        inputSpecialMoraArray: initialSpecialMoraArray,
+      };
     });
+    const initialQuiz: QuizState = { ...quiz, questions: initialQuestions };
+
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], true),
+      R.assocPath<QuizState, State>(['memo', 'quizzes'], initialQuiz),
+      R.assocPath<ScoreState, State>(['score'], score),
+      R.assocPath<ScoreState, State>(['memo', 'scores', score.id], score),
+      R.assocPath<QuizListState, State>(['quizzes'], updatedQuizzes)
+    )(state);
+
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
     navigate(`/score/${score.id}/quiz/${id}`);
 
     return;

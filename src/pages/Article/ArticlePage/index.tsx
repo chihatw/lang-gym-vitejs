@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { Container } from '@mui/material';
 import { Navigate, useLocation } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
@@ -9,6 +10,7 @@ import { getArticleState } from '../../../services/article';
 
 import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../../App';
+import { ArticleState, State } from '../../../Model';
 
 const ArticlePage = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -27,7 +29,16 @@ const ArticlePage = () => {
       const memorizedArticlePage = memo.articlePages[articleId];
       const articlePage =
         memorizedArticlePage || (await getArticleState(uid, articleId));
-      dispatch({ type: ActionTypes.setArticle, payload: articlePage });
+
+      const updatedState = R.compose(
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<ArticleState, State>(['articlePage'], articlePage),
+        R.assocPath<ArticleState, State>(
+          ['memo', 'articlePages', articlePage.article.id],
+          articlePage
+        )
+      )(state);
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
   }, [isFetching, articleId, memo, uid, dispatch]);

@@ -20,7 +20,7 @@ const ArticleHeader = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}>
         <CreatedAt state={state} />
       </div>
-      {!!audioContext && !!articleBlob && (
+      {!!audioContext && !!articleBlob && articleBlob.size > 2000 && (
         <>
           <AudioSlider
             end={end}

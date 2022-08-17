@@ -7,6 +7,7 @@ import {
   INITIAL_RANDOM_WORKOUT,
   RandomWorkout,
   RandomWorkoutState,
+  State,
 } from '../../../Model';
 import BlobSlider from '../../../components/BlobSlider';
 import Delete from '@mui/icons-material/Delete';
@@ -43,10 +44,13 @@ const WorkoutRow = ({ index }: { index: number }) => {
       R.assocPath<null, RandomWorkoutState>(['blobs', workoutId], null)
     )(stateWorkout);
 
-    dispatch({
-      type: ActionTypes.setWorkout,
-      payload: updatedWorkoutState,
-    });
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], false),
+      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+    )(state);
+
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
+
     await deleteStorage(workout.storagePath);
     await setRandomWorkout(updatedWorkout);
   };

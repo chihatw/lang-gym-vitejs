@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Button, Collapse, Container, IconButton, Modal } from '@mui/material';
@@ -10,7 +11,7 @@ import {
   blobToAudioBuffer,
   createSourceNode,
 } from '../../../../../../../../services/utils';
-import { State } from '../../../../../../../../Model';
+import { Sentence, State } from '../../../../../../../../Model';
 import { uploadStorage } from '../../../../../../../../repositories/storage';
 import { updateSentence } from '../../../../../../../../services/article';
 import { Action, ActionTypes } from '../../../../../../../../Update';
@@ -50,10 +51,22 @@ const CheckPane = ({
     const audioBuffer = await blobToAudioBuffer(blob, audioContext);
     const storageDuration = audioBuffer.duration;
     const updatedSentence = { ...sentence, storageDuration, storagePath };
-    dispatch({
-      type: ActionTypes.setAssignmentBlob,
-      payload: { sentence: updatedSentence, blob },
-    });
+
+    const updatedSentences = sentences.map((s) =>
+      s.id !== id ? s : updatedSentence
+    );
+
+    const updatedState: State = R.compose(
+      R.assocPath<Blob | null, State>(
+        ['articlePage', 'assignmentBlobs', id],
+        blob
+      ),
+      R.assocPath<Sentence[], State>(
+        ['articlePage', 'sentences'],
+        updatedSentences
+      )
+    )(state);
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
     updateSentence(id, storagePath, storageDuration);
   };
   const handleCancel = () => {

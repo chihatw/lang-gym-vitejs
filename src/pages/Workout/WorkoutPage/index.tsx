@@ -125,9 +125,14 @@ const WorkoutPage = () => {
       )
     )(stateWorkout);
 
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], false),
+      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+    )(state);
+
     dispatch({
-      type: ActionTypes.setWorkout,
-      payload: updatedWorkoutState,
+      type: ActionTypes.setState,
+      payload: updatedState,
     });
     // remote
     await setRandomWorkout(updatedWorkout);
@@ -150,7 +155,12 @@ const WorkoutPage = () => {
       })
     )(stateWorkout);
 
-    dispatch({ type: ActionTypes.setWorkout, payload: updatedWorkoutState });
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], false),
+      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+    )(state);
+
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
 
   const stop = async () => {
@@ -174,10 +184,15 @@ const WorkoutPage = () => {
       })
     )(stateWorkout);
 
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], false),
+      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+    )(state);
+
     // ここはローカルだけ変更
     dispatch({
-      type: ActionTypes.setWorkout,
-      payload: updatedWorkoutState,
+      type: ActionTypes.setState,
+      payload: updatedState,
     });
     setMiliSeconds(0);
 
@@ -209,7 +224,12 @@ const WorkoutPage = () => {
       })
     )(stateWorkout);
 
-    dispatch({ type: ActionTypes.setWorkout, payload: updatedWorkoutState });
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], false),
+      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+    )(state);
+
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
     setMiliSeconds(0);
 
     let mediaRecorder = mediaRecorderRef.current;

@@ -1,9 +1,10 @@
+import * as R from 'ramda';
 import { Navigate, useLocation } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 
 import { Container } from '@mui/material';
 
-import { State } from '../../../Model';
+import { QuizState, ScoreState, State } from '../../../Model';
 import { Action, ActionTypes } from '../../../Update';
 import QuestionIndex from '../commons/QuestionIndex';
 import { getQuestionSet, getQuestionSetScore } from '../../../services/quiz';
@@ -37,7 +38,15 @@ const ScorePage = () => {
       const score =
         memorizedScore || (await getQuestionSetScore(questionSetScoreId));
       const quiz = memorizedQuiz || (await getQuestionSet(questionSetId));
-      dispatch({ type: ActionTypes.setScore, payload: { quiz, score } });
+
+      const updatedState = R.compose(
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<QuizState, State>(['quiz'], quiz),
+        R.assocPath<QuizState, State>(['memo', 'quizzes', quiz.id], quiz),
+        R.assocPath<ScoreState, State>(['score'], score),
+        R.assocPath<ScoreState, State>(['memo', 'scores', score.id], score)
+      )(state);
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
 
     fetchData();

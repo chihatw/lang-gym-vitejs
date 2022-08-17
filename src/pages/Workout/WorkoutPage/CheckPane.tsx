@@ -10,6 +10,7 @@ import {
   RandomWorkout,
   RandomWorkoutParams,
   RandomWorkoutState,
+  State,
 } from '../../../Model';
 import { ActionTypes } from '../../../Update';
 import { setRandomWorkout } from '../../../services/workout';
@@ -64,9 +65,17 @@ const CheckPane = React.memo(
 
       // リストへ遷移してから、変更
       setTimeout(() => {
+        const updatedState = R.compose(
+          R.assocPath<boolean, State>(['isFetching'], false),
+          R.assocPath<RandomWorkoutState, State>(
+            ['workout'],
+            updatedWorkoutState
+          )
+        )(state);
+
         dispatch({
-          type: ActionTypes.setWorkout,
-          payload: updatedWorkoutState,
+          type: ActionTypes.setState,
+          payload: updatedState,
         });
       }, 200);
     };
@@ -81,7 +90,13 @@ const CheckPane = React.memo(
           currentIndex: 0,
         })
       )(stateWorkout);
-      dispatch({ type: ActionTypes.setWorkout, payload: updatedWorkoutState });
+
+      const updatedState = R.compose(
+        R.assocPath<boolean, State>(['isFetching'], false),
+        R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
+      )(state);
+
+      dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
 
     return (
