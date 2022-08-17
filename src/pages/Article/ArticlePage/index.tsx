@@ -16,7 +16,7 @@ const ArticlePage = () => {
   const { articleId } = useParams();
   if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { auth, isFetching, articlePages, memo } = state;
+  const { auth, isFetching, articlePages } = state;
   const { uid } = auth;
   const articlePage = articlePages[articleId] || INITIAL_ARTICLE_STATE;
   const { article, sentences } = articlePage;

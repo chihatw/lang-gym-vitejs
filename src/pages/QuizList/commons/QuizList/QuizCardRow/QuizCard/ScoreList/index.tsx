@@ -4,9 +4,9 @@ import { AppContext } from '../../../../../../../App';
 import ScoreRow from './ScoreRow';
 
 const ScoreList = ({ cardIndex }: { cardIndex: number }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const { answeredList } = quizzes;
+  const { state } = useContext(AppContext);
+  const { quizList } = state;
+  const { answeredList } = quizList;
   const card = answeredList[cardIndex];
   const { scores } = card;
 

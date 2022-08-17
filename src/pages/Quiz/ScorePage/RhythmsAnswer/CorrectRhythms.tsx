@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../Model';
 
 const CorrectRhythms = ({
@@ -8,7 +9,10 @@ const CorrectRhythms = ({
   state: State;
   questionIndex: number;
 }) => {
-  const { quiz } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { syllablesArray } = question;

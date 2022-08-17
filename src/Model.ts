@@ -146,7 +146,6 @@ export type ScoreState = {
   score: number;
   answers: { [key: string]: string };
   createdAt: number;
-  isChecking: boolean;
   questionSet: string;
 };
 
@@ -156,7 +155,6 @@ export const INITIAL_SCORE_STATE: ScoreState = {
   score: 0,
   answers: {},
   createdAt: 0,
-  isChecking: false,
   questionSet: '',
 };
 
@@ -168,7 +166,6 @@ export type QuestionSet = {
   createdAt: number;
   questionCount: number;
   questionGroups: string[];
-  userDisplayname: string;
 };
 
 export type Accents = {
@@ -229,7 +226,6 @@ export type QuizState = {
   createdAt: number;
   initializing: boolean;
   questionCount: number;
-  userDisplayname: string;
 };
 
 export const INITIAL_QUIZ_STATE: QuizState = {
@@ -242,7 +238,6 @@ export const INITIAL_QUIZ_STATE: QuizState = {
   createdAt: 0,
   initializing: true,
   questionCount: 0,
-  userDisplayname: '',
 };
 
 export type RandomWorkoutCue = {
@@ -317,31 +312,25 @@ export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
 
 export type State = {
   auth: AuthState;
-  quiz: QuizState; // quiz と score はまとめる
-  score: ScoreState; // quiz と score はまとめる
   layout: LayoutState;
-  quizzes: QuizListState;
+  quizList: QuizListState;
   workout: RandomWorkoutState;
   isFetching: boolean;
   articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
   audioContext: AudioContext | null;
   articleListParams: ArticleListParams;
+  quizzes: { [questionSetId: string]: QuizState }; // quiz と score はまとめる
+  scores: { [scoreId: string]: ScoreState }; // quiz と score はまとめる
   blobURLs: {
     [imagePath: string]: string;
-  };
-  memo: {
-    quizzes: { [questionSetId: string]: QuizState };
-    scores: { [scoreId: string]: ScoreState };
   };
 };
 
 export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
-  quiz: INITIAL_QUIZ_STATE,
-  score: INITIAL_SCORE_STATE,
   layout: INITIAL_LAYOUT_STATE,
-  quizzes: INITIAL_QUIZ_LIST_STATE,
+  quizList: INITIAL_QUIZ_LIST_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
   articleList: [],
@@ -349,5 +338,6 @@ export const INITIAL_STATE: State = {
   audioContext: null,
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},
-  memo: { quizzes: {}, scores: {} },
+  quizzes: {},
+  scores: {},
 };

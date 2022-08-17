@@ -1,6 +1,6 @@
 import { Button, useTheme } from '@mui/material';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { State } from '../../../Model';
 
 const QuizPageHeader = ({
@@ -13,7 +13,7 @@ const QuizPageHeader = ({
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
       <Title state={state} />
-      <CreatedAt state={state} isScore={isScore} />
+      <CreatedAt state={state} />
       {isScore && <BackButton />}
     </div>
   );
@@ -22,7 +22,10 @@ const QuizPageHeader = ({
 export default QuizPageHeader;
 
 const Title = ({ state }: { state: State }) => {
-  const { quiz } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { title } = quiz;
   const theme = useTheme();
   return (
@@ -37,8 +40,11 @@ const Title = ({ state }: { state: State }) => {
   );
 };
 
-const CreatedAt = ({ state, isScore }: { state: State; isScore?: boolean }) => {
-  const { quiz } = state;
+const CreatedAt = ({ state }: { state: State }) => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { createdAt } = quiz;
   const theme = useTheme();
   const date = new Date(createdAt);

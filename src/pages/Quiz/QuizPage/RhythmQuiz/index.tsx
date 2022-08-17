@@ -1,14 +1,18 @@
 import React, { useContext } from 'react';
-import { State } from '../../../../Model';
-import { Action } from '../../../../Update';
+
 import RhythmMonitor from './RhythmMonitor';
 import SpeakerButton from '../../commons/SpeakerButton';
 import SpecialMoraSelector from './SpecialMoraSelector';
 import { AppContext } from '../../../../App';
+import { useParams } from 'react-router-dom';
 
 const RhythmQuiz = ({ questionIndex }: { questionIndex: number }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { quiz } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+
+  const { state } = useContext(AppContext);
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { syllablesArray } = question;

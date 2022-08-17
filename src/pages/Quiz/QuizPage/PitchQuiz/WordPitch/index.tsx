@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { AppContext } from '../../../../../App';
-import { State } from '../../../../../Model';
-import { Action } from '../../../../../Update';
 import MoraPitch from './MoraPitch';
 
 const WordPitch = ({
@@ -11,8 +10,11 @@ const WordPitch = ({
   questionIndex: number;
   wordIndex: number;
 }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { quiz } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { state } = useContext(AppContext);
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { disableds, inputPitchesArray } = question;

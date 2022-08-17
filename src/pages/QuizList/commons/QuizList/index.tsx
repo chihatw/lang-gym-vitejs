@@ -4,9 +4,9 @@ import CustomLabel from '../../../../components/CustomLabel';
 import QuizCardRow from './QuizCardRow';
 
 const QuizList = ({ isAnswered }: { isAnswered?: boolean }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const { answeredList, unansweredList } = quizzes;
+  const { state } = useContext(AppContext);
+  const { quizList } = state;
+  const { answeredList, unansweredList } = quizList;
   const cards = isAnswered ? answeredList : unansweredList;
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>

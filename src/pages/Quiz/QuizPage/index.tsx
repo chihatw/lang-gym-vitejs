@@ -1,8 +1,8 @@
 import * as R from 'ramda';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 
-import { QuizState, State } from '../../../Model';
+import { INITIAL_QUIZ_STATE, QuizState, State } from '../../../Model';
 import { Action, ActionTypes } from '../../../Update';
 import { getQuestionSet } from '../../../services/quiz';
 import { Container } from '@mui/material';
@@ -15,28 +15,28 @@ import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../../App';
 
 const QuizPage = () => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { pathname } = useLocation();
-  const questionSetId = pathname.split('/').slice(-1)[0];
 
-  const { auth, isFetching, memo, quiz } = state;
+  const { auth, isFetching, quizzes } = state;
+  const quiz: QuizState = quizzes[quizId];
   const { uid } = auth;
 
   useEffect(() => {
     if (!isFetching || !dispatch) return;
     const fetchData = async () => {
-      const memorizedQuiz = memo.quizzes[questionSetId];
-      const quiz = memorizedQuiz || (await getQuestionSet(questionSetId));
+      const _quiz = quizzes[quizId];
+      const quiz = _quiz ? _quiz : await getQuestionSet(quizId);
 
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<QuizState, State>(['quiz'], quiz),
-        R.assocPath<QuizState, State>(['memo', 'quizzes', quiz.id], quiz)
+        R.assocPath<QuizState, State>(['quizzes', quizId], quiz)
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [isFetching, questionSetId, memo, dispatch]);
+  }, [isFetching, quizId, quizzes]);
 
   if (!uid) return <Navigate to='/login' />;
   if (isFetching) return <SkeletonPage />;

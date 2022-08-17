@@ -15,8 +15,8 @@ const QuizCard = ({
   cardIndex: number;
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const { answeredList, unansweredList } = quizzes;
+  const { quizList } = state;
+  const { answeredList, unansweredList } = quizList;
   const cards = isAnswered ? answeredList : unansweredList;
   const card = cards[cardIndex];
 

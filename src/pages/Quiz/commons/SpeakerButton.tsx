@@ -3,6 +3,7 @@ import { IconButton } from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { State } from '../../../Model';
 import { createSourceNode } from '../../../services/utils';
+import { useParams } from 'react-router-dom';
 
 const SpeakerButton = ({
   state,
@@ -11,7 +12,11 @@ const SpeakerButton = ({
   state: State;
   questionIndex: number;
 }) => {
-  const { quiz, audioContext } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+
+  const { quizzes, audioContext } = state;
+  const quiz = quizzes[quizId];
   const { questions, quizBlob } = quiz;
   const question = questions[questionIndex];
   const { start, end } = question;

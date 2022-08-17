@@ -8,6 +8,7 @@ import { changePitchesArray } from '../../../../../../services/quiz';
 import { ActionTypes } from '../../../../../../Update';
 import MoraSeparater from './MoraSeparater';
 import { State } from '../../../../../../Model';
+import { useParams } from 'react-router-dom';
 
 const TouchIcon = ({
   questionIndex,
@@ -18,8 +19,11 @@ const TouchIcon = ({
   wordIndex: number;
   moraIndex: number;
 }) => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { quiz } = state;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { disableds, inputPitchesArray } = question;

@@ -1,5 +1,6 @@
 import { IconButton, useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../../Model';
 
 const Monitor = ({
@@ -14,8 +15,11 @@ const Monitor = ({
   syllableIndex: number;
 }) => {
   const theme = useTheme();
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
 
-  const { quiz } = state;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { inputSpecialMoraArray } = question;

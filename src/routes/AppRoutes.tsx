@@ -45,8 +45,8 @@ const AppComponent = () => {
           <Route index element={<UnAnsweredPage />} />
           <Route path={'answered'} element={<AnsweredPage />} />
         </Route>
-        <Route path='/quiz/:id' element={<QuizPage />} />
-        <Route path='/score/:id/quiz/:quizId' element={<ScorePage />} />
+        <Route path='/quiz/:quizId' element={<QuizPage />} />
+        <Route path='/score/:scoreId/quiz/:quizId' element={<ScorePage />} />
         <Route path='workout'>
           <Route path='list' element={<WorkoutListPage />} />
           <Route path=':workoutId' element={<WorkoutPage />} />

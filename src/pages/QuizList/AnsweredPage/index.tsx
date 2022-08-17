@@ -15,9 +15,9 @@ const AnsweredPage = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const { auth, isFetching, quizzes } = state;
+  const { auth, isFetching, quizList } = state;
   const { uid } = auth;
-  const { answeredList } = quizzes;
+  const { answeredList } = quizList;
 
   useEffect(() => {
     if (!isFetching || !dispatch) return;
@@ -29,7 +29,7 @@ const AnsweredPage = () => {
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
         R.assocPath<AnsweredQuiz[], State>(
-          ['quizzes', 'answeredList'],
+          ['quizList', 'answeredList'],
           _answeredList
         )
       )(state);

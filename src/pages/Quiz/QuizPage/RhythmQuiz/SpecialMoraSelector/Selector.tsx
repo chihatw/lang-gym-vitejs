@@ -8,6 +8,7 @@ import {
   SPECIAL_MORAS,
 } from '../../../../../services/quiz';
 import { ActionTypes } from '../../../../../Update';
+import { useParams } from 'react-router-dom';
 
 const Selector = ({
   questionIndex,
@@ -19,7 +20,10 @@ const Selector = ({
   syllableIndex: number;
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { quiz } = state;
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const {

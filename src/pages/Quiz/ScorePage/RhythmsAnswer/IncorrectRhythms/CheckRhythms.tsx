@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../../Model';
 
 const CheckRhythms = ({
@@ -9,7 +10,12 @@ const CheckRhythms = ({
   state: State;
   questionIndex: number;
 }) => {
-  const { score, quiz } = state;
+  const { scoreId, quizId } = useParams();
+  if (!scoreId || !quizId) return <></>;
+
+  const { scores, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const score = scores[scoreId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { answers } = score;

@@ -100,8 +100,8 @@ const App = () => {
         _params = params;
       }
 
-      const quizzes = !!state.quizzes.unansweredList.length
-        ? state.quizzes.unansweredList
+      const unansweredList = !!state.quizList.unansweredList.length
+        ? state.quizList.unansweredList
         : await getUnansweredQuizList(state.auth.uid);
 
       isFetched.current = true;
@@ -111,14 +111,14 @@ const App = () => {
         R.assocPath<Article[], State>(['articleList'], _articles),
         R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
         R.assocPath<UnansweredQuiz[], State>(
-          ['quizzes', 'unansweredList'],
-          quizzes
+          ['quizList', 'unansweredList'],
+          unansweredList
         )
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [state.auth.uid, state.quizzes.unansweredList, state.articleList.length]);
+  }, [state.auth.uid, state.quizList.unansweredList, state.articleList.length]);
 
   useEffect(() => {
     const createAudioContext = () => {

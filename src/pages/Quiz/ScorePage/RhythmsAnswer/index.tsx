@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../Model';
 import CorrectAnswer from '../commons/CorrectAnswer';
 import CorrectRhythms from './CorrectRhythms';
@@ -11,7 +12,11 @@ const RhythmsAnswer = ({
   state: State;
   questionIndex: number;
 }) => {
-  const { score, quiz } = state;
+  const { scoreId, quizId } = useParams();
+  if (!scoreId || !quizId) return <></>;
+  const { scores, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const score = scores[scoreId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { answers } = score;

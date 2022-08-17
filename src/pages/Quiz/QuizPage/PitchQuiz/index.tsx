@@ -3,11 +3,15 @@ import { useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import WordPitch from './WordPitch';
 import { AppContext } from '../../../../App';
+import { useParams } from 'react-router-dom';
 
 const PitchQuiz = ({ questionIndex }: { questionIndex: number }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+  const { state } = useContext(AppContext);
   const theme = useTheme();
-  const { quiz } = state;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { japanese, inputPitchesArray } = question;

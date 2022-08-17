@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { Button, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../../App';
 import { QuizListState, QuizState, ScoreState, State } from '../../../Model';
 import {
@@ -16,9 +16,13 @@ import {
 import { Action, ActionTypes } from '../../../Update';
 
 const QuizPageFooter = () => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
+
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
-  const { quiz, auth, quizzes } = state;
+  const { quizzes, auth, quizList } = state;
+  const quiz = quizzes[quizId];
   const { uid } = auth;
   const { id, type, questions, questionCount } = quiz;
 
@@ -48,7 +52,7 @@ const QuizPageFooter = () => {
     successed = await answeredQuestionSet(id);
     if (!successed) return;
 
-    const updatedQuizzes = updateQuizzes(quiz, score, quizzes, questionCount);
+    const updatedQuizzes = updateQuizzes(quiz, score, quizList, questionCount);
 
     const initialQuestions = questions.map((question) => {
       const { initialPitchesArray, initialSpecialMoraArray } = question;

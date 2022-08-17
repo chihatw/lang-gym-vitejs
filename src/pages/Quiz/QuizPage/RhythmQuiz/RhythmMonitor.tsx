@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../Model';
 
 const RhythmMonitor = ({
@@ -9,8 +10,11 @@ const RhythmMonitor = ({
   state: State;
   questionIndex: number;
 }) => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
   const theme = useTheme();
-  const { quiz } = state;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { syllablesArray, monitorSpecialMoraArray } = question;

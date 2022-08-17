@@ -18,8 +18,8 @@ const ScoreRow = ({
   scoreIndex: number;
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const { answeredList } = quizzes;
+  const { quizList } = state;
+  const { answeredList } = quizList;
   const card = answeredList[cardIndex];
   const { scores, id: questionSetId } = card;
   const score = scores[scoreIndex];

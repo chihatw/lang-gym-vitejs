@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/css';
 import { useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../Model';
 
 const barberAnimation = keyframes`
@@ -13,7 +14,12 @@ const barberAnimation = keyframes`
 `;
 
 const Score = ({ state }: { state: State }) => {
-  const { score: scoreState, quiz } = state;
+  const { scoreId, quizId } = useParams();
+  if (!scoreId || !quizId) return <></>;
+
+  const { scores: scoresState, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const scoreState = scoresState[scoreId];
   const { questionCount } = quiz;
 
   const { score: points } = scoreState;

@@ -51,16 +51,8 @@ export const getQuestionSet = async (
   let snapshot = await getDoc(doc(db, COLLECTIONS.questionSets, questionSetId));
   if (!snapshot.exists()) return INITIAL_QUIZ_STATE;
   const questionSet = buildQuestionSet(snapshot);
-  const {
-    id,
-    uid,
-    type,
-    title,
-    createdAt,
-    questionCount,
-    questionGroups,
-    userDisplayname,
-  } = questionSet;
+  const { id, uid, type, title, createdAt, questionCount, questionGroups } =
+    questionSet;
 
   const questionGroupId = questionGroups[0];
   console.log('get question group');
@@ -104,7 +96,6 @@ export const getQuestionSet = async (
     createdAt,
     initializing: false,
     questionCount,
-    userDisplayname,
   };
 };
 
@@ -275,8 +266,7 @@ const buildUnansweredQuiz = (doc: DocumentData): UnansweredQuiz => {
 };
 
 export const buildQuestionSetScore = (doc: DocumentData): ScoreState => {
-  const { uid, score, answers, createdAt, questionSet, isChecking } =
-    doc.data();
+  const { uid, score, answers, createdAt, questionSet } = doc.data();
   const questionSetScore: ScoreState = {
     id: doc.id,
     uid: uid || '',
@@ -284,21 +274,13 @@ export const buildQuestionSetScore = (doc: DocumentData): ScoreState => {
     answers: answers || {},
     createdAt: createdAt || 0,
     questionSet: questionSet || '',
-    isChecking: isChecking || false,
   };
   return questionSetScore;
 };
 
 const buildQuestionSet = (doc: DocumentData) => {
-  const {
-    uid,
-    type,
-    title,
-    createdAt,
-    questionCount,
-    questionGroups,
-    userDisplayname,
-  } = doc.data();
+  const { uid, type, title, createdAt, questionCount, questionGroups } =
+    doc.data();
   const questionSet: QuestionSet = {
     id: doc.id,
     uid: uid || '',
@@ -307,7 +289,6 @@ const buildQuestionSet = (doc: DocumentData) => {
     createdAt: createdAt || 0,
     questionCount: questionCount || 0,
     questionGroups: questionGroups || [],
-    userDisplayname: userDisplayname || '',
   };
   return questionSet;
 };
@@ -405,7 +386,6 @@ export const buildNewScore = (
     score: point,
     answers: inputs,
     createdAt: new Date().getTime(),
-    isChecking: false,
     questionSet: questionSetId,
   };
 };
@@ -455,10 +435,10 @@ export const answeredQuestionSet = async (questionSetId: string) => {
 export const updateQuizzes = (
   quiz: QuizState,
   score: ScoreState,
-  quizzes: QuizListState,
+  quizList: QuizListState,
   questionCount: number
 ): QuizListState => {
-  const { unansweredList, answeredList } = quizzes;
+  const { unansweredList, answeredList } = quizList;
 
   const updatedUnanswered = unansweredList.filter(({ id }) => id !== quiz.id);
 

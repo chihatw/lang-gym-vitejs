@@ -16,8 +16,8 @@ const PageFooter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { quizzes } = state;
-  const { unansweredList } = quizzes;
+  const { quizList } = state;
+  const { unansweredList } = quizList;
 
   const [value, setValue] = useState(-1);
 

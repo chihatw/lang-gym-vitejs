@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../../Model';
 import CheckRhythms from './CheckRhythms';
 
@@ -10,8 +11,13 @@ const IncorrectRhythms = ({
   state: State;
   questionIndex: number;
 }) => {
+  const { scoreId, quizId } = useParams();
+  if (!scoreId || !quizId) return <></>;
   const theme = useTheme();
-  const { score, quiz } = state;
+  const { scores, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const score = scores[scoreId];
+
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { answers } = score;

@@ -1,11 +1,11 @@
 import * as R from 'ramda';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import React, { useContext, useEffect } from 'react';
 
 import { Container } from '@mui/material';
 
 import { QuizState, ScoreState, State } from '../../../Model';
-import { Action, ActionTypes } from '../../../Update';
+import { ActionTypes } from '../../../Update';
 import QuestionIndex from '../commons/QuestionIndex';
 import { getQuestionSet, getQuestionSetScore } from '../../../services/quiz';
 
@@ -20,37 +20,29 @@ import { AppContext } from '../../../App';
 
 const ScorePage = () => {
   const { state, dispatch } = useContext(AppContext);
-  const { pathname } = useLocation();
-  const items = pathname.split('/');
-  // 先頭を破棄
-  items.shift();
-  const questionSetScoreId = items[1];
-  const questionSetId = items[3];
-  const { auth, isFetching, memo, score, quiz } = state;
+  const { scoreId, quizId } = useParams();
+  if (!quizId || !scoreId) return <></>;
+  const { auth, isFetching, scores, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const score = scores[scoreId];
   const { uid } = auth;
 
   useEffect(() => {
-    if (!isFetching || !questionSetScoreId || !questionSetId || !dispatch)
-      return;
+    if (!isFetching || !scoreId || !quizId || !dispatch) return;
     const fetchData = async () => {
-      const memorizedScore = memo.scores[questionSetScoreId];
-      const memorizedQuiz = memo.quizzes[questionSetId];
-      const score =
-        memorizedScore || (await getQuestionSetScore(questionSetScoreId));
-      const quiz = memorizedQuiz || (await getQuestionSet(questionSetId));
+      const _score = score || (await getQuestionSetScore(scoreId));
+      const _quiz = quiz || (await getQuestionSet(quizId));
 
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<QuizState, State>(['quiz'], quiz),
-        R.assocPath<QuizState, State>(['memo', 'quizzes', quiz.id], quiz),
-        R.assocPath<ScoreState, State>(['score'], score),
-        R.assocPath<ScoreState, State>(['memo', 'scores', score.id], score)
+        R.assocPath<QuizState, State>(['quizzes', quizId], _quiz),
+        R.assocPath<ScoreState, State>(['scores', scoreId], _score)
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
 
     fetchData();
-  }, [isFetching, questionSetScoreId, memo, dispatch, questionSetId]);
+  }, [isFetching, scoreId, quizId, score, quiz]);
 
   if (!uid) return <Navigate to='/login' />;
   if (isFetching) return <SkeletonPage />;

@@ -7,6 +7,7 @@ import { ActionTypes } from '../../../../../Update';
 import Monitor from './Monitor';
 import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
+import { useParams } from 'react-router-dom';
 
 const SpecialMoraSelector = ({
   questionIndex,
@@ -17,8 +18,11 @@ const SpecialMoraSelector = ({
   wordIndex: number;
   syllableIndex: number;
 }) => {
+  const { quizId } = useParams();
+  if (!quizId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { quiz } = state;
+  const { quizzes } = state;
+  const quiz = quizzes[quizId];
   const { questions } = quiz;
   const question = questions[questionIndex];
   const { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray } =

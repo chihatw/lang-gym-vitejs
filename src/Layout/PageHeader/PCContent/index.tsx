@@ -9,8 +9,8 @@ import LabelButton from './LabelButton';
 const PCContent = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
-  const { quizzes } = state;
-  const { unansweredList } = quizzes;
+  const { quizList } = state;
+  const { unansweredList } = quizList;
   return (
     <div
       style={{
