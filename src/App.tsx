@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
 import AppComponent from './routes/AppRoutes';
 import { Action, ActionTypes, reducer } from './Update';
@@ -16,6 +16,7 @@ export const AppContext = createContext<{
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const isFetched = useRef(false);
 
   // 認証判定
   useEffect(() => {
@@ -38,10 +39,11 @@ const App = () => {
           _uid = firstUid;
         }
       }
-      if (state.auth.uid !== _uid || state.auth.initializing) {
+      // 初期化が true の時、または uid が変更された時
+      if (state.auth.initializing || state.auth.uid !== _uid) {
         dispatch({
           type: ActionTypes.authenticate,
-          payload: { uid: _uid, isAdmin, initializing: false, users: _users }, // initializing どこで使っている？
+          payload: { uid: _uid, isAdmin, users: _users, initializing: false },
         });
       }
     });
@@ -50,7 +52,6 @@ const App = () => {
     let layout: LayoutState = {
       width: window.innerWidth,
       height: window.innerHeight,
-      isBrave: false,
     };
 
     const onResize = () => {
@@ -63,39 +64,37 @@ const App = () => {
     };
     window.addEventListener('resize', onResize);
 
-    const checkBrowser = async () => {
-      layout.isBrave =
-        ((navigator as any).brave &&
-          (await (navigator as any).brave.isBrave())) ||
-        false;
-      dispatch({ type: ActionTypes.setLayout, payload: layout });
-    };
-    checkBrowser();
-
     return () => {
       unsubscribe();
       window.removeEventListener('resize', onResize);
     };
-  }, [dispatch, state.auth.users, state.auth.uid, state.auth.initializing]);
+  }, [dispatch, state.auth.users, state.auth.uid]);
 
-  // topPage の作文を取得
-  // 未回答の問題も取得
+  // 初期値取得
+  // topPage、未回答の問題
   useEffect(() => {
-    if (!state.auth.uid) return;
-
+    if (!state.auth.uid || isFetched.current) return;
     const fetchData = async () => {
       const articles = !!state.topPage.cards.length
         ? state.topPage
         : await getArticleCards(state.auth.uid, 3);
-      const quizzes = await getUnansweredQuizList(state.auth.uid);
+      const quizzes = !!state.quizzes.unansweredList.length
+        ? state.quizzes.unansweredList
+        : await getUnansweredQuizList(state.auth.uid);
+
+      isFetched.current = true;
+
       dispatch({
         type: ActionTypes.setTopPage,
         payload: { articles, quizzes },
       });
     };
     fetchData();
+  }, [state.topPage.cards, state.auth.uid, state.quizzes.unansweredList]);
 
+  useEffect(() => {
     const createAudioContext = () => {
+      console.log('create audio context');
       const factory = new AudioContextFactory();
       const _audioContext = factory.create();
       dispatch({ type: ActionTypes.setAudioContext, payload: _audioContext });
@@ -104,7 +103,7 @@ const App = () => {
     if (!state.audioContext) {
       window.addEventListener('click', createAudioContext);
     }
-  }, [state.audioContext, state.topPage.cards, state.auth.uid]);
+  }, [state.audioContext]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

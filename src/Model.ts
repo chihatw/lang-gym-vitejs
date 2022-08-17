@@ -1,5 +1,3 @@
-import { FSentences } from 'fsentence-types';
-
 export type User = {
   id: string;
   displayname: string;
@@ -7,16 +5,16 @@ export type User = {
 
 export type AuthState = {
   uid: string;
-  isAdmin: boolean;
-  initializing: boolean;
   users: User[];
+  isAdmin: boolean;
+  initializing: boolean; // auth を cloud から受け取る前にサインイン画面が表示されるのを防ぐ
 };
 
 const INITIAL_AUTH_STATE: AuthState = {
   uid: '',
+  users: [],
   isAdmin: false,
   initializing: true,
-  users: [],
 };
 
 export type Article = {
@@ -28,7 +26,6 @@ export type Article = {
   createdAt: number;
   downloadURL: string;
   isShowParse: boolean;
-  hasRecButton: boolean;
   isShowAccents: boolean;
 };
 
@@ -42,7 +39,6 @@ const INITIAL_ARTICLE: Article = {
   downloadURL: '',
   isShowParse: false,
   isShowAccents: false,
-  hasRecButton: false,
 };
 
 export type Sentence = {
@@ -81,18 +77,14 @@ export const INITIAL_SENTENCE: Sentence = {
 
 export type AssignmentBlobs = { [key: string]: Blob | null };
 
+// will delete
 export type AssignmentSentence = {
   end: number;
   start: number;
   pitchesArray: string[][][];
 };
 
-// const INITIAL_ASSIGNMENT_SENTENCE: AssignmentSentence = {
-//   end: 0,
-//   start: 0,
-//   pitchesArray: [],
-// };
-
+// will delete
 export type ArticleCard = {
   id: string;
   title: string;
@@ -112,90 +104,18 @@ export const INITIAL_ARICLE_CARDS: ArticleCardsState = {
   startAfter: 0,
 };
 
-export type SentenceParseNew = {
-  units: string;
-  words: string;
-  branches: string;
-  sentences: string;
-  sentenceArrays: string;
-};
-
-type Branch = {
-  lock: boolean;
-  border: string;
-  unitId: string;
-  unitType: string;
-  joshiLabels: string[];
-  isDraggable: boolean;
-  isCommentMeishi: boolean;
-};
-
-export type SentenceParseProps = {
-  units: {
-    [unitId: string]: {
-      id: string;
-      type: string;
-      text: string;
-      hinshi: string;
-      branches: Branch[];
-      isTaigendome: boolean;
-      parentUnitId: string;
-      setsuzokuJoshi: string;
-      parentBranchJoshi: string;
-    };
-  };
-  sentences: {
-    [sentenceId: string]: {
-      id: string;
-      color: string;
-      bodyTexts: string[];
-      shuuJoshi: string;
-      buntouText: string;
-      juntaiJoshi: string;
-      topicUnitId: string;
-      topicBranch: Branch | null;
-      isTaigendome: boolean;
-      bunmatsuText: string;
-      buntouSeibuns: {
-        text: string;
-        hinshi: string;
-      }[];
-      commentUnitIds: string[];
-      juntaiJoshiBunmatsu: string;
-    };
-  };
-  sentenceArrays: string[][];
-};
-
-export type ArticleSentenceForm = {
-  id: string;
-  lineIndex: number;
-  articleId: string;
-  sentences: FSentences;
-};
-
 export type ArticleState = {
   article: Article;
   sentences: Sentence[];
   articleBlob: Blob | null;
-  assignmentBlob: Blob | null; // 旧式
-  assignmentBlobs: AssignmentBlobs; // 新式
-  assignmentDownloadURL: string;
-  articleAssignmentSentences: AssignmentSentence[];
-  sentenceParseProps: { [sentenceId: string]: SentenceParseProps };
-  articleSentenceForms: ArticleSentenceForm[];
+  assignmentBlobs: AssignmentBlobs;
 };
 
 export const INITIAL_ARTICLE_STATE: ArticleState = {
   article: INITIAL_ARTICLE,
   sentences: [],
   articleBlob: null,
-  assignmentBlob: null,
   assignmentBlobs: {},
-  assignmentDownloadURL: '',
-  articleAssignmentSentences: [],
-  sentenceParseProps: {},
-  articleSentenceForms: [],
 };
 
 export type SearchState = {
@@ -211,13 +131,11 @@ export const INITIAL_SEARCH_STATE: SearchState = {
 export type LayoutState = {
   width: number;
   height: number;
-  isBrave: boolean;
 };
 
 const INITIAL_LAYOUT_STATE: LayoutState = {
   width: window.innerWidth,
   height: window.innerHeight,
-  isBrave: false,
 };
 
 export type UnansweredQuiz = {
@@ -427,9 +345,10 @@ export type State = {
   auth: AuthState;
   isFetching: boolean;
   audioContext: AudioContext | null;
-  topPage: ArticleCardsState;
+  topPage: ArticleCardsState; // will delete
   articlePage: ArticleState;
-  articlesPage: ArticleCardsState;
+  articlesPage: ArticleCardsState; // will delete
+  articleList: Article[];
   search: SearchState;
   layout: LayoutState;
   quiz: QuizState;
@@ -450,6 +369,7 @@ export type State = {
 export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
   isFetching: false,
+  articleList: [],
   topPage: INITIAL_ARICLE_CARDS,
   articlePage: INITIAL_ARTICLE_STATE,
   articlesPage: INITIAL_ARICLE_CARDS,

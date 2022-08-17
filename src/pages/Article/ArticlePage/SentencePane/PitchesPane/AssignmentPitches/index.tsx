@@ -1,39 +1,18 @@
 import React, { useContext } from 'react';
 
 import AssignmentAudioPlayer from './AssignmentAudioPlayer';
-import SentencePitches from '../SentencePitches';
 import MicTogglePane from './MicTogglePane';
 
-import { State } from '../../../../../../Model';
-import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../../services/article';
-import { Action } from '../../../../../../Update';
 import { AppContext } from '../../../../../../App';
 
 const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const { articlePage } = state;
-  const {
-    sentences,
-    assignmentBlob,
-    assignmentBlobs,
-    assignmentDownloadURL,
-    articleAssignmentSentences,
-  } = articlePage;
+  const { sentences, assignmentBlobs } = articlePage;
 
   const sentence = sentences[sentenceIndex];
 
-  const assignmentSentence =
-    articleAssignmentSentences[sentenceIndex] || INITIAL_ASSIGNMENT_SENTENCE;
-
   const { storagePath } = sentence;
-
-  if (assignmentDownloadURL) {
-    // 旧式
-    if (!!assignmentSentence.pitchesArray.length && assignmentBlob) {
-      return <SentencePitches isAssignment sentenceIndex={sentenceIndex} />;
-    }
-    return <></>;
-  }
 
   const blob = assignmentBlobs[sentence.id];
   // 新式

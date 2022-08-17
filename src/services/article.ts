@@ -1,4 +1,3 @@
-import sentenceParseNew2SentenceParseProps from 'sentence-parse-new2sentence-parse-props';
 import accentsForPitchesArray from 'accents-for-pitches-array';
 import {
   collection,
@@ -17,14 +16,11 @@ import {
   Article,
   ArticleCard,
   ArticleCardsState,
-  ArticleSentenceForm,
   ArticleState,
   AssignmentBlobs,
   AssignmentSentence,
   INITIAL_ARTICLE_STATE,
   Sentence,
-  SentenceParseNew,
-  SentenceParseProps,
 } from '../Model';
 import { db, storage } from '../repositories/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
@@ -78,26 +74,6 @@ export const getArticleState = async (
   let response = await fetch(downloadURL);
   const articleBlob = await response.blob();
 
-  // assignmentBlob
-  // assignmentDownloadURL
-  let assignmentDownloadURL = '';
-  q = query(
-    collection(db, COLLECTIONS.assignments),
-    where('article', '==', articleId),
-    where('uid', '==', uid)
-  );
-  console.log('get assignments');
-  querySnapshot = await getDocs(q);
-  const first = querySnapshot.docs[0];
-  if (first) {
-    assignmentDownloadURL = first.data().downloadURL;
-  }
-
-  console.log('create assignment audio');
-  response = await fetch(assignmentDownloadURL);
-
-  const assignmentBlob = await response.blob();
-
   // assignmentBlobs
   const assignmentBlobs: AssignmentBlobs = {};
   await Promise.all(
@@ -116,76 +92,11 @@ export const getArticleState = async (
     })
   );
 
-  // articleAssignmentSentences
-  const articleAssignmentSentences: AssignmentSentence[] = [];
-  q = query(
-    collection(db, COLLECTIONS.aSentences),
-    where('article', '==', articleId),
-    where('uid', '==', uid),
-    orderBy('line')
-  );
-  console.log('get assignments');
-  querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    articleAssignmentSentences.push(buildAssignmentSentence(doc));
-  });
-
-  // sentenceParseProps
-  const sentenceParseProps: { [sentenceId: string]: SentenceParseProps } = {};
-  q = query(
-    collection(db, COLLECTIONS.sentenceParseNews),
-    where('article', '==', articleId)
-  );
-  console.log('get sentenceParses ');
-  querySnapshot = await getDocs(q);
-  const sentenceParseNews: { [key: string]: SentenceParseNew } = {};
-
-  querySnapshot.forEach((doc) => {
-    const sentenceParseNew: SentenceParseNew = {
-      units: doc.data().units,
-      words: doc.data().words,
-      branches: doc.data().branches,
-      sentences: doc.data().sentences,
-      sentenceArrays: doc.data().sentenceArrays,
-    };
-    sentenceParseNews[doc.data().sentence] = sentenceParseNew;
-  });
-
-  for (const [sentenceId, sentenceParseNew] of Object.entries(
-    sentenceParseNews
-  )) {
-    sentenceParseProps[sentenceId] = sentenceParseNew2SentenceParseProps({
-      units: JSON.parse(sentenceParseNew.units),
-      words: JSON.parse(sentenceParseNew.words),
-      branches: JSON.parse(sentenceParseNew.branches),
-      sentences: JSON.parse(sentenceParseNew.sentences),
-      sentenceArrays: JSON.parse(sentenceParseNew.sentenceArrays),
-    });
-  }
-
-  // articleSentenceForms
-  const articleSentenceForms: ArticleSentenceForm[] = [];
-  q = query(
-    collection(db, COLLECTIONS.articleSentenceForms),
-    where('articleId', '==', articleId),
-    orderBy('lineIndex')
-  );
-  console.log('get sentenceForms');
-  querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    articleSentenceForms.push(buildArticleSentenceForm(doc));
-  });
-
   return {
     article,
     sentences,
     articleBlob,
-    assignmentBlob,
     assignmentBlobs,
-    assignmentDownloadURL,
-    articleAssignmentSentences,
-    sentenceParseProps,
-    articleSentenceForms,
   };
 };
 
@@ -250,7 +161,6 @@ const buildArticle = (doc: DocumentData) => {
     createdAt,
     isShowParse,
     downloadURL,
-    hasRecButton,
     isShowAccents,
   } = doc.data();
   const article: Article = {
@@ -262,7 +172,6 @@ const buildArticle = (doc: DocumentData) => {
     createdAt: createdAt || 0,
     isShowParse: isShowParse || false,
     downloadURL: downloadURL || '',
-    hasRecButton: hasRecButton || false,
     isShowAccents: isShowAccents || false,
   };
   return article;
@@ -317,17 +226,6 @@ export const INITIAL_ASSIGNMENT_SENTENCE: AssignmentSentence = {
   end: 0,
   start: 0,
   pitchesArray: [],
-};
-
-const buildArticleSentenceForm = (doc: DocumentData) => {
-  const { articleId, lineIndex, sentences } = doc.data();
-  const articleSentenceForm: ArticleSentenceForm = {
-    id: doc.id || '',
-    articleId: articleId || '',
-    lineIndex: lineIndex || 0,
-    sentences: sentences || {},
-  };
-  return articleSentenceForm;
 };
 
 const buildCard = (id: string, title: string, createdAt: number) => {

@@ -2,27 +2,23 @@ import { Collapse, Hidden } from '@mui/material';
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { State } from '../Model';
-import BraveCaution from './BraveCaution';
 import Copyright from './Copyright';
 import PageFooter from './PageFooter';
 import HitList from './HitList';
 import PageHeader from './PageHeader';
-import { Action } from '../Update';
 import { AppContext } from '../App';
 
 const HEIGHT_THRESHOLD = 480;
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const location = useLocation();
   const [isParse, setIsPase] = useState(false);
   const [isHideAppBar, setIsHideAppBar] = useState(false);
 
-  const { search, auth, layout } = state;
+  const { search, auth } = state;
   const { uid } = auth;
   const { hitItems } = search;
-  const { isBrave } = layout;
 
   // スマホで文の形を表示する時にヘッダーを隠す
   useEffect(() => {
@@ -45,8 +41,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {isBrave && <BraveCaution />}
-
       <div>
         <div
           style={{

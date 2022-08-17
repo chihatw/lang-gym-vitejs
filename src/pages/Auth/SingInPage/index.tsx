@@ -11,6 +11,7 @@ const SignInPage = () => {
   const { uid, initializing } = auth;
   const [emailErrMsg, setEmailErrMsg] = useState<string>('');
   const [passwordErrMsg, setPasswordErrMsg] = useState<string>('');
+
   const resetErrMsg = () => {
     setEmailErrMsg('');
     setPasswordErrMsg('');

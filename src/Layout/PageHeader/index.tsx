@@ -10,7 +10,7 @@ import PCContent from './PCContent';
 const PageHeader = () => {
   const { state, dispatch } = useContext(AppContext);
   const { auth } = state;
-  const { uid, initializing } = auth;
+  const { uid } = auth;
   const matches = useMediaQuery('(min-width:600px)');
   return (
     <AppBar
@@ -22,7 +22,7 @@ const PageHeader = () => {
       }}
     >
       <Toolbar variant='dense' sx={{ display: 'grid' }}>
-        {!initializing && !!uid ? (
+        {!!uid ? (
           matches ? (
             <PCContent />
           ) : (

@@ -4,28 +4,18 @@ import React, { useContext } from 'react';
 
 import AudioSlider from '../../../../../components/AudioSlider';
 
-import { INITIAL_ASSIGNMENT_SENTENCE } from '../../../../../services/article';
 import { AppContext } from '../../../../../App';
 
-const SentencePitches = ({
-  sentenceIndex,
-  isAssignment,
-}: {
-  sentenceIndex: number;
-  isAssignment?: boolean;
-}) => {
+const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state } = useContext(AppContext);
   const theme = useTheme();
   const { articlePage, audioContext } = state;
-  const { sentences, articleAssignmentSentences, articleBlob, assignmentBlob } =
-    articlePage;
+  const { sentences, articleBlob } = articlePage;
 
   const articleSentence = sentences[sentenceIndex];
-  const assignmentSentence =
-    articleAssignmentSentences[sentenceIndex] || INITIAL_ASSIGNMENT_SENTENCE;
-  const sentence = isAssignment ? assignmentSentence : articleSentence;
+  const sentence = articleSentence;
 
-  const blob = isAssignment ? assignmentBlob : articleBlob;
+  const blob = articleBlob;
   const { start, end, pitchesArray } = sentence;
 
   return (
@@ -44,7 +34,7 @@ const SentencePitches = ({
           marginBottom: 8,
         }}
       >
-        {`${isAssignment ? '練習' : '音調'}:`}
+        {`${'音調'}:`}
       </div>
       {audioContext && blob && (
         <div
