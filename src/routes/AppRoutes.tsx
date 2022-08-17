@@ -39,7 +39,7 @@ const AppComponent = () => {
         <Route index element={<ArticleListPage />} />
         <Route path='/article'>
           <Route path='list' element={<ArticleListPage />} />
-          <Route path=':id' element={<ArticlePage />} />
+          <Route path=':articleId' element={<ArticlePage />} />
         </Route>
         <Route path='/quizzes'>
           <Route index element={<UnAnsweredPage />} />

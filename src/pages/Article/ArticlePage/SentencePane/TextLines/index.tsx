@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { State } from '../../../../../Model';
 
 import Chinese from './Chinese';
@@ -12,7 +13,10 @@ const TextLines = ({
   sentenceIndex: number;
   state: State;
 }) => {
-  const { articlePage } = state;
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
+  const { articlePages } = state;
+  const articlePage = articlePages[articleId];
   const { sentences } = articlePage;
   const sentence = sentences[sentenceIndex];
   const { japanese, chinese, original } = sentence;

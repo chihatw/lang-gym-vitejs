@@ -5,11 +5,15 @@ import React, { useContext } from 'react';
 import AudioSlider from '../../../../../components/AudioSlider';
 
 import { AppContext } from '../../../../../App';
+import { useParams } from 'react-router-dom';
 
 const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
   const { state } = useContext(AppContext);
   const theme = useTheme();
-  const { articlePage, audioContext } = state;
+  const { articlePages, audioContext } = state;
+  const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
 
   const articleSentence = sentences[sentenceIndex];

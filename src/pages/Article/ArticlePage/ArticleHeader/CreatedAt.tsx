@@ -1,10 +1,15 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 import { State } from '../../../../Model';
 
 const CreatedAt = ({ state }: { state: State }) => {
-  const { articlePage } = state;
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
+
+  const { articlePages } = state;
+  const articlePage = articlePages[articleId];
   const { article } = articlePage;
   const { createdAt } = article;
   const theme = useTheme();

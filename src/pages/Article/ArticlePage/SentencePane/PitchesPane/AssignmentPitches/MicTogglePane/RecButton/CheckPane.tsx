@@ -16,6 +16,7 @@ import { uploadStorage } from '../../../../../../../../repositories/storage';
 import { updateSentence } from '../../../../../../../../services/article';
 import { Action, ActionTypes } from '../../../../../../../../Update';
 import { AppContext } from '../../../../../../../../App';
+import { useParams } from 'react-router-dom';
 
 const CheckPane = ({
   blob,
@@ -29,8 +30,11 @@ const CheckPane = ({
   isChecking: boolean;
   handleChecked: () => void;
 }) => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { articlePage, audioContext } = state;
+  const { articlePages, audioContext } = state;
+  const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
   const sentence = sentences[sentenceIndex];
   const { japanese, id } = sentence;

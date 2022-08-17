@@ -8,10 +8,14 @@ import { updateSentence } from '../../../../../../../services/article';
 
 import { ActionTypes } from '../../../../../../../Update';
 import { Sentence, State } from '../../../../../../../Model';
+import { useParams } from 'react-router-dom';
 
 const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { articlePage } = state;
+  const { articlePages } = state;
+  const articlePage = articlePages[articleId];
   const { sentences } = articlePage;
 
   const sentence = sentences[sentenceIndex];

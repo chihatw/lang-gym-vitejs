@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import React, { useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { AppContext } from '../../../../../../../App';
 import BlobSlider from '../../../../../../../components/BlobSlider';
 import { State } from '../../../../../../../Model';
@@ -12,9 +13,12 @@ const AssignmentAudioPlayer = ({
 }: {
   sentenceIndex: number;
 }) => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
   const theme = useTheme();
-  const { articlePage, audioContext } = state;
+  const { articlePages, audioContext } = state;
+  const articlePage = articlePages[articleId];
   const { assignmentBlobs, sentences } = articlePage;
 
   const sentence = sentences[sentenceIndex];

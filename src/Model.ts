@@ -317,21 +317,20 @@ export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
 
 export type State = {
   auth: AuthState;
-  isFetching: boolean;
-  audioContext: AudioContext | null;
-  articlePage: ArticleState; // メモと統合して articlePages に一本化、useParams() から articleId を取得して、値を抽出
-  articleList: Article[];
-  articleListParams: ArticleListParams;
-  layout: LayoutState;
   quiz: QuizState; // quiz と score はまとめる
   score: ScoreState; // quiz と score はまとめる
+  layout: LayoutState;
   quizzes: QuizListState;
   workout: RandomWorkoutState;
+  isFetching: boolean;
+  articleList: Article[];
+  articlePages: { [articleId: string]: ArticleState };
+  audioContext: AudioContext | null;
+  articleListParams: ArticleListParams;
   blobURLs: {
     [imagePath: string]: string;
   };
   memo: {
-    articlePages: { [articleId: string]: ArticleState };
     quizzes: { [questionSetId: string]: QuizState };
     scores: { [scoreId: string]: ScoreState };
   };
@@ -339,16 +338,16 @@ export type State = {
 
 export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
-  isFetching: false,
-  articleList: [],
-  articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
-  articlePage: INITIAL_ARTICLE_STATE,
-  audioContext: null,
-  layout: INITIAL_LAYOUT_STATE,
   quiz: INITIAL_QUIZ_STATE,
   score: INITIAL_SCORE_STATE,
+  layout: INITIAL_LAYOUT_STATE,
   quizzes: INITIAL_QUIZ_LIST_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
+  isFetching: false,
+  articleList: [],
+  articlePages: {},
+  audioContext: null,
+  articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},
-  memo: { articlePages: {}, quizzes: {}, scores: {} },
+  memo: { quizzes: {}, scores: {} },
 };

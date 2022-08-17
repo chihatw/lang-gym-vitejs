@@ -5,10 +5,15 @@ import CreatedAt from './CreatedAt';
 import Title from './Title';
 import AudioSlider from '../../../../components/AudioSlider';
 import { AppContext } from '../../../../App';
+import { useParams } from 'react-router-dom';
 
 const ArticleHeader = () => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
+
   const { state } = useContext(AppContext);
-  const { articlePage, audioContext } = state;
+  const { articlePages, audioContext } = state;
+  const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
 
   const end = useMemo(() => sentences.slice(-1)[0]?.end || 0, [sentences]);

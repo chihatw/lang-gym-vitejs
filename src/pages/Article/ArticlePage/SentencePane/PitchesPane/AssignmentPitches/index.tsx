@@ -4,10 +4,14 @@ import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import MicTogglePane from './MicTogglePane';
 
 import { AppContext } from '../../../../../../App';
+import { useParams } from 'react-router-dom';
 
 const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
   const { state } = useContext(AppContext);
-  const { articlePage } = state;
+  const { articlePages } = state;
+  const articlePage = articlePages[articleId];
   const { sentences, assignmentBlobs } = articlePage;
 
   const sentence = sentences[sentenceIndex];

@@ -5,18 +5,23 @@ import Index from './StyledIndex';
 import TextLines from './TextLines';
 import PitchesPane from './PitchesPane';
 import { AppContext } from '../../../../App';
+import { useParams } from 'react-router-dom';
 
 const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { articlePage } = state;
+  const { articleId } = useParams();
+  if (!articleId) return <></>;
+
+  const { state } = useContext(AppContext);
+  const { articlePages } = state;
+  const articlePage = articlePages[articleId];
   const { article, sentences } = articlePage;
   const { isShowAccents } = article;
   const sentence = sentences[sentenceIndex];
-  const { id } = sentence;
+  const { id: sentenceId } = sentence;
 
   return (
     <div
-      id={id}
+      id={sentenceId}
       style={{
         rowGap: 8,
         display: 'grid',
