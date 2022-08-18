@@ -1,18 +1,21 @@
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
+import { QuizFormState } from '../../Model';
+import { QuizFormAction } from '../../Update';
 import WordPitch from './WordPitch';
-import { AppContext } from '../../../../App';
-import { useParams } from 'react-router-dom';
 
-const PitchQuiz = ({ questionIndex }: { questionIndex: number }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { state } = useContext(AppContext);
+const PitchQuiz = ({
+  state,
+  questionIndex,
+  dispatch,
+}: {
+  state: QuizFormState;
+  questionIndex: number;
+  dispatch: React.Dispatch<QuizFormAction>;
+}) => {
   const theme = useTheme();
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { japanese, inputPitchesArray } = question;
   return (
@@ -27,11 +30,13 @@ const PitchQuiz = ({ questionIndex }: { questionIndex: number }) => {
       </div>
       <SentencePitchLine pitchesArray={inputPitchesArray} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {inputPitchesArray.map((_, index) => (
+        {inputPitchesArray.map((_, wordIndex) => (
           <WordPitch
-            key={index}
-            wordIndex={index}
+            key={wordIndex}
+            state={state}
+            wordIndex={wordIndex}
             questionIndex={questionIndex}
+            dispatch={dispatch}
           />
         ))}
       </div>

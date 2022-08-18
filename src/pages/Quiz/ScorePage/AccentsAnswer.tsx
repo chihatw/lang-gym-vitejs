@@ -3,26 +3,21 @@ import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { Divider, useTheme } from '@mui/material';
 import accentsForPitchesArray from 'accents-for-pitches-array';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../Model';
+import { ScoreState } from '../../../Model';
+import { QuizFormState } from '../QuizPage/Model';
 import CorrectAnswer from './commons/CorrectAnswer';
 
 const AccentsAnswer = ({
   state,
+  score,
   questionIndex,
 }: {
-  state: State;
+  score: ScoreState;
+  state: QuizFormState;
   questionIndex: number;
 }) => {
-  const { quizId, scoreId } = useParams();
-  if (!quizId || !scoreId) return <></>;
-
   const theme = useTheme();
-
-  const { quizzes, scores } = state;
-  const quiz = quizzes[quizId];
-  const score = scores[scoreId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { id: questionId, correctPitchesArray } = question;
   const { answers } = score;

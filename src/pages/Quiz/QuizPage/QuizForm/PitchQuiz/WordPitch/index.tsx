@@ -1,25 +1,24 @@
-import React, { useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import { AppContext } from '../../../../../App';
+import React from 'react';
+import { QuizFormState } from '../../../Model';
+import { QuizFormAction } from '../../../Update';
 import MoraPitch from './MoraPitch';
 
 const WordPitch = ({
-  questionIndex,
+  state,
   wordIndex,
+  questionIndex,
+  dispatch,
 }: {
-  questionIndex: number;
+  state: QuizFormState;
   wordIndex: number;
+  questionIndex: number;
+  dispatch: React.Dispatch<QuizFormAction>;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { state } = useContext(AppContext);
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { disableds, inputPitchesArray } = question;
-  const wordPitches = inputPitchesArray[wordIndex];
   const disabled = disableds.includes(wordIndex);
+  const wordPitches = inputPitchesArray[wordIndex];
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -33,10 +32,12 @@ const WordPitch = ({
       >
         {wordPitches.map((_, moraIndex) => (
           <MoraPitch
+            state={state}
             key={moraIndex}
             questionIndex={questionIndex}
             wordIndex={wordIndex}
             moraIndex={moraIndex}
+            dispatch={dispatch}
           />
         ))}
       </div>

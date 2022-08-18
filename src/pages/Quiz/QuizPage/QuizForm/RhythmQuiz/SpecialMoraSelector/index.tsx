@@ -1,29 +1,27 @@
 import * as R from 'ramda';
 import { useTheme } from '@mui/material';
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../../../../../App';
-import { State } from '../../../../../Model';
-import { ActionTypes } from '../../../../../Update';
+import React, { useState } from 'react';
+import { ActionTypes } from '../../../../../../Update';
 import Monitor from './Monitor';
 import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
-import { useParams } from 'react-router-dom';
+import { QuizFormState } from '../../../Model';
+import { QuizFormAction } from '../../../Update';
 
 const SpecialMoraSelector = ({
-  questionIndex,
+  state,
   wordIndex,
+  questionIndex,
   syllableIndex,
+  dispatch,
 }: {
-  questionIndex: number;
+  state: QuizFormState;
   wordIndex: number;
   syllableIndex: number;
+  questionIndex: number;
+  dispatch: React.Dispatch<QuizFormAction>;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray } =
     question;
@@ -31,7 +29,8 @@ const SpecialMoraSelector = ({
   const inputSpecialMoras = inputSpecialMoraArray[wordIndex];
   const mora = wordSyllable[syllableIndex];
   const inputSpecialMora = inputSpecialMoras[syllableIndex];
-
+  const specialMoras = inputSpecialMoraArray[wordIndex];
+  const specialMora = specialMoras[syllableIndex];
   const { syllable } = mora;
 
   const [selected, setSelected] = useState(false);
@@ -44,12 +43,12 @@ const SpecialMoraSelector = ({
     updatedMonitor[wordIndex][syllableIndex] = '';
 
     const updatedState = R.compose(
-      R.assocPath<string[][], State>(
-        ['quiz', 'questions', questionIndex, 'inputSpecialMoraArray'],
+      R.assocPath<string[][], QuizFormState>(
+        ['questions', questionIndex, 'inputSpecialMoraArray'],
         updatedInput
       ),
-      R.assocPath<string[][], State>(
-        ['quiz', 'questions', questionIndex, 'monitorSpecialMoraArray'],
+      R.assocPath<string[][], QuizFormState>(
+        ['questions', questionIndex, 'monitorSpecialMoraArray'],
         updatedMonitor
       )
     )(state);
@@ -72,14 +71,7 @@ const SpecialMoraSelector = ({
       </div>
 
       {/* 特殊拍が選択済の場合、特殊拍を表示する */}
-      {!!inputSpecialMora && (
-        <Monitor
-          state={state}
-          questionIndex={questionIndex}
-          wordIndex={wordIndex}
-          syllableIndex={syllableIndex}
-        />
-      )}
+      {!!inputSpecialMora && <Monitor specialMora={specialMora} />}
 
       {/* 特殊拍が未選択で、シラブルが選択されている場合、特殊拍の選択肢を表示*/}
       {!inputSpecialMora && selected && (
@@ -88,6 +80,9 @@ const SpecialMoraSelector = ({
             questionIndex={questionIndex}
             wordIndex={wordIndex}
             syllableIndex={syllableIndex}
+            syllablesArray={syllablesArray}
+            inputSpecialMoraArray={inputSpecialMoraArray}
+            monitorSpecialMoraArray={monitorSpecialMoraArray}
           />
         </div>
       )}

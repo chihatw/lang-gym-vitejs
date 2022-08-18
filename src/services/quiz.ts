@@ -29,9 +29,11 @@ import {
   QuizState,
   Syllable,
   UnansweredQuiz,
+  State,
 } from '../Model';
 import { db, storage } from '../repositories/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
+import { QuizFormState, QuizQuestion } from '../pages/Quiz/QuizPage/Model';
 
 export const SPECIAL_MORAS = ['っ', 'ん', 'ー', 'ーん', 'ーっ'];
 
@@ -62,6 +64,8 @@ export const getQuestionSet = async (
   const questionIds: string[] = snapshot.data().questions;
   if (!questionIds || !questionIds.length) return INITIAL_QUIZ_STATE;
 
+  let downloadURL = '';
+
   const questions: Question[] = [];
   await Promise.all(
     questionIds.map(async (questionId) => {
@@ -71,11 +75,22 @@ export const getQuestionSet = async (
         ? buildQuestion(snapshot)
         : INITIAL_QUESTION;
       questions.push(question);
+      if (snapshot.exists()) {
+        const { question: _question } = snapshot.data();
+        const {
+          audio: { downloadURL: _downloadURL },
+        }: {
+          audio: { downloadURL: string; start: number; end: number };
+        } = JSON.parse(_question);
+        if (_downloadURL) {
+          downloadURL = _downloadURL;
+        }
+      }
     })
   );
 
   let quizBlob: Blob | null = null;
-  let downloadURL = questions[0].downloadURL;
+
   if (downloadURL) {
     const header = downloadURL.slice(0, 4);
     if (header !== 'http') {
@@ -112,72 +127,9 @@ export const getQuestionSetScore = async (
 
 const buildQuestion = (doc: DocumentData): Question => {
   const { question } = doc.data();
-  const {
-    japanese,
-    disableds,
-    accents,
-    audio: { downloadURL, start, end },
-    syllableUnits,
-  }: {
-    japanese: string;
-    disableds: number[];
-    accents: Accents[];
-    audio: { downloadURL: string; start: number; end: number };
-    syllableUnits: Syllable[][];
-  } = JSON.parse(question);
-
-  const initialAccents = accents
-    ? accents.map((accent, index) => ({
-        ...accent,
-        pitchPoint: disableds.includes(index) ? accent.pitchPoint : 0,
-      }))
-    : [];
-  const correctPitchesArray = accentsForPitchesArray(accents || []);
-  const initialPitchesArray = accentsForPitchesArray(initialAccents);
-  const initialSpecialMoraArray: string[][] = [];
-  const monitorSpecialMoraArray: string[][] = [];
-  const correctSpecialMoraArray: string[][] = [];
-  if (syllableUnits) {
-    syllableUnits.forEach((wordSyllable) => {
-      const monitorWordSpecialMora: string[] = [];
-      const inputWordSpecialMora: string[] = [];
-      const correctWordSpecialMora: string[] = [];
-      wordSyllable.forEach((syllable) => {
-        const { disabled, mora, longVowel } = syllable;
-        correctWordSpecialMora.push(mora);
-        if (!!disabled) {
-          inputWordSpecialMora.push(disabled);
-          const monitorString = getKanaSpecialMora({
-            mora: syllable.syllable,
-            fixedVowel: longVowel,
-            specialMora: disabled,
-          });
-          monitorWordSpecialMora.push(monitorString);
-        } else {
-          inputWordSpecialMora.push('');
-          monitorWordSpecialMora.push('');
-        }
-      });
-      initialSpecialMoraArray.push(inputWordSpecialMora);
-      monitorSpecialMoraArray.push(monitorWordSpecialMora);
-      correctSpecialMoraArray.push(correctWordSpecialMora);
-    });
-  }
   return {
     id: doc.id,
     question: question || '',
-    japanese: japanese || '',
-    disableds: disableds || [],
-    inputPitchesArray: initialPitchesArray,
-    correctPitchesArray,
-    initialPitchesArray,
-    downloadURL: downloadURL || '',
-    start: start || 0,
-    end: end || 0,
-    inputSpecialMoraArray: initialSpecialMoraArray,
-    initialSpecialMoraArray,
-    syllablesArray: syllableUnits,
-    monitorSpecialMoraArray,
   };
 };
 
@@ -336,7 +288,7 @@ export const changePitchesArray = (
   return pitchesArray;
 };
 
-export const calcPitchesQuiz = (questions: Question[]) => {
+export const calcPitchesQuiz = (questions: QuizQuestion[]) => {
   let points = 0;
 
   questions.forEach((question) => {
@@ -355,7 +307,7 @@ export const calcPitchesQuiz = (questions: Question[]) => {
   return points;
 };
 
-export const calcRhythmQuiz = (questions: Question[]) => {
+export const calcRhythmQuiz = (questions: QuizQuestion[]) => {
   let points = 0;
   questions.forEach((question) => {
     const { inputSpecialMoraArray, syllablesArray } = question;
@@ -409,6 +361,13 @@ export const pitchesArray2Accents = (pitchesArray: string[][][]): Accents[] => {
 
 export const setNewScore = async (score: ScoreState) => {
   console.log('create question set score');
+  type Keys = keyof ScoreState;
+  for (const key of Object.keys(score)) {
+    if (!Object.keys(INITIAL_SCORE_STATE).includes(key)) {
+      console.log(`remove ${key}`);
+      delete score[key as Keys];
+    }
+  }
   const { id, ...omitted } = score;
   try {
     await setDoc(doc(db, COLLECTIONS.questionSetScores, id), omitted);
@@ -552,4 +511,93 @@ export const deleteQuestionSet = async (questionSetId: string) => {
     batch.delete(doc.ref);
   });
   await batch.commit();
+};
+
+export const buildQuizFormState = (
+  state: State,
+  quizId: string
+): QuizFormState => {
+  const { audioContext, quizzes } = state;
+  const quiz = quizzes[quizId];
+  const { title, createdAt, type, quizBlob, questionCount } = quiz;
+  const questions: QuizQuestion[] = [];
+
+  for (const question of quiz?.questions || []) {
+    const { id, question: _question }: Question = question;
+
+    const {
+      japanese,
+      disableds,
+      accents,
+      audio: { start, end },
+      syllableUnits,
+    }: {
+      japanese: string;
+      disableds: number[];
+      accents: Accents[];
+      audio: { downloadURL: string; start: number; end: number };
+      syllableUnits: Syllable[][];
+    } = JSON.parse(_question);
+
+    const initialAccents = accents
+      ? accents.map((accent, index) => ({
+          ...accent,
+          pitchPoint: disableds.includes(index) ? accent.pitchPoint : 0,
+        }))
+      : [];
+
+    const correctPitchesArray = accentsForPitchesArray(accents || []);
+    const inputPitchesArray = accentsForPitchesArray(initialAccents);
+    const inputSpecialMoraArray: string[][] = [];
+    const monitorSpecialMoraArray: string[][] = [];
+
+    if (syllableUnits) {
+      syllableUnits.forEach((wordSyllable) => {
+        const monitorWordSpecialMora: string[] = [];
+        const inputWordSpecialMora: string[] = [];
+        const correctWordSpecialMora: string[] = [];
+        wordSyllable.forEach((syllable) => {
+          const { disabled, mora, longVowel } = syllable;
+          correctWordSpecialMora.push(mora);
+          if (!!disabled) {
+            inputWordSpecialMora.push(disabled);
+            const monitorString = getKanaSpecialMora({
+              mora: syllable.syllable,
+              fixedVowel: longVowel,
+              specialMora: disabled,
+            });
+            monitorWordSpecialMora.push(monitorString);
+          } else {
+            inputWordSpecialMora.push('');
+            monitorWordSpecialMora.push('');
+          }
+        });
+        inputSpecialMoraArray.push(inputWordSpecialMora);
+        monitorSpecialMoraArray.push(monitorWordSpecialMora);
+      });
+    }
+
+    const quizQuestion: QuizQuestion = {
+      id,
+      end,
+      start,
+      japanese,
+      disableds,
+      syllablesArray: syllableUnits,
+      inputPitchesArray,
+      correctPitchesArray,
+      inputSpecialMoraArray,
+      monitorSpecialMoraArray,
+    };
+    questions.push(quizQuestion);
+  }
+  return {
+    type: type || '',
+    title: title || '',
+    quizBlob: quizBlob || null,
+    createdAt: createdAt || 0,
+    questions,
+    audioContext,
+    questionCount: questionCount || 0,
+  };
 };

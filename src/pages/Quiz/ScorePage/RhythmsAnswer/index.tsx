@@ -1,23 +1,20 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../Model';
+import { ScoreState } from '../../../../Model';
+import { QuizFormState } from '../../QuizPage/Model';
 import CorrectAnswer from '../commons/CorrectAnswer';
 import CorrectRhythms from './CorrectRhythms';
 import IncorrectRhythms from './IncorrectRhythms';
 
 const RhythmsAnswer = ({
+  score,
   state,
   questionIndex,
 }: {
-  state: State;
+  score: ScoreState;
+  state: QuizFormState;
   questionIndex: number;
 }) => {
-  const { scoreId, quizId } = useParams();
-  if (!scoreId || !quizId) return <></>;
-  const { scores, quizzes } = state;
-  const quiz = quizzes[quizId];
-  const score = scores[scoreId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { answers } = score;
   const { id: questionId, syllablesArray } = question;
@@ -39,7 +36,13 @@ const RhythmsAnswer = ({
       </CorrectAnswer>
     );
   }
-  return <IncorrectRhythms state={state} questionIndex={questionIndex} />;
+  return (
+    <IncorrectRhythms
+      state={state}
+      questionIndex={questionIndex}
+      score={score}
+    />
+  );
 };
 
 export default RhythmsAnswer;

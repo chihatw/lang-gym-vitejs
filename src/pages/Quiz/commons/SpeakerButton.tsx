@@ -1,28 +1,20 @@
 import { GiSpeaker } from 'react-icons/gi';
 import { IconButton } from '@mui/material';
 import React, { useRef, useState } from 'react';
-import { State } from '../../../Model';
 import { createSourceNode } from '../../../services/utils';
-import { useParams } from 'react-router-dom';
 
 const SpeakerButton = ({
-  state,
-  questionIndex,
+  start,
+  end,
+  quizBlob,
+  audioContext,
 }: {
-  state: State;
-  questionIndex: number;
+  end: number;
+  start: number;
+  quizBlob: Blob;
+  audioContext: AudioContext;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-
-  const { quizzes, audioContext } = state;
-  const quiz = quizzes[quizId];
-  const { questions, quizBlob } = quiz;
-  const question = questions[questionIndex];
-  const { start, end } = question;
-
   const [isPlaying, setIsPlaying] = useState(false);
-
   const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
 
   const play = async () => {

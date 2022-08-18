@@ -1,42 +1,36 @@
 import * as R from 'ramda';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../App';
-import { Question, State } from '../../../../../Model';
+import { AppContext } from '../../../../../../App';
+import { State, Syllable } from '../../../../../../Model';
 import {
   getKanaSpecialMora,
   SPECIAL_MORAS,
-} from '../../../../../services/quiz';
-import { ActionTypes } from '../../../../../Update';
-import { useParams } from 'react-router-dom';
+} from '../../../../../../services/quiz';
+import { ActionTypes } from '../../../../../../Update';
 
 const Selector = ({
   questionIndex,
   wordIndex,
   syllableIndex,
+  syllablesArray,
+  inputSpecialMoraArray,
+  monitorSpecialMoraArray,
 }: {
   questionIndex: number;
   wordIndex: number;
   syllableIndex: number;
+  syllablesArray: Syllable[][];
+  inputSpecialMoraArray: string[][];
+  monitorSpecialMoraArray: string[][];
 }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
-  const question = questions[questionIndex];
-  const {
-    syllablesArray,
-    inputSpecialMoraArray,
-    monitorSpecialMoraArray,
-  }: Question = question;
   const syllable = syllablesArray[wordIndex][syllableIndex];
-  const { syllable: mora, longVowel } = syllable;
+  const { syllable: kana, longVowel } = syllable;
   const handleClick = (specialMora: string) => {
     if (!dispatch) return;
     const monitorString = getKanaSpecialMora({
-      mora,
+      mora: kana,
       fixedVowel: longVowel,
       specialMora,
     });
@@ -59,7 +53,7 @@ const Selector = ({
   };
   return (
     <div style={{ marginTop: -4 }}>
-      {SPECIAL_MORAS.map((specialMora, itemIndex) => (
+      {SPECIAL_MORAS.map((SPECIAL_MORA, itemIndex) => (
         <div
           key={itemIndex}
           style={{ marginBottom: itemIndex !== SPECIAL_MORAS.length ? 4 : 0 }}
@@ -71,7 +65,7 @@ const Selector = ({
               border: `1px solid #86bec4`,
               borderRadius: 4,
             }}
-            onClick={() => handleClick(specialMora)}
+            onClick={() => handleClick(SPECIAL_MORA)}
           >
             <span
               style={{
@@ -80,7 +74,7 @@ const Selector = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {specialMora}
+              {SPECIAL_MORA}
             </span>
           </IconButton>
         </div>

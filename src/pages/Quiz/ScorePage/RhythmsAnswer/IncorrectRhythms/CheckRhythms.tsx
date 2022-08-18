@@ -1,22 +1,18 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../../Model';
+import { ScoreState } from '../../../../../Model';
+import { QuizFormState } from '../../../QuizPage/Model';
 
 const CheckRhythms = ({
+  score,
   state,
   questionIndex,
 }: {
-  state: State;
+  score: ScoreState;
+  state: QuizFormState;
   questionIndex: number;
 }) => {
-  const { scoreId, quizId } = useParams();
-  if (!scoreId || !quizId) return <></>;
-
-  const { scores, quizzes } = state;
-  const quiz = quizzes[quizId];
-  const score = scores[scoreId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { answers } = score;
   const { id: questionId, syllablesArray } = question;

@@ -1,19 +1,14 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../Model';
+import { QuizFormState } from '../../QuizPage/Model';
 
 const CorrectRhythms = ({
   state,
   questionIndex,
 }: {
-  state: State;
+  state: QuizFormState;
   questionIndex: number;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { syllablesArray } = question;
   return (

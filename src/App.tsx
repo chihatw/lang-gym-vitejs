@@ -132,7 +132,6 @@ const App = () => {
       window.addEventListener('click', createAudioContext);
     }
   }, [state.audioContext]);
-
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       <AppComponent />

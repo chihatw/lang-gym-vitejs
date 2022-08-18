@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
 
-const Mora = ({ mora }: { mora: string }) => {
+const Kana = ({ kana }: { kana: string }) => {
   const theme = useTheme();
   return (
     <div
@@ -14,9 +14,9 @@ const Mora = ({ mora }: { mora: string }) => {
         userSelect: 'none',
       }}
     >
-      {mora}
+      {kana}
     </div>
   );
 };
 
-export default Mora;
+export default Kana;

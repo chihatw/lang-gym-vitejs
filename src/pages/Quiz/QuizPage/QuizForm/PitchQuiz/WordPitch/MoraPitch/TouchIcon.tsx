@@ -2,38 +2,34 @@ import * as R from 'ramda';
 import LabelIcon from '@mui/icons-material/Label';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
-import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../App';
-import { changePitchesArray } from '../../../../../../services/quiz';
-import { ActionTypes } from '../../../../../../Update';
+import React from 'react';
+import { changePitchesArray } from '../../../../../../../services/quiz';
+import { ActionTypes } from '../../../../../../../Update';
 import MoraSeparater from './MoraSeparater';
-import { State } from '../../../../../../Model';
-import { useParams } from 'react-router-dom';
+import { QuizFormAction } from '../../../../Update';
+import { QuizFormState } from '../../../../Model';
 
 const TouchIcon = ({
-  questionIndex,
+  state,
   wordIndex,
   moraIndex,
+  questionIndex,
+  dispatch,
 }: {
-  questionIndex: number;
+  state: QuizFormState;
   wordIndex: number;
   moraIndex: number;
+  questionIndex: number;
+  dispatch: React.Dispatch<QuizFormAction>;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const { state, dispatch } = useContext(AppContext);
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
-  const { disableds, inputPitchesArray } = question;
+  const { inputPitchesArray, disableds } = question;
   const disabled = disableds.includes(wordIndex);
-
   const wordPitches = inputPitchesArray[wordIndex];
   const mora = wordPitches[moraIndex];
   const next = wordPitches[moraIndex + 1];
   const isAccent = !!next && next.length === 1 && mora.length === 2;
-
   const handleClick = () => {
     if (!dispatch) return;
     const updated: string[][][] = changePitchesArray(
@@ -42,8 +38,8 @@ const TouchIcon = ({
       moraIndex
     );
     const updatedState = R.compose(
-      R.assocPath<string[][][], State>(
-        ['quiz', 'questions', questionIndex, 'inputPitchesArray'],
+      R.assocPath<string[][][], QuizFormState>(
+        ['questions', questionIndex, 'inputPitchesArray'],
         updated
       )
     )(state);

@@ -1,71 +1,106 @@
 import * as R from 'ramda';
-import { Navigate, useLocation, useParams } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import React, { useContext, useEffect, useReducer } from 'react';
 
-import { INITIAL_QUIZ_STATE, QuizState, State } from '../../../Model';
-import { Action, ActionTypes } from '../../../Update';
-import { getQuestionSet } from '../../../services/quiz';
-import { Container } from '@mui/material';
-import QuizPageFooter from './QuizPageFooter';
-import QuizPageHeader from '../commons/QuizHeader';
-import QuestionIndex from '../commons/QuestionIndex';
-import PitchQuiz from './PitchQuiz';
-import RhythmQuiz from './RhythmQuiz';
+import { QuizListState, QuizState, ScoreState, State } from '../../../Model';
+import { ActionTypes } from '../../../Update';
+import {
+  answeredQuestionSet,
+  buildNewScore,
+  buildQuizFormState,
+  calcPitchesQuiz,
+  calcRhythmQuiz,
+  getQuestionSet,
+  pitchesArray2Accents,
+  setNewScore,
+  updateQuizzes,
+} from '../../../services/quiz';
 import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../../App';
+import QuizForm from './QuizForm';
+import { QuizFormActionTypes, quizFormReducer } from './Update';
+import { INITIAL_QUIZ_FORM_STATE } from './Model';
 
 const QuizPage = () => {
+  const navigate = useNavigate();
   const { quizId } = useParams();
+
   if (!quizId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-
-  const { auth, isFetching, quizzes } = state;
-  const quiz: QuizState = quizzes[quizId];
+  const [quizFormState, quizFormDispatch] = useReducer(
+    quizFormReducer,
+    INITIAL_QUIZ_FORM_STATE
+  );
+  const { auth, isFetching, quizzes, quizList } = state;
   const { uid } = auth;
+  if (!uid) return <Navigate to='/login' />;
 
+  const quiz: QuizState = quizzes[quizId];
   useEffect(() => {
     if (!isFetching || !dispatch) return;
     const fetchData = async () => {
-      const _quiz = quizzes[quizId];
-      const quiz = _quiz ? _quiz : await getQuestionSet(quizId);
-
+      const _quiz = quiz ? quiz : await getQuestionSet(quizId);
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<QuizState, State>(['quizzes', quizId], quiz)
+        R.assocPath<QuizState, State>(['quizzes', quizId], _quiz)
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
+
+      const quizFormState = buildQuizFormState(updatedState, quizId);
+      quizFormDispatch({
+        type: QuizFormActionTypes.setState,
+        payload: quizFormState,
+      });
     };
     fetchData();
-  }, [isFetching, quizId, quizzes]);
+  }, [isFetching, quiz]);
 
-  if (!uid) return <Navigate to='/login' />;
   if (isFetching) return <SkeletonPage />;
   if (!quiz.title) return <Navigate to='/' />;
 
-  const { type, questions } = quiz;
-  return (
-    <Container maxWidth='sm'>
-      <div style={{ height: 48 }} />
-      <div style={{ paddingTop: 16, paddingBottom: 80 }}>
-        <div style={{ display: 'grid', rowGap: 24 }}>
-          <QuizPageHeader state={state} />
+  const handleSubmit = async () => {
+    const { type, questions, questionCount } = quizFormState;
+    if (!dispatch) return;
+    if (!['articleAccents', 'articleRhythms'].includes(type)) return;
+    const points =
+      type === 'articleAccents'
+        ? calcPitchesQuiz(questions)
+        : calcRhythmQuiz(questions);
+    const inputs: { [questionId: string]: string } = {};
+    questions.forEach((question) => {
+      const { id, inputPitchesArray, inputSpecialMoraArray } = question;
+      const accents = pitchesArray2Accents(inputPitchesArray);
+      inputs[id] = JSON.stringify(
+        type === 'articleAccents' ? accents : inputSpecialMoraArray
+      );
+    });
+    const score = buildNewScore(uid, points, inputs, quizId);
 
-          {questions.map((_, questionIndex) => (
-            <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
-              <QuestionIndex index={questionIndex + 1} />
-              {type === 'articleAccents' && (
-                <PitchQuiz questionIndex={questionIndex} />
-              )}
-              {type === 'articleRhythms' && (
-                <RhythmQuiz questionIndex={questionIndex} />
-              )}
-            </div>
-          ))}
-        </div>
-        <div style={{ height: 32 }} />
-        <QuizPageFooter />
-      </div>
-    </Container>
+    // スコアの永続化
+    let successed = await setNewScore(score);
+    if (!successed) return;
+
+    // 問題セットのリモート更新
+    successed = await answeredQuestionSet(quizId);
+    if (!successed) return;
+
+    const updatedQuizList = updateQuizzes(quiz, score, quizList, questionCount);
+
+    const updatedState = R.compose(
+      R.assocPath<boolean, State>(['isFetching'], true),
+      R.assocPath<ScoreState, State>(['scores', score.id], score),
+      R.assocPath<QuizListState, State>(['quizList'], updatedQuizList)
+    )(state);
+
+    dispatch({ type: ActionTypes.setState, payload: updatedState });
+    navigate(`/score/${score.id}/quiz/${quizId}`);
+  };
+  return (
+    <QuizForm
+      state={quizFormState}
+      dispatch={quizFormDispatch}
+      handleSubmit={handleSubmit}
+    />
   );
 };
 

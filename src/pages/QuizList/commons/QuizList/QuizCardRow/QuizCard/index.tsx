@@ -2,8 +2,8 @@ import { Card, CardContent } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../../../../App';
-import { AnsweredQuiz, State } from '../../../../../../Model';
-import { Action, ActionTypes } from '../../../../../../Update';
+import { AnsweredQuiz } from '../../../../../../Model';
+import { ActionTypes } from '../../../../../../Update';
 import DateDisplay from './DateDisplay';
 import ScoreList from './ScoreList';
 
@@ -19,7 +19,6 @@ const QuizCard = ({
   const { answeredList, unansweredList } = quizList;
   const cards = isAnswered ? answeredList : unansweredList;
   const card = cards[cardIndex];
-
   const navigate = useNavigate();
   const { id, title, createdAt } = card;
   const { scores } = card as AnsweredQuiz;

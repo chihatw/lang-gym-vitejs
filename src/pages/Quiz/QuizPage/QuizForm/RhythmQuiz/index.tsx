@@ -1,24 +1,34 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import RhythmMonitor from './RhythmMonitor';
-import SpeakerButton from '../../commons/SpeakerButton';
+import SpeakerButton from '../../../commons/SpeakerButton';
 import SpecialMoraSelector from './SpecialMoraSelector';
-import { AppContext } from '../../../../App';
-import { useParams } from 'react-router-dom';
+import { QuizFormState } from '../../Model';
+import { QuizFormAction } from '../../Update';
 
-const RhythmQuiz = ({ questionIndex }: { questionIndex: number }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-
-  const { state } = useContext(AppContext);
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+const RhythmQuiz = ({
+  state,
+  questionIndex,
+  dispatch,
+}: {
+  state: QuizFormState;
+  questionIndex: number;
+  dispatch: React.Dispatch<QuizFormAction>;
+}) => {
+  const { audioContext, quizBlob, questions } = state;
   const question = questions[questionIndex];
-  const { syllablesArray } = question;
+  const { syllablesArray, start, end } = question;
   return (
     <div>
-      <SpeakerButton state={state} questionIndex={questionIndex} />
+      {!!audioContext && !!quizBlob && (
+        <SpeakerButton
+          start={start}
+          end={end}
+          quizBlob={quizBlob}
+          audioContext={audioContext}
+        />
+      )}
+
       <div style={{ padding: '0 8px', display: 'grid', rowGap: 24 }}>
         <RhythmMonitor state={state} questionIndex={questionIndex} />
 
@@ -28,9 +38,11 @@ const RhythmQuiz = ({ questionIndex }: { questionIndex: number }) => {
               {syllablesArray[wordIndex].map((_, syllableIndex) => (
                 <SpecialMoraSelector
                   key={syllableIndex}
-                  questionIndex={questionIndex}
+                  state={state}
                   wordIndex={wordIndex}
+                  questionIndex={questionIndex}
                   syllableIndex={syllableIndex}
+                  dispatch={dispatch}
                 />
               ))}
               <div style={{ width: 16 }} />

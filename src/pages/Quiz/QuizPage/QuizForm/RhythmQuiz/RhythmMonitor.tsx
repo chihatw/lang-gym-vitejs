@@ -1,23 +1,18 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../Model';
+import { QuizFormState } from '../../Model';
 
 const RhythmMonitor = ({
   state,
   questionIndex,
 }: {
-  state: State;
+  state: QuizFormState;
   questionIndex: number;
 }) => {
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-  const theme = useTheme();
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
+  const { questions } = state;
   const question = questions[questionIndex];
   const { syllablesArray, monitorSpecialMoraArray } = question;
+  const theme = useTheme();
   return (
     <div
       style={{
@@ -30,11 +25,11 @@ const RhythmMonitor = ({
       {syllablesArray.map((_, wordIndex) => (
         <div style={{ display: 'flex' }} key={wordIndex}>
           {syllablesArray[wordIndex].map((syllable, syllableIndex) => {
-            const { syllable: _syllable } = syllable;
+            const { syllable: kana } = syllable;
             const monitor = monitorSpecialMoraArray[wordIndex][syllableIndex];
             return (
               <div key={syllableIndex}>
-                <span style={{ whiteSpace: 'nowrap' }}>{_syllable}</span>
+                <span style={{ whiteSpace: 'nowrap' }}>{kana}</span>
                 <span style={{ color: '#f50057', whiteSpace: 'nowrap' }}>
                   {monitor}
                 </span>

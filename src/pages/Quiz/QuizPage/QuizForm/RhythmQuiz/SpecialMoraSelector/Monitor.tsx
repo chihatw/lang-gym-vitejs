@@ -1,31 +1,8 @@
 import { IconButton, useTheme } from '@mui/material';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../../Model';
 
-const Monitor = ({
-  state,
-  questionIndex,
-  wordIndex,
-  syllableIndex,
-}: {
-  state: State;
-  questionIndex: number;
-  wordIndex: number;
-  syllableIndex: number;
-}) => {
+const Monitor = ({ specialMora }: { specialMora: string }) => {
   const theme = useTheme();
-  const { quizId } = useParams();
-  if (!quizId) return <></>;
-
-  const { quizzes } = state;
-  const quiz = quizzes[quizId];
-  const { questions } = quiz;
-  const question = questions[questionIndex];
-  const { inputSpecialMoraArray } = question;
-  const SPECIAL_MORAS = inputSpecialMoraArray[wordIndex];
-  const specialMora = SPECIAL_MORAS[syllableIndex];
-
   return (
     <div style={{ margin: '-5px -8px 34px 0' }}>
       <div>

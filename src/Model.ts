@@ -180,40 +180,14 @@ export type Syllable = {
   longVowel?: string;
 };
 
-// quiz にまとめる
-// form で使う変数は quizParams にする
 export type Question = {
   id: string;
   question: string;
-  japanese: string;
-  disableds: number[];
-  inputPitchesArray: string[][][];
-  correctPitchesArray: string[][][];
-  initialPitchesArray: string[][][];
-  start: number;
-  end: number;
-  downloadURL: string;
-  inputSpecialMoraArray: string[][];
-  monitorSpecialMoraArray: string[][];
-  initialSpecialMoraArray: string[][];
-  syllablesArray: Syllable[][];
 };
 
 export const INITIAL_QUESTION: Question = {
   id: '',
   question: '',
-  japanese: '',
-  disableds: [],
-  inputPitchesArray: [],
-  correctPitchesArray: [],
-  initialPitchesArray: [],
-  start: 0,
-  end: 0,
-  downloadURL: '',
-  inputSpecialMoraArray: [],
-  monitorSpecialMoraArray: [],
-  initialSpecialMoraArray: [],
-  syllablesArray: [],
 };
 
 export type QuizState = {
