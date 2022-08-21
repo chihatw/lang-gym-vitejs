@@ -26,12 +26,12 @@ const Selector = ({
 }) => {
   const { state, dispatch } = useContext(AppContext);
   const syllable = syllablesArray[wordIndex][syllableIndex];
-  const { syllable: kana, longVowel } = syllable;
+
   const handleClick = (specialMora: string) => {
     if (!dispatch) return;
     const monitorString = getKanaSpecialMora({
-      mora: kana,
-      fixedVowel: longVowel,
+      mora: syllable.kana,
+      fixedVowel: syllable.longVowel,
       specialMora,
     });
     const updatedInput = [...inputSpecialMoraArray];

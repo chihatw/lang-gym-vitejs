@@ -1,26 +1,28 @@
 import React from 'react';
-import { QuizFormState } from '../../QuizPage/Model';
+import { Quiz, Syllable } from '../../../../Model';
 
 const CorrectRhythms = ({
-  state,
+  quiz,
   questionIndex,
 }: {
-  state: QuizFormState;
+  quiz: Quiz;
   questionIndex: number;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { syllablesArray } = question;
+  const question = quiz.questions[questionIndex];
+  const syllablesArray: Syllable[][] = [];
+  for (const syllables of Object.values(question.syllables)) {
+    syllablesArray.push(syllables);
+  }
+
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {syllablesArray.map((syllableUnit, wordIndex) => (
         <div key={wordIndex} style={{ marginRight: 8 }}>
           {syllableUnit.map((syllable, syllableIndex) => {
-            const { syllable: baseMora, mora: specialMora } = syllable;
             return (
               <span key={syllableIndex}>
-                <span style={{ color: '#555' }}>{baseMora}</span>
-                <span style={{ color: '#f50057' }}>{specialMora}</span>
+                <span style={{ color: '#555' }}>{syllable.kana}</span>
+                <span style={{ color: '#f50057' }}>{syllable.specialMora}</span>
               </span>
             );
           })}

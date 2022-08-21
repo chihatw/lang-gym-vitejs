@@ -1,15 +1,10 @@
+import * as R from 'ramda';
 import { useTheme } from '@mui/material';
-import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../../App';
+import React from 'react';
+import { Quiz } from '../../../../../../../Model';
 import ScoreRow from './ScoreRow';
 
-const ScoreList = ({ cardIndex }: { cardIndex: number }) => {
-  const { state } = useContext(AppContext);
-  const { quizList } = state;
-  const { answeredList } = quizList;
-  const card = answeredList[cardIndex];
-  const { scores } = card;
-
+const ScoreList = ({ quiz }: { quiz: Quiz }) => {
   const theme = useTheme();
   return (
     <div>
@@ -23,8 +18,8 @@ const ScoreList = ({ cardIndex }: { cardIndex: number }) => {
       >
         結果
       </div>
-      {scores.map((_, index) => (
-        <ScoreRow key={index} cardIndex={cardIndex} scoreIndex={index} />
+      {R.reverse(Object.values(quiz.scores)).map((score, index) => (
+        <ScoreRow key={index} score={score} quizId={quiz.id} />
       ))}
     </div>
   );

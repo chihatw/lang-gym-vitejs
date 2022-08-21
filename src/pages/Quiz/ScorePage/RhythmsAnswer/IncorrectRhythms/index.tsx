@@ -1,30 +1,35 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { ScoreState } from '../../../../../Model';
-import { QuizFormState } from '../../../QuizPage/Model';
+import { Quiz, QuizScore, Syllable } from '../../../../../Model';
 import CheckRhythms from './CheckRhythms';
 
 const IncorrectRhythms = ({
-  state,
+  quiz,
   score,
   questionIndex,
 }: {
-  score: ScoreState;
-  state: QuizFormState;
+  quiz: Quiz;
+  score: QuizScore;
   questionIndex: number;
 }) => {
   const theme = useTheme();
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { answers } = score;
-  const { id: questionId, syllablesArray } = question;
 
-  const answer = answers[questionId];
-  const answeredSpecialMoraArray = JSON.parse(answer);
+  const question = quiz.questions[questionIndex];
+  const syllablesArray: Syllable[][] = [];
+  for (const syllables of Object.values(question.syllables)) {
+    syllablesArray.push(syllables);
+  }
+
+  const { rhythmAnswers } = score;
+
+  const answer = rhythmAnswers[questionIndex];
+  const answeredSpecialMoraArray = answer
+    .split('\n')
+    .map((word) => word.split(','));
 
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
-      <CheckRhythms state={state} questionIndex={questionIndex} score={score} />
+      <CheckRhythms quiz={quiz} questionIndex={questionIndex} score={score} />
       <div style={{ display: 'grid', rowGap: 8, padding: '0 8px' }}>
         <div
           style={{
@@ -46,7 +51,9 @@ const IncorrectRhythms = ({
               (wordSyllable, wordIndex) =>
                 // 単語単位で走査。誤答分のみ表示
                 JSON.stringify(answeredSpecialMoraArray[wordIndex]) !==
-                JSON.stringify(wordSyllable.map((s) => s.mora))
+                JSON.stringify(
+                  wordSyllable.map((syllable) => syllable.specialMora)
+                )
             )
             .map((wordSyllable, wordIndex) => (
               <div
@@ -57,15 +64,14 @@ const IncorrectRhythms = ({
                 }}
                 key={wordIndex}
               >
-                {wordSyllable.map((syllable, syllableIndex) => {
-                  const { syllable: baseMora, mora: specialMora } = syllable;
-                  return (
-                    <span key={syllableIndex}>
-                      <span>{baseMora}</span>
-                      <span style={{ color: '#f50057' }}>{specialMora}</span>
+                {wordSyllable.map((syllable, syllableIndex) => (
+                  <span key={syllableIndex}>
+                    <span>{syllable.kana}</span>
+                    <span style={{ color: '#f50057' }}>
+                      {syllable.specialMora}
                     </span>
-                  );
-                })}
+                  </span>
+                ))}
               </div>
             ))}
         </div>

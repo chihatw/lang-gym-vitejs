@@ -6,7 +6,7 @@ export const QuizTypes = {
   articleRhythms: 'articleRhythms',
 };
 
-export type QuizQuestion = {
+export type QuizFormQuestion = {
   id: string;
   end: number;
   start: number;
@@ -19,25 +19,12 @@ export type QuizQuestion = {
   monitorSpecialMoraArray: string[][];
 };
 
-export const INITIAL_QUIZ_QUESTION: QuizQuestion = {
-  id: '',
-  end: 0,
-  start: 0,
-  japanese: '',
-  disableds: [],
-  syllablesArray: [],
-  inputPitchesArray: [],
-  correctPitchesArray: [],
-  inputSpecialMoraArray: [],
-  monitorSpecialMoraArray: [],
-};
-
 export type QuizFormState = {
   audioContext: AudioContext | null;
   title: string;
   createdAt: number;
   type: string;
-  questions: QuizQuestion[];
+  questions: QuizFormQuestion[];
   quizBlob: Blob | null;
   questionCount: number;
 };

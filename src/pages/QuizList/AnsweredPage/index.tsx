@@ -1,44 +1,21 @@
-import * as R from 'ramda';
 import { Navigate, useNavigate } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import { Container } from '@mui/material';
 import StyledButton from '../commons/StyledButton';
 import QuizList from '../commons/QuizList';
-import { getAnsweredQuizList } from '../../../services/quiz';
-import { ActionTypes } from '../../../Update';
 
 import { AppContext } from '../../../App';
-import { AnsweredQuiz, State } from '../../../Model';
 
 const AnsweredPage = () => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
+  if (!state.auth.uid) return <Navigate to='/login' />;
+
   const navigate = useNavigate();
+  const answeredList = state.quizzes.filter(
+    (item) => !!Object.keys(item.scores).length
+  );
 
-  const { auth, isFetching, quizList } = state;
-  const { uid } = auth;
-  const { answeredList } = quizList;
-
-  useEffect(() => {
-    if (!isFetching || !dispatch) return;
-    const fetchData = async () => {
-      const _answeredList = !!answeredList.length
-        ? answeredList
-        : await getAnsweredQuizList(uid);
-
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<AnsweredQuiz[], State>(
-          ['quizList', 'answeredList'],
-          _answeredList
-        )
-      )(state);
-      dispatch({ type: ActionTypes.setState, payload: updatedState });
-    };
-    fetchData();
-  }, [isFetching, dispatch, answeredList, uid]);
-
-  if (!uid) return <Navigate to='/login' />;
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
@@ -46,11 +23,11 @@ const AnsweredPage = () => {
         <StyledButton
           label='未回答'
           color='#52a2aa'
-          handleClick={() => navigate('/quizzes')}
+          handleClick={() => navigate('/quiz/list/unanswered')}
         />
         <StyledButton color='#ccc' disabled label='回答済' />
       </div>
-      <QuizList isAnswered />
+      <QuizList isAnswered quizList={answeredList} />
     </Container>
   );
 };

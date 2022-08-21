@@ -37,16 +37,21 @@ const AppComponent = () => {
     <Layout>
       <Routes>
         <Route index element={<ArticleListPage />} />
+
         <Route path='/article'>
           <Route path='list' element={<ArticleListPage />} />
           <Route path=':articleId' element={<ArticlePage />} />
         </Route>
-        <Route path='/quizzes'>
-          <Route index element={<UnAnsweredPage />} />
-          <Route path={'answered'} element={<AnsweredPage />} />
+
+        <Route path='/quiz'>
+          <Route path='list'>
+            <Route path='unanswered' element={<UnAnsweredPage />} />
+            <Route path='answered' element={<AnsweredPage />} />
+          </Route>
+          <Route path=':quizId/score/:scoreId' element={<ScorePage />} />
+          <Route path=':quizId' element={<QuizPage />} />
         </Route>
-        <Route path='/quiz/:quizId' element={<QuizPage />} />
-        <Route path='/score/:scoreId/quiz/:quizId' element={<ScorePage />} />
+
         <Route path='workout'>
           <Route path='list' element={<WorkoutListPage />} />
           <Route path=':workoutId' element={<WorkoutPage />} />

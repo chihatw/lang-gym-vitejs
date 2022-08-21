@@ -11,7 +11,7 @@ const BackButton = () => {
       <Button
         variant='contained'
         size='small'
-        onClick={() => navigate('/quizzes/answered')}
+        onClick={() => navigate('/quiz/list/answered')}
         style={{
           ...(theme.typography as any).mPlusRounded,
           color: 'white',

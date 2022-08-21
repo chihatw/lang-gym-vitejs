@@ -109,109 +109,70 @@ const INITIAL_LAYOUT_STATE: LayoutState = {
   height: window.innerHeight,
 };
 
-export type UnansweredQuiz = {
-  id: string;
-  title: string;
-  createdAt: number;
-};
-
-// quiz にまとめる
-export type Score = {
-  id: string;
+export type QuizScore = {
   score: number;
   createdAt: number;
-  questionCount: number;
+  pitchAnswers: string[];
+  rhythmAnswers: string[];
 };
 
-export type AnsweredQuiz = {
-  id: string;
-  title: string;
-  createdAt: number;
-  scores: Score[];
-};
-
-export type QuizListState = {
-  unansweredList: UnansweredQuiz[];
-  answeredList: AnsweredQuiz[];
-};
-
-const INITIAL_QUIZ_LIST_STATE: QuizListState = {
-  unansweredList: [],
-  answeredList: [],
-};
-
-export type ScoreState = {
-  id: string;
-  uid: string;
-  score: number;
-  answers: { [key: string]: string };
-  createdAt: number;
-  questionSet: string;
-};
-
-export const INITIAL_SCORE_STATE: ScoreState = {
-  id: '',
-  uid: '',
+export const INITIAL_QUIZ_SCORE: QuizScore = {
   score: 0,
-  answers: {},
   createdAt: 0,
-  questionSet: '',
+  pitchAnswers: [],
+  rhythmAnswers: [],
 };
 
-export type QuestionSet = {
-  id: string;
-  uid: string;
-  type: 'articleRhythms' | 'articleAccents';
-  title: string;
-  createdAt: number;
-  questionCount: number;
-  questionGroups: string[];
+export type QuizQuestion = {
+  japanese: string; // pitchQuiz で利用
+  pitchStr: string; // pitchQuiz で利用
+  disableds: number[]; // pitchQuiz の非題化を wordIndex で指定
+  end: number; // rhythmQuiz で利用
+  start: number; // rhythmQuiz で利用
+  syllables: { [index: number]: Syllable[] }; // rhythmQuiz で利用
 };
 
-export type Accents = {
-  moras: string[];
-  pitchPoint: number;
+export const INITIAL_QUIZ_QUESTION: QuizQuestion = {
+  end: 0,
+  start: 0,
+  pitchStr: '',
+  japanese: '',
+  disableds: [],
+  syllables: {},
 };
 
-export type Syllable = {
-  mora: string;
-  disabled: string;
-  syllable: string;
-  longVowel?: string;
-};
+export type QuizScores = { [createdAt: number]: QuizScore };
+export type QuizQuestions = { [index: number]: QuizQuestion };
 
-export type Question = {
-  id: string;
-  question: string;
-};
-
-export const INITIAL_QUESTION: Question = {
-  id: '',
-  question: '',
-};
-
-export type QuizState = {
+export type Quiz = {
   id: string;
   uid: string;
   type: string;
   title: string;
-  quizBlob: Blob | null;
-  questions: Question[];
+  scores: QuizScores;
+  questions: QuizQuestions;
   createdAt: number;
-  initializing: boolean;
+  downloadURL: string;
   questionCount: number;
 };
 
-export const INITIAL_QUIZ_STATE: QuizState = {
+export const INITIAL_QUIZ: Quiz = {
   id: '',
   uid: '',
   type: '',
   title: '',
-  quizBlob: null,
-  questions: [],
+  scores: {},
+  questions: {},
   createdAt: 0,
-  initializing: true,
+  downloadURL: '',
   questionCount: 0,
+};
+
+export type Syllable = {
+  kana: string;
+  disabled: string;
+  longVowel: string;
+  specialMora: string;
 };
 
 export type RandomWorkoutCue = {
@@ -287,15 +248,14 @@ export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
 export type State = {
   auth: AuthState;
   layout: LayoutState;
-  quizList: QuizListState;
   workout: RandomWorkoutState;
   isFetching: boolean;
   articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
   audioContext: AudioContext | null;
   articleListParams: ArticleListParams;
-  quizzes: { [questionSetId: string]: QuizState }; // quiz と score はまとめる
-  scores: { [scoreId: string]: ScoreState }; // quiz と score はまとめる
+  quizzes: Quiz[];
+  blobs: { [downloadURL: string]: Blob };
   blobURLs: {
     [imagePath: string]: string;
   };
@@ -304,7 +264,6 @@ export type State = {
 export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
   layout: INITIAL_LAYOUT_STATE,
-  quizList: INITIAL_QUIZ_LIST_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
   articleList: [],
@@ -312,6 +271,6 @@ export const INITIAL_STATE: State = {
   audioContext: null,
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},
-  quizzes: {},
-  scores: {},
+  quizzes: [],
+  blobs: {},
 };

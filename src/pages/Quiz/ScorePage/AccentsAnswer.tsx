@@ -1,31 +1,30 @@
 import { PitchLine } from '@chihatw/lang-gym-h.ui.pitch-line';
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { Divider, useTheme } from '@mui/material';
-import accentsForPitchesArray from 'accents-for-pitches-array';
 import React from 'react';
-import { ScoreState } from '../../../Model';
-import { QuizFormState } from '../QuizPage/Model';
+import string2PitchesArray from 'string2pitches-array';
+import { Quiz } from '../../../Model';
 import CorrectAnswer from './commons/CorrectAnswer';
 
 const AccentsAnswer = ({
-  state,
-  score,
+  quiz,
+  scoreId,
   questionIndex,
 }: {
-  score: ScoreState;
-  state: QuizFormState;
+  quiz: Quiz;
+  scoreId: string;
   questionIndex: number;
 }) => {
   const theme = useTheme();
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { id: questionId, correctPitchesArray } = question;
-  const { answers } = score;
-  const answer = answers[questionId];
-  const answeredPitchesArray = accentsForPitchesArray(JSON.parse(answer));
-  const isCorrect =
-    JSON.stringify(correctPitchesArray) ===
-    JSON.stringify(answeredPitchesArray);
+
+  const question = quiz.questions[questionIndex];
+  const score = quiz.scores[Number(scoreId)];
+  const answer = score.pitchAnswers[questionIndex];
+
+  const correctPitchesArray = string2PitchesArray(question.pitchStr);
+  const answeredPitchesArray = string2PitchesArray(answer);
+
+  const isCorrect = question.pitchStr === answer;
   if (isCorrect) {
     return (
       <CorrectAnswer>
@@ -33,6 +32,7 @@ const AccentsAnswer = ({
       </CorrectAnswer>
     );
   }
+
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>

@@ -1,24 +1,28 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { ScoreState } from '../../../../../Model';
-import { QuizFormState } from '../../../QuizPage/Model';
+import { Quiz, QuizScore, Syllable } from '../../../../../Model';
 
 const CheckRhythms = ({
   score,
-  state,
+  quiz,
   questionIndex,
 }: {
-  score: ScoreState;
-  state: QuizFormState;
+  score: QuizScore;
+  quiz: Quiz;
   questionIndex: number;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { answers } = score;
-  const { id: questionId, syllablesArray } = question;
+  const question = quiz.questions[questionIndex];
+  const syllablesArray: Syllable[][] = [];
+  for (const syllables of Object.values(question.syllables)) {
+    syllablesArray.push(syllables);
+  }
 
-  const answer = answers[questionId];
-  const answeredSpecialMoraArray = JSON.parse(answer);
+  const { rhythmAnswers } = score;
+
+  const answer = rhythmAnswers[questionIndex];
+  const answeredSpecialMoraArray = answer
+    .split('\n')
+    .map((word) => word.split(','));
 
   const theme = useTheme();
   return (
@@ -34,7 +38,7 @@ const CheckRhythms = ({
         const answeredWordMora = answeredSpecialMoraArray[wordIndex];
         const isCorrect =
           JSON.stringify(answeredWordMora) ===
-          JSON.stringify(wordMora.map(({ mora: specialMora }) => specialMora));
+          JSON.stringify(wordMora.map(({ specialMora }) => specialMora));
         return (
           <div key={wordIndex} style={{ padding: '0 16px 16px 0' }}>
             <div
@@ -45,12 +49,11 @@ const CheckRhythms = ({
               }}
             >
               {wordMora.map((syllable, syllableIndex) => {
-                const { syllable: baseMora } = syllable;
                 const answeredSpecialMora =
                   answeredSpecialMoraArray[wordIndex][syllableIndex];
                 return (
                   <span key={syllableIndex}>
-                    <span style={{ color: '#555' }}>{baseMora}</span>
+                    <span style={{ color: '#555' }}>{syllable.kana}</span>
                     <span style={{ color: '#f50057' }}>
                       {answeredSpecialMora}
                     </span>

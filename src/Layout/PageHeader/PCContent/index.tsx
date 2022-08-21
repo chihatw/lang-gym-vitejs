@@ -9,8 +9,11 @@ import LabelButton from './LabelButton';
 const PCContent = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
-  const { quizList } = state;
-  const { unansweredList } = quizList;
+
+  const unansweredList = state.quizzes.filter(
+    (item) => !Object.keys(item.scores).length
+  );
+
   return (
     <div
       style={{
@@ -35,7 +38,7 @@ const PCContent = () => {
         />
         <BadgeButton
           label='小テスト'
-          handleClick={() => navigate('/quizzes')}
+          handleClick={() => navigate('/quiz/list/unanswered')}
           badgeContent={unansweredList.length}
         />
         <LabelButton

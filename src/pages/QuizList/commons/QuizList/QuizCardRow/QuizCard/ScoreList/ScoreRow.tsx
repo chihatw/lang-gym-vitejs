@@ -6,26 +6,18 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ActionTypes } from '../../../../../../../Update';
 import { AppContext } from '../../../../../../../App';
+import { QuizScore } from '../../../../../../../Model';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
 
-const ScoreRow = ({
-  cardIndex,
-  scoreIndex,
-}: {
-  cardIndex: number;
-  scoreIndex: number;
-}) => {
+const ScoreRow = ({ score, quizId }: { score: QuizScore; quizId: string }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { quizList } = state;
-  const { answeredList } = quizList;
-  const card = answeredList[cardIndex];
-  const { scores, id: questionSetId } = card;
-  const score = scores[scoreIndex];
+  const quiz = state.quizzes.find((item) => item.id === quizId);
+  if (!quiz) return <></>;
   const theme = useTheme();
   const navigate = useNavigate();
-  const { score: _score, id, createdAt, questionCount } = score;
+
   return (
     <Button
       fullWidth
@@ -41,16 +33,16 @@ const ScoreRow = ({
         if (!dispatch) return;
         e.stopPropagation();
         dispatch({ type: ActionTypes.startFetching });
-        navigate(`/score/${id}/quiz/${questionSetId}`);
+        navigate(`/quiz/${quizId}/score/${score.createdAt}`);
       }}
     >
       <span>
-        {_score === questionCount
+        {score.score === quiz.questionCount
           ? '全問正解'
-          : Math.round((_score / questionCount) * 100) + '%正解'}
+          : Math.round((score.score / quiz.questionCount) * 100) + '%正解'}
       </span>
       <span className='center' />
-      <span>{dayjs(createdAt).fromNow()}</span>
+      <span>{dayjs(score.createdAt).fromNow()}</span>
     </Button>
   );
 };

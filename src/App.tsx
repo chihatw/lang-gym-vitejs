@@ -9,15 +9,15 @@ import {
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
   LayoutState,
+  Quiz,
   State,
-  UnansweredQuiz,
   User,
 } from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleList } from './services/article';
-import { getUnansweredQuizList } from './services/quiz';
 import { getUsers } from './services/auth';
+import { getQuizzes } from './services/quiz';
 
 export const AppContext = createContext<{
   state: State;
@@ -100,9 +100,9 @@ const App = () => {
         _params = params;
       }
 
-      const unansweredList = !!state.quizList.unansweredList.length
-        ? state.quizList.unansweredList
-        : await getUnansweredQuizList(state.auth.uid);
+      const _quizzes = !!state.quizzes.length
+        ? state.quizzes
+        : await getQuizzes(state.auth.uid);
 
       isFetched.current = true;
 
@@ -110,15 +110,12 @@ const App = () => {
         R.assocPath<boolean, State>(['auth', 'initializing'], false),
         R.assocPath<Article[], State>(['articleList'], _articles),
         R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
-        R.assocPath<UnansweredQuiz[], State>(
-          ['quizList', 'unansweredList'],
-          unansweredList
-        )
+        R.assocPath<Quiz[], State>(['quizzes'], _quizzes)
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [state.auth.uid, state.quizList.unansweredList, state.articleList.length]);
+  }, [state.auth.uid, state.quizzes, state.articleList.length]);
 
   useEffect(() => {
     const createAudioContext = () => {

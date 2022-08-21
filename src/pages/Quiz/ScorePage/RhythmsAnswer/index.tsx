@@ -1,47 +1,47 @@
 import React from 'react';
-import { ScoreState } from '../../../../Model';
-import { QuizFormState } from '../../QuizPage/Model';
+import { Quiz, Syllable } from '../../../../Model';
 import CorrectAnswer from '../commons/CorrectAnswer';
 import CorrectRhythms from './CorrectRhythms';
 import IncorrectRhythms from './IncorrectRhythms';
 
 const RhythmsAnswer = ({
-  score,
-  state,
+  scoreId,
+  quiz,
   questionIndex,
 }: {
-  score: ScoreState;
-  state: QuizFormState;
+  quiz: Quiz;
+  scoreId: string;
   questionIndex: number;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { answers } = score;
-  const { id: questionId, syllablesArray } = question;
+  const question = quiz.questions[questionIndex];
+  const syllablesArray: Syllable[][] = [];
+  for (const syllables of Object.values(question.syllables)) {
+    syllablesArray.push(syllables);
+  }
 
-  const answer = answers[questionId];
-  const answeredSpecialMoraArray = JSON.parse(answer);
+  const score = quiz.scores[Number(scoreId)];
+  const { rhythmAnswers } = score;
+  const answer = rhythmAnswers[questionIndex];
+  const answeredSpecialMoraArray: string[][] = answer
+    .split('\n')
+    .map((word) => word.split(',').map((specialMora) => specialMora));
 
   if (
     JSON.stringify(answeredSpecialMoraArray) ===
     JSON.stringify(
       syllablesArray.map((syllableUnit) =>
-        syllableUnit.map((syllable) => syllable.mora)
+        syllableUnit.map((syllable) => syllable.specialMora)
       )
     )
   ) {
     return (
       <CorrectAnswer>
-        <CorrectRhythms state={state} questionIndex={questionIndex} />
+        <CorrectRhythms quiz={quiz} questionIndex={questionIndex} />
       </CorrectAnswer>
     );
   }
   return (
-    <IncorrectRhythms
-      state={state}
-      questionIndex={questionIndex}
-      score={score}
-    />
+    <IncorrectRhythms quiz={quiz} questionIndex={questionIndex} score={score} />
   );
 };
 

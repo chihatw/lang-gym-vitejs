@@ -16,8 +16,9 @@ const PageFooter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const { quizList } = state;
-  const { unansweredList } = quizList;
+  const unansweredList = state.quizzes.filter(
+    (item) => !Object.keys(item.scores).length
+  );
 
   const [value, setValue] = useState(-1);
 
@@ -30,7 +31,7 @@ const PageFooter = () => {
       case '/workout/list':
         navItemIndex = 1;
         break;
-      case '/quizzes':
+      case '/quiz/list/unanswered':
         navItemIndex = 2;
         break;
       case '/account':
@@ -57,7 +58,7 @@ const PageFooter = () => {
         break;
       }
       case 2: {
-        path = '/quizzes';
+        path = '/quiz/list/unanswered';
         break;
       }
       case 3: {

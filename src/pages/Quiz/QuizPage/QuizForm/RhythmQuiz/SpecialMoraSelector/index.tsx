@@ -27,11 +27,10 @@ const SpecialMoraSelector = ({
     question;
   const wordSyllable = syllablesArray[wordIndex];
   const inputSpecialMoras = inputSpecialMoraArray[wordIndex];
-  const mora = wordSyllable[syllableIndex];
+  const syllable = wordSyllable[syllableIndex];
   const inputSpecialMora = inputSpecialMoras[syllableIndex];
   const specialMoras = inputSpecialMoraArray[wordIndex];
   const specialMora = specialMoras[syllableIndex];
-  const { syllable } = mora;
 
   const [selected, setSelected] = useState(false);
   const handleToggle = () => {
@@ -66,7 +65,7 @@ const SpecialMoraSelector = ({
           userSelect: 'none',
         }}
       >
-        <div style={{ width: 32, textAlign: 'center' }}>{syllable}</div>
+        <div style={{ width: 32, textAlign: 'center' }}>{syllable.kana}</div>
         {<ToggleSelectorIcon handleToggle={handleToggle} />}
       </div>
 

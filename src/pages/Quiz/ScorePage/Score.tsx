@@ -17,17 +17,14 @@ const Score = ({ state }: { state: State }) => {
   const { scoreId, quizId } = useParams();
   if (!scoreId || !quizId) return <></>;
 
-  const { scores: scoresState, quizzes } = state;
-  const quiz = quizzes[quizId];
-  const scoreState = scoresState[scoreId];
-  const { questionCount } = quiz;
-
-  const { score: points } = scoreState;
+  const { quizzes } = state;
+  const quiz = quizzes.find((item) => item.id === quizId);
+  if (!quiz) return <></>;
+  const score = quiz.scores[Number(scoreId)];
 
   const theme = useTheme();
 
-  const ratio = Math.round((points / questionCount) * 100);
-  const score = `${ratio}%`;
+  const ratio = Math.round((score.score / quiz.questionCount) * 100);
 
   const comment = (() => {
     if (ratio < 100 && ratio >= 75) {
@@ -67,7 +64,7 @@ const Score = ({ state }: { state: State }) => {
           textAlign: 'center',
         }}
       >
-        {score}
+        {`${ratio}%`}
       </div>
       <div
         style={{

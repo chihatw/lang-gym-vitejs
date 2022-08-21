@@ -25,11 +25,10 @@ const RhythmMonitor = ({
       {syllablesArray.map((_, wordIndex) => (
         <div style={{ display: 'flex' }} key={wordIndex}>
           {syllablesArray[wordIndex].map((syllable, syllableIndex) => {
-            const { syllable: kana } = syllable;
             const monitor = monitorSpecialMoraArray[wordIndex][syllableIndex];
             return (
               <div key={syllableIndex}>
-                <span style={{ whiteSpace: 'nowrap' }}>{kana}</span>
+                <span style={{ whiteSpace: 'nowrap' }}>{syllable.kana}</span>
                 <span style={{ color: '#f50057', whiteSpace: 'nowrap' }}>
                   {monitor}
                 </span>

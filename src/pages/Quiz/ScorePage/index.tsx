@@ -1,17 +1,10 @@
 import * as R from 'ramda';
 import { Navigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Container } from '@mui/material';
 
-import { QuizState, ScoreState, State } from '../../../Model';
-import { ActionTypes } from '../../../Update';
 import QuestionIndex from '../commons/QuestionIndex';
-import {
-  buildQuizFormState,
-  getQuestionSet,
-  getQuestionSetScore,
-} from '../../../services/quiz';
 
 import SpeakerButton from '../commons/SpeakerButton';
 import AccentsAnswer from './AccentsAnswer';
@@ -19,93 +12,86 @@ import QuizPageHeader from '../commons/QuizPageHeader';
 import Score from './Score';
 import RhythmsAnswer from './RhythmsAnswer';
 import ScoreFooter from './ScoreFooter';
-import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../../App';
-import { QuizFormActionTypes, quizFormReducer } from '../QuizPage/Update';
-import { INITIAL_QUIZ_FORM_STATE } from '../QuizPage/Model';
+import { getBlob } from '../../../services/quiz';
+import { State } from '../../../Model';
+import { ActionTypes } from '../../../Update';
 
 const ScorePage = () => {
-  const { state, dispatch } = useContext(AppContext);
-  const [quizFormState, quizFormDispatch] = useReducer(
-    quizFormReducer,
-    INITIAL_QUIZ_FORM_STATE
-  );
-  const { scoreId, quizId } = useParams();
+  const { quizId, scoreId } = useParams();
   if (!quizId || !scoreId) return <></>;
-  const { auth, isFetching, scores, quizzes, audioContext } = state;
-  const quiz = quizzes[quizId];
-  const score = scores[scoreId];
-  const { uid } = auth;
+  const { state, dispatch } = useContext(AppContext);
+
+  if (!state.auth.uid) return <Navigate to='/login' />;
+
+  const quiz = state.quizzes.find((item) => item.id === quizId);
+  if (!quiz) return <></>;
 
   useEffect(() => {
-    if (!isFetching || !scoreId || !quizId || !dispatch) return;
-    const fetchData = async () => {
-      const _score = score || (await getQuestionSetScore(scoreId));
-      const _quiz = quiz || (await getQuestionSet(quizId));
+    if (!state.isFetching || !dispatch) return;
 
+    const fetchData = async () => {
+      let _blob: Blob | null = null;
+      if (quiz.downloadURL) {
+        _blob =
+          state.blobs[quiz.downloadURL] || (await getBlob(quiz.downloadURL));
+      }
+
+      const updatedBlobs = { ...state.blobs };
+      if (_blob) {
+        updatedBlobs[quiz.downloadURL] = _blob;
+      }
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<QuizState, State>(['quizzes', quizId], _quiz),
-        R.assocPath<ScoreState, State>(['scores', scoreId], _score)
+        R.assocPath<{ [downloadURL: string]: Blob }, State>(
+          ['blobs'],
+          updatedBlobs
+        )
       )(state);
-
       dispatch({ type: ActionTypes.setState, payload: updatedState });
-
-      const quizFormState = buildQuizFormState(updatedState, quizId);
-      quizFormDispatch({
-        type: QuizFormActionTypes.setState,
-        payload: quizFormState,
-      });
     };
-
     fetchData();
-  }, [isFetching, scoreId, quizId, score, quiz]);
-
-  if (!uid) return <Navigate to='/login' />;
-  if (isFetching) return <SkeletonPage />;
-  if (!score.id || !quiz.id) return <Navigate to='/' />;
-  const { title, createdAt, questions, type, quizBlob } = quizFormState;
+  }, [quiz, state.blobs]);
+  if (state.isFetching) return <></>;
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16, paddingBottom: 80 }}>
         <div style={{ display: 'grid', rowGap: 24 }}>
-          <QuizPageHeader title={title} createdAt={createdAt} />
+          <QuizPageHeader title={quiz.title} createdAt={quiz.createdAt} />
           <Score state={state} />
           <div style={{ display: 'grid', rowGap: 24 }}>
-            {questions.map((question, questionIndex) => {
-              const { start, end } = question;
-              return (
-                <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
-                  <QuestionIndex index={questionIndex + 1} />
-                  {type === 'articleAccents' && (
-                    <AccentsAnswer
-                      score={score}
-                      state={quizFormState}
-                      questionIndex={questionIndex}
-                    />
-                  )}
-                  {type === 'articleRhythms' && (
-                    <div>
-                      {!!quizBlob && !!audioContext && (
+            {Object.values(quiz.questions).map((question, questionIndex) => (
+              <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
+                <QuestionIndex index={questionIndex + 1} />
+                {quiz.type === 'articleAccents' && (
+                  <AccentsAnswer
+                    quiz={quiz}
+                    scoreId={scoreId}
+                    questionIndex={questionIndex}
+                  />
+                )}
+                {quiz.type === 'articleRhythms' && (
+                  <div>
+                    {!!state.blobs[quiz.downloadURL] &&
+                      !!state.audioContext && (
                         <SpeakerButton
-                          start={start}
-                          end={end}
-                          quizBlob={quizBlob}
-                          audioContext={audioContext}
+                          start={question.start}
+                          end={question.end}
+                          quizBlob={state.blobs[quiz.downloadURL]}
+                          audioContext={state.audioContext}
                         />
                       )}
 
-                      <RhythmsAnswer
-                        score={score}
-                        state={quizFormState}
-                        questionIndex={questionIndex}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    <RhythmsAnswer
+                      scoreId={scoreId}
+                      quiz={quiz}
+                      questionIndex={questionIndex}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
         <div style={{ height: 80 }} />
