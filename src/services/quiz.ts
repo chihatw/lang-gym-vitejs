@@ -92,7 +92,7 @@ export const changePitchesArray = (
   }
   // 頭高以外
   targetWord = targetWord.map((mora, index) => {
-    const kana = mora[0];
+    const kana: string = mora[0];
     if (index === 0) {
       return [kana];
     } else if (index <= moraIndex) {
@@ -109,13 +109,12 @@ export const calcPitchesQuiz = (questions: QuizFormQuestion[]) => {
   let points = 0;
 
   questions.forEach((question) => {
-    const { inputPitchesArray, correctPitchesArray, disableds } = question;
-    inputPitchesArray.forEach((wordPitches, wordIndex) => {
+    question.inputPitchesArray.forEach((wordPitches, wordIndex) => {
       // アクセント固定は採点しない
-      if (disableds.includes(wordIndex)) return;
+      if (question.disableds.includes(wordIndex)) return;
 
       // 正解数を増やす
-      const correctPitches = correctPitchesArray[wordIndex];
+      const correctPitches = question.correctPitchesArray[wordIndex];
       if (JSON.stringify(wordPitches) === JSON.stringify(correctPitches)) {
         points++;
       }
@@ -127,13 +126,15 @@ export const calcPitchesQuiz = (questions: QuizFormQuestion[]) => {
 export const calcRhythmQuiz = (questions: QuizFormQuestion[]) => {
   let points = 0;
   questions.forEach((question) => {
-    const { inputSpecialMoraArray, syllablesArray } = question;
-    syllablesArray.forEach((wordMora, wordIndex) => {
+    question.syllablesArray.forEach((wordMora, wordIndex) => {
+      // 特殊拍固定は採点しない
+      if (question.disableds.includes(wordIndex)) return;
+
       // wordMoraがすべて合っていれば、正解数を増やす
       let isCorrect = true;
       wordMora.forEach((syllable, syllableIndex) => {
         const inputSpecialMora =
-          inputSpecialMoraArray[wordIndex][syllableIndex];
+          question.inputSpecialMoraArray[wordIndex][syllableIndex];
         syllable.specialMora !== inputSpecialMora && (isCorrect = false);
       });
       isCorrect && points++;
@@ -230,21 +231,23 @@ export const buildQuizFormState = (
     const inputSpecialMoraArray: string[][] = [];
     const monitorSpecialMoraArray: string[][] = [];
 
-    Object.values(question.syllables).forEach((wordSyllable) => {
+    Object.values(question.syllables).forEach((wordSyllable, wordIndex) => {
       syllablesArray.push(wordSyllable);
 
       const monitorWordSpecialMora: string[] = [];
       const inputWordSpecialMora: string[] = [];
       const correctWordSpecialMora: string[] = [];
 
+      const isDisabled = question.disableds.includes(wordIndex);
+
       wordSyllable.forEach((syllable) => {
         correctWordSpecialMora.push(syllable.specialMora);
-        if (!!syllable.disabled) {
-          inputWordSpecialMora.push(syllable.disabled);
+        if (isDisabled) {
+          inputWordSpecialMora.push(syllable.specialMora);
           const monitorString = getKanaSpecialMora({
             mora: syllable.kana,
             fixedVowel: syllable.longVowel,
-            specialMora: syllable.disabled,
+            specialMora: syllable.specialMora,
           });
           monitorWordSpecialMora.push(monitorString);
         } else {

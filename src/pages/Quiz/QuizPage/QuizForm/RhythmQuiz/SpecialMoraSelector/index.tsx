@@ -21,8 +21,7 @@ const SpecialMoraSelector = ({
   questionIndex: number;
   dispatch: React.Dispatch<QuizFormAction>;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
+  const question = state.questions[questionIndex];
   const { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray } =
     question;
   const wordSyllable = syllablesArray[wordIndex];
@@ -31,6 +30,8 @@ const SpecialMoraSelector = ({
   const inputSpecialMora = inputSpecialMoras[syllableIndex];
   const specialMoras = inputSpecialMoraArray[wordIndex];
   const specialMora = specialMoras[syllableIndex];
+
+  const disabled = question.disableds.includes(wordIndex);
 
   const [selected, setSelected] = useState(false);
   const handleToggle = () => {
@@ -66,7 +67,7 @@ const SpecialMoraSelector = ({
         }}
       >
         <div style={{ width: 32, textAlign: 'center' }}>{syllable.kana}</div>
-        {<ToggleSelectorIcon handleToggle={handleToggle} />}
+        {<ToggleSelectorIcon handleToggle={handleToggle} disabled={disabled} />}
       </div>
 
       {/* 特殊拍が選択済の場合、特殊拍を表示する */}

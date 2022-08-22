@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { useTheme } from '@mui/material';
 import React from 'react';
 import { Quiz } from '../../../../../../../Model';
@@ -18,9 +17,11 @@ const ScoreList = ({ quiz }: { quiz: Quiz }) => {
       >
         結果
       </div>
-      {R.reverse(Object.values(quiz.scores)).map((score, index) => (
-        <ScoreRow key={index} score={score} quizId={quiz.id} />
-      ))}
+      {Object.values(quiz.scores)
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .map((score, index) => (
+          <ScoreRow key={index} score={score} quizId={quiz.id} />
+        ))}
     </div>
   );
 };

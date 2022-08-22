@@ -2,7 +2,13 @@ import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
 import React from 'react';
 
-const ToggleSelectorIcon = ({ handleToggle }: { handleToggle: () => void }) => {
+const ToggleSelectorIcon = ({
+  disabled,
+  handleToggle,
+}: {
+  disabled?: boolean;
+  handleToggle: () => void;
+}) => {
   return (
     <div
       style={{
@@ -10,10 +16,10 @@ const ToggleSelectorIcon = ({ handleToggle }: { handleToggle: () => void }) => {
         left: 16,
       }}
     >
-      <IconButton size='small' onClick={handleToggle}>
+      <IconButton size='small' disabled={disabled} onClick={handleToggle}>
         <LabelOutlinedIcon
           style={{
-            color: '#86bec4',
+            color: disabled ? '#ccc' : '#86bec4',
             position: 'relative',
             transform: 'rotate(270deg)',
           }}
@@ -22,10 +28,10 @@ const ToggleSelectorIcon = ({ handleToggle }: { handleToggle: () => void }) => {
       <div
         style={{
           top: -15,
-          left: 14,
+          left: 16,
           height: 21,
           position: 'absolute',
-          borderLeft: `2px dotted #86bec4`,
+          borderLeft: `2px dotted ${disabled ? '#ccc' : '#86bec4'}`,
         }}
       />
     </div>

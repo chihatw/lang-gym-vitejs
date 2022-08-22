@@ -15,17 +15,16 @@ const RhythmQuiz = ({
   questionIndex: number;
   dispatch: React.Dispatch<QuizFormAction>;
 }) => {
-  const { audioContext, quizBlob, questions } = state;
-  const question = questions[questionIndex];
+  const question = state.questions[questionIndex];
   const { syllablesArray, start, end } = question;
   return (
     <div>
-      {!!audioContext && !!quizBlob && (
+      {!!state.audioContext && !!state.quizBlob && (
         <SpeakerButton
           start={start}
           end={end}
-          quizBlob={quizBlob}
-          audioContext={audioContext}
+          quizBlob={state.quizBlob}
+          audioContext={state.audioContext}
         />
       )}
 
