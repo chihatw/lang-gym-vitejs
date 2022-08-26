@@ -24,7 +24,7 @@ const WorkingMemoryPage = () => {
   if (!workoutId) return <></>;
 
   const workingMemory = state.workingMemories[workoutId];
-  if (!workingMemory) return;
+  if (!workingMemory) return <></>;
 
   const [workingMemoryFormState, workingMemoryFormDispatch] = useReducer(
     workingMemoryFormReducer,
