@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /aSentences/{aSentence} {
+   	  allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /articles/{article} {
+   	  allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /assignments/{assignment} {
+   	  allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }    
+
+    match /sentences/{sentence} {
+   	  allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /users/{user} {
+   	  allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    } 
+
+    match /sentenceParses/{sentenceParse} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /sentenceParseNews/{sentenceParseNew} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /workouts/{workout} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+      	&& request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /articleSentenceForms/{articleSentenceForm} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+        && request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+    
+    match /randomWorkouts/{randomWorkout} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+        && request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+    
+    match /quizzes/{quiz} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+        && request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+
+    match /workingMemories/{workingMemory} {
+      allow read: if request.auth != null
+      allow create,update: if request.auth != null
+      allow delete: if request.auth != null
+        && request.auth.token.email == 'chiha.tw@gmail.com'
+    }
+  }
+}

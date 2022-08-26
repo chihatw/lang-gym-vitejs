@@ -15,6 +15,7 @@ import PasswordPage from '../pages/Auth/Setting/PasswordPage';
 import Layout from '../Layout';
 import WorkoutListPage from '../pages/Workout/WorkoutListPage';
 import WorkoutPage from '../pages/Workout/WorkoutPage';
+import WorkingMemoryPage from '../pages/Workout/WorkingMemoryPage';
 
 const AppComponent = () => {
   const { pathname } = useLocation();
@@ -55,6 +56,9 @@ const AppComponent = () => {
         <Route path='workout'>
           <Route path='list' element={<WorkoutListPage />} />
           <Route path=':workoutId' element={<WorkoutPage />} />
+        </Route>
+        <Route path='memory'>
+          <Route path=':workoutId' element={<WorkingMemoryPage />} />
         </Route>
         <Route path='/account'>
           <Route index element={<AccountPage />} />

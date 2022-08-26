@@ -2,12 +2,9 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { IconButton, Slider, useTheme } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+import { createSourceNode } from '../../services/utils';
 import TimePane from './TimePane';
-import {
-  createSourceNode,
-  currentTimeToSliderValue,
-  sliderValueToCurrentTime,
-} from './utils';
+import { currentTimeToSliderValue, sliderValueToCurrentTime } from './utils';
 
 const BlobSlider = ({
   blob,

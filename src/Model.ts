@@ -232,6 +232,9 @@ export const INITIAL_RANDOM_WORKOUT_PARAMS: RandomWorkoutParams = {
   isChecking: false,
 };
 
+// todo 将来的に blobs を、App に統合、params は局部的な RandomWorkoutFormState で対応する
+// workouts は App 層で取得するようにして、
+// RandomWorkoutFormState 作成時点で blob を作成、メモ化
 export type RandomWorkoutState = {
   blobs: { [workoutId: string]: Blob | null };
   params: RandomWorkoutParams;
@@ -244,10 +247,79 @@ export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
   workouts: {},
 };
 
+export type WorkingMemoryAnswerLog = {
+  tapped: { [index: number]: string };
+  duration: number;
+};
+
+export const INITIAL_WORKING_MEMORY_ANSWER_LOG: WorkingMemoryAnswerLog = {
+  tapped: {},
+  duration: 0,
+};
+
+export type WorkingMemoryAnswer = {
+  log: { [index: number]: WorkingMemoryAnswerLog };
+  cueIds: string[];
+  offset: number;
+  duration: number;
+  createdAt: number;
+  correctRatio: number;
+};
+
+export const INITIAL_WORKING_MEMORY_ANSWER: WorkingMemoryAnswer = {
+  log: {},
+  cueIds: [],
+  offset: 0,
+  duration: 0,
+  createdAt: 0,
+  correctRatio: 0,
+};
+
+export type WorkingMemoryCue = {
+  end: number;
+  id: string;
+  start: number;
+  pitchStr: string;
+};
+
+export const INITIAL_WORKING_MEMORY_CUE: WorkingMemoryCue = {
+  end: 0,
+  id: '',
+  start: 0,
+  pitchStr: '',
+};
+
+export type WorkingMemory = {
+  id: string;
+  uid: string;
+  cues: { [id: string]: WorkingMemoryCue };
+  title: string;
+  offset: number;
+  answers: { [createdAt: number]: WorkingMemoryAnswer };
+  cueCount: number;
+  isActive: boolean;
+  createdAt: number;
+  storagePath: string;
+};
+
+export const INITIAL_WORKING_MEMORY: WorkingMemory = {
+  id: '',
+  uid: '',
+  cues: {},
+  title: '',
+  offset: 0,
+  answers: {},
+  cueCount: 0,
+  isActive: false,
+  createdAt: 0,
+  storagePath: '',
+};
+
 export type State = {
   auth: AuthState;
   layout: LayoutState;
   workout: RandomWorkoutState;
+  workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
   articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
@@ -268,6 +340,7 @@ export const INITIAL_STATE: State = {
   articleList: [],
   articlePages: {},
   audioContext: null,
+  workingMemories: {},
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},
   quizzes: [],

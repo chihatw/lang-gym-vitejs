@@ -12,12 +12,14 @@ import {
   Quiz,
   State,
   User,
+  WorkingMemory,
 } from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleList } from './services/article';
 import { getUsers } from './services/auth';
 import { getQuizzes } from './services/quiz';
+import { getWorkingMemories } from './services/workingMemory';
 
 export const AppContext = createContext<{
   state: State;
@@ -81,8 +83,7 @@ const App = () => {
     };
   }, [dispatch, state.auth.users, state.auth.uid]);
 
-  // 初期値取得
-  // 作文、未回答の問題
+  // 初期値取得（作文、問題、記憶問題）
   useEffect(() => {
     if (state.auth.initializing) {
       isFetched.current = false;
@@ -104,13 +105,21 @@ const App = () => {
         ? state.quizzes
         : await getQuizzes(state.auth.uid);
 
+      const _workingMemories = !!Object.keys(state.workingMemories).length
+        ? state.workingMemories
+        : await getWorkingMemories(state.auth.uid);
+
       isFetched.current = true;
 
       const updatedState: State = R.compose(
         R.assocPath<boolean, State>(['auth', 'initializing'], false),
         R.assocPath<Article[], State>(['articleList'], _articles),
         R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
-        R.assocPath<Quiz[], State>(['quizzes'], _quizzes)
+        R.assocPath<Quiz[], State>(['quizzes'], _quizzes),
+        R.assocPath<{ [id: string]: WorkingMemory }, State>(
+          ['workingMemories'],
+          _workingMemories
+        )
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };

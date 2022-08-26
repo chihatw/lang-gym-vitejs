@@ -7,8 +7,14 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { RandomWorkout } from '../Model';
-import { db } from '../repositories/firebase';
+import { getDownloadURL, ref } from 'firebase/storage';
+import {
+  INITIAL_RANDOM_WORKOUT_PARAMS,
+  RandomWorkout,
+  RandomWorkoutState,
+  State,
+} from '../Model';
+import { db, storage } from '../repositories/firebase';
 
 const COLLECTIONS = {
   randomWorkouts: 'randomWorkouts',
@@ -105,4 +111,39 @@ export const miliSecondsToSeconds = (miliSeconds: number) => {
     Math.floor(miliSeconds / 1000) +
     Math.floor((miliSeconds % 1000) / 100) / 10;
   return seconds;
+};
+
+export const buildWorkoutState = async (
+  state: State
+): Promise<RandomWorkoutState> => {
+  const _workouts = Object.keys(state.workout.workouts).length
+    ? state.workout.workouts
+    : await getRandomWorkouts(state.auth.uid);
+
+  const storagePathToFetch: { workoutId: string; storagePath: string }[] = [];
+  for (const workout of Object.values(_workouts)) {
+    const { id: workoutId, storagePath } = workout;
+    if (
+      !!storagePath &&
+      !Object.keys(state.workout.blobs).includes(workoutId)
+    ) {
+      storagePathToFetch.push({ workoutId, storagePath });
+    }
+  }
+  const gotBlobs: { [workoutId: string]: Blob | null } = {};
+  await Promise.all(
+    storagePathToFetch.map(async ({ workoutId, storagePath }) => {
+      console.log('get workout audio');
+      const downloadURL = await getDownloadURL(ref(storage, storagePath));
+      const response = await fetch(downloadURL);
+      const blob = await response.blob();
+      gotBlobs[workoutId] = blob;
+    })
+  );
+
+  return {
+    workouts: _workouts,
+    blobs: { ...state.workout.blobs, ...gotBlobs },
+    params: INITIAL_RANDOM_WORKOUT_PARAMS,
+  };
 };
