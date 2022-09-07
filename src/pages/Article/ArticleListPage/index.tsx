@@ -18,8 +18,8 @@ const ArticleListPage = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
 
-  const { articleList, articleListParams, auth } = state;
-  const { uid } = auth;
+  const { articleList, articleListParams } = state;
+
   const articles = isTopPage ? articleList.slice(0, 3) : articleList;
   const { hasMore, startAfter } = articleListParams;
 
@@ -31,7 +31,11 @@ const ArticleListPage = () => {
       return;
     }
 
-    const { articles, params } = await getArticleList(uid, 10, startAfter);
+    const { articles, params } = await getArticleList(
+      state.auth.uid,
+      10,
+      startAfter
+    );
 
     const updatedState: State = R.compose(
       R.assocPath<Article[], State>(
@@ -43,8 +47,7 @@ const ArticleListPage = () => {
     dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
 
-  if (!uid) return <Navigate to='/login' />;
-
+  if (!state.auth.uid) return <Navigate to='/login' />;
   return (
     <Container maxWidth='sm' sx={{ paddingTop: 2 }}>
       <div style={{ height: 48 }} className='dummyHeader' />

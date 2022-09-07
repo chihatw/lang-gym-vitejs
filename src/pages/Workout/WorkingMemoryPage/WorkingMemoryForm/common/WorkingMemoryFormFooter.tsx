@@ -1,7 +1,13 @@
 import { Button } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { buildCueIds } from '../../../../../services/workingMemory';
+import { nanoid } from 'nanoid';
+import React, { useContext } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AppContext } from '../../../../../App';
+import { INITIAL_WORKING_MEMORY_LOG } from '../../../../../Model';
+import {
+  buildCueIds,
+  getTodaysLogCount,
+} from '../../../../../services/workingMemory';
 import { WorkingMemoryFormState } from '../../Model';
 
 const WorkingMemoryFormFooter = ({
@@ -12,11 +18,43 @@ const WorkingMemoryFormFooter = ({
   dispatch: React.Dispatch<WorkingMemoryFormState>;
 }) => {
   const navigate = useNavigate();
+  const { workoutId } = useParams();
+  const { state: appState } = useContext(AppContext);
+  if (!workoutId) return <></>;
+
+  const workingMemory = appState.workingMemories[workoutId];
+  const logCount = getTodaysLogCount(workingMemory);
+
+  let hasResetButton = false;
+  let resetButtonLabel = '重新一次';
+  let retryMsg = '';
+  let backButtonLabel = '停止練習';
+
+  if (state.scene !== 'result') {
+    hasResetButton = true;
+  } else {
+    if (logCount < 3) {
+      hasResetButton = true;
+      resetButtonLabel = '再一次挑戰';
+      retryMsg = `今天還可以挑戰${3 - logCount}次`;
+    } else {
+      backButtonLabel = '今天到此為止';
+    }
+  }
+
   const handleReset = () => {
+    const cueIds = buildCueIds(state.cueRange, state.cueCount);
     const updatedState: WorkingMemoryFormState = {
       ...state,
-      cueIds: buildCueIds(Object.keys(state.cues), state.cueCount),
-      answers: [],
+      scene: 'opening',
+      cueIds,
+      log: {
+        ...INITIAL_WORKING_MEMORY_LOG,
+        id: nanoid(8),
+        cueIds,
+        offset: state.offset,
+        createdAt: Date.now(),
+      },
       currentIndex: 0,
     };
     dispatch(updatedState);
@@ -28,18 +66,35 @@ const WorkingMemoryFormFooter = ({
     <div
       style={{
         display: 'grid',
-        rowGap: 16,
-        paddingTop: 80,
+        rowGap: 40,
+        paddingTop: state.scene !== 'result' ? 80 : 40,
       }}
     >
-      <div style={{ textAlign: 'center' }}>
-        <Button variant='outlined' onClick={handleReset} sx={{ width: 240 }}>
-          重新一次
-        </Button>
-      </div>
+      {hasResetButton && (
+        <div style={{ display: 'grid' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              variant={state.scene !== 'result' ? 'outlined' : 'contained'}
+              onClick={handleReset}
+              sx={{
+                width: 240,
+                color: state.scene !== 'result' ? '#52a2aa' : 'white',
+              }}
+            >
+              {resetButtonLabel}
+            </Button>
+          </div>
+          {!!retryMsg && (
+            <div style={{ textAlign: 'center', color: '#aaa', fontSize: 14 }}>
+              {retryMsg}
+            </div>
+          )}
+        </div>
+      )}
+
       <div style={{ textAlign: 'center' }}>
         <Button variant='outlined' onClick={handleExit} sx={{ width: 240 }}>
-          停止練習
+          {backButtonLabel}
         </Button>
       </div>
     </div>

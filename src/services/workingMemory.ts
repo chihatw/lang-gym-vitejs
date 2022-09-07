@@ -1,3 +1,4 @@
+import downpitch_120 from '../assets/audios/downpitch_120.mp3';
 import {
   collection,
   doc,
@@ -10,11 +11,10 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import {
-  INITIAL_WORKING_MEMORY,
   State,
+  INITIAL_WORKING_MEMORY,
+  INITIAL_WORKING_MEMORY_LOG,
   WorkingMemory,
-  WorkingMemoryAnswer,
-  WorkingMemoryAnswerLog,
 } from '../Model';
 import {
   WorkingMemoryFormState,
@@ -22,6 +22,7 @@ import {
 } from '../pages/Workout/WorkingMemoryPage/Model';
 import { db, storage } from '../repositories/firebase';
 import { getRandomInt } from './utils';
+import { nanoid } from 'nanoid';
 
 const COLLECTIONS = {
   workingMemories: 'workingMemories',
@@ -43,28 +44,18 @@ export const getWorkingMemories = async (uid: string) => {
 };
 
 const buildWorkingMemory = (doc: DocumentData): WorkingMemory => {
-  const {
-    uid,
-    cues,
-    title,
-    offset,
-    answers,
-    cueCount,
-    isActive,
-    createdAt,
-    storagePath,
-  } = doc.data();
+  const { uid, logs, cueIds, title, offset, cueCount, isActive, createdAt } =
+    doc.data();
   return {
     id: doc.id,
     uid: uid || '',
-    cues: cues || {},
+    cueIds: cueIds || [],
     title: title || '',
     offset: offset || 0,
-    answers: answers || {},
+    logs: logs || {},
     cueCount: cueCount || 0,
     isActive: isActive || false,
     createdAt: createdAt || 0,
-    storagePath: storagePath || '',
   };
 };
 
@@ -103,68 +94,32 @@ export const setWorkingMemory = async (workingMemory: WorkingMemory) => {
 
 export const buildWorkingMemoryFormState = (
   state: State,
-  blob: Blob | null,
   workoutId: string
 ): WorkingMemoryFormState => {
   const workingMemory = state.workingMemories[workoutId];
   if (!workingMemory) return INITIAL_WORKING_MEMORY_FORM_STATE;
 
   const cueIds: string[] = buildCueIds(
-    Object.keys(workingMemory.cues),
+    workingMemory.cueIds,
     workingMemory.cueCount
   );
-
   return {
-    cues: workingMemory.cues,
-    blob,
-    cueIds,
+    id: workoutId,
+    blob: state.blobs[downpitch_120],
+    scene: 'opening',
     offset: workingMemory.offset,
-    answers: [],
+    cueIds,
+    cueRange: workingMemory.cueIds,
+    log: {
+      ...INITIAL_WORKING_MEMORY_LOG,
+      id: nanoid(8),
+      cueIds,
+      offset: workingMemory.offset,
+      createdAt: Date.now(),
+    },
     cueCount: workingMemory.cueCount,
     currentIndex: 0,
     audioContext: state.audioContext,
-  };
-};
-
-export const buildWorkingMemoryAnswer = (
-  workingMemoryFormState: WorkingMemoryFormState
-): WorkingMemoryAnswer => {
-  // 回答全体の時間 算出
-  const start = workingMemoryFormState.answers[0].startAt;
-  const end = workingMemoryFormState.answers.slice(-1)[0].endAt;
-  const duration = Math.round((end - start) / 100) / 10;
-
-  let correctCount = 0;
-  const log: { [index: number]: WorkingMemoryAnswerLog } = {};
-  workingMemoryFormState.answers.forEach((answer, index) => {
-    // キュー配列と最終タップが等しければ、正答数を増加
-    const correctAnswer = workingMemoryFormState.cueIds[index];
-    const inputAnswer = answer.tapped.slice(-1)[0];
-    if (correctAnswer === inputAnswer) {
-      correctCount++;
-    }
-
-    // tapped を配列からオブジェクトに変更（firestore に2次配列が保存できないため）
-    const tapped: { [index: number]: string } = {};
-    answer.tapped.forEach((item, index) => {
-      tapped[index] = item;
-    });
-
-    log[index] = {
-      tapped,
-      duration: Math.round((answer.endAt - answer.startAt) / 100) / 10,
-    };
-  });
-
-  return {
-    log,
-    cueIds: workingMemoryFormState.cueIds,
-    offset: workingMemoryFormState.offset,
-    duration,
-    createdAt: new Date().getTime(),
-    correctRatio: Math.round(
-      (correctCount / workingMemoryFormState.cueCount) * 100
-    ),
   };
 };
 
@@ -181,4 +136,28 @@ export const buildCueIds = (ids: string[], cueCount: number) => {
     cueIds.push(currentCueId);
   }
   return cueIds;
+};
+
+export const getTodaysLogCount = (workingMemory: WorkingMemory) => {
+  let todaysLogCount = 0;
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  const logs = workingMemory.logs;
+  for (const log of Object.values(logs)) {
+    const answerDay = new Date(log.createdAt);
+    // log の日付が「今日」
+    if (
+      year === answerDay.getFullYear() &&
+      month === answerDay.getMonth() + 1 &&
+      day === answerDay.getDate()
+    ) {
+      // 結果画面が表示されている場合、試行回数としてカウント
+      if (log.result.createdAt) {
+        todaysLogCount++;
+      }
+    }
+  }
+  return todaysLogCount;
 };

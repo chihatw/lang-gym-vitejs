@@ -1,6 +1,5 @@
-import { Button, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import React from 'react';
-import { buildCueIds } from '../../../../../services/workingMemory';
 import { WorkingMemoryFormState } from '../../Model';
 import WorkingMemoryFormFooter from '../common/WorkingMemoryFormFooter';
 import WorkingMemoryResultAnswerListHeader from './WorkingMemoryResultAnswerListHeader';
@@ -13,18 +12,21 @@ const WorkingMemoryResultPane = ({
   state: WorkingMemoryFormState;
   dispatch: React.Dispatch<WorkingMemoryFormState>;
 }) => {
-  if (!state.answers.length) return <></>;
+  if (!Object.keys(state.log.practice).length) return <></>;
 
   const theme = useTheme();
-  let correctCount = 0;
-  state.answers.forEach((answer, index) => {
-    const cueId = state.cueIds[index] || '';
-    const answerId = answer.tapped.slice(-1)[0];
-    if (answerId === cueId) {
-      correctCount++;
-    }
-  });
-  const correctRatio = Math.round((correctCount / state.cueCount) * 100);
+
+  let updateOffsetMsg = `正確率66〜84%，繼續加油！`;
+  if (state.log.correctRatio <= 65) {
+    updateOffsetMsg = `正確率65%以下，不用焦急。下次挑戰前${Math.max(
+      1,
+      state.log.offset - 1
+    )}項`;
+  } else if (state.log.correctRatio >= 85) {
+    updateOffsetMsg = `正確率85%以上，表現很好！下次挑戰前${
+      state.log.offset + 1
+    }項`;
+  }
 
   return (
     <div style={{ display: 'grid', rowGap: 8, color: '#555' }}>
@@ -33,11 +35,10 @@ const WorkingMemoryResultPane = ({
         <span
           style={{
             ...(theme.typography as any).lato900,
-
             fontSize: 100,
           }}
         >
-          {correctRatio}
+          {state.log.correctRatio}
         </span>
         <span>%</span>
       </div>
@@ -48,8 +49,14 @@ const WorkingMemoryResultPane = ({
             key={index}
             state={state}
             index={index}
+            dispatch={dispatch}
           />
         ))}
+      </div>
+      <div
+        style={{ display: 'flex', justifyContent: 'center', paddingTop: 40 }}
+      >
+        {updateOffsetMsg}
       </div>
       <WorkingMemoryFormFooter state={state} dispatch={dispatch} />
     </div>

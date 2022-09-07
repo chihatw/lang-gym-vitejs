@@ -27,3 +27,9 @@ export const shuffle = ([...array]: string[]) => {
 export const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max);
 };
+
+export const getBlobFromAssets = async (path: string) => {
+  const response = await fetch(path);
+  const blob = await response.blob();
+  return blob;
+};

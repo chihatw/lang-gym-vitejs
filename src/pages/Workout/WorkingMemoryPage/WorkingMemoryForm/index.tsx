@@ -2,49 +2,58 @@ import { Container } from '@mui/material';
 import React from 'react';
 
 import { WorkingMemoryFormState } from '../Model';
-import WorkingMemoryAnswerPane from './WorkingMemoryAnswerPane';
+import WorkingMemoryAnswerPane from './WorkingMemoryAnswer';
 
-import WorkingMemoryFormPlayButton from './WorkingMemoryFormPlayButton';
+import WorkingMemoryPlayButton from './WorkingMemoryPlayButton';
 import WorkingMemoryHeader from './WorkingMemoryHeader';
-import WorkingMemoryResultPane from './WorkingMemoryResultPane';
+import WorkingMemoryOpening from './WorkingMemoryOpening';
+import WorkingMemoryResultPane from './WorkingMemoryResult';
 
 const WorkingMemoryForm = ({
   state,
   dispatch,
-  handleSubmit,
 }: {
   state: WorkingMemoryFormState;
   dispatch: React.Dispatch<WorkingMemoryFormState>;
-  handleSubmit: (state: WorkingMemoryFormState) => void;
 }) => {
-  if (!state.cueIds.length) return <></>;
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 8, paddingBottom: 120 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
-          <WorkingMemoryHeader state={state} />
           {(() => {
-            if (state.currentIndex < state.offset) {
-              return (
-                <WorkingMemoryFormPlayButton
-                  state={state}
-                  dispatch={dispatch}
-                />
-              );
+            switch (state.scene) {
+              case 'opening':
+                return (
+                  <WorkingMemoryOpening state={state} dispatch={dispatch} />
+                );
+              case 'playbutton':
+                return (
+                  <>
+                    <WorkingMemoryHeader state={state} />
+                    <WorkingMemoryPlayButton
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  </>
+                );
+              case 'answer':
+                return (
+                  <>
+                    <WorkingMemoryHeader state={state} />
+                    <WorkingMemoryAnswerPane
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  </>
+                );
+              case 'result':
+                return (
+                  <WorkingMemoryResultPane state={state} dispatch={dispatch} />
+                );
+              default:
+                return <></>;
             }
-            if (state.currentIndex < state.offset + state.cueCount) {
-              return (
-                <WorkingMemoryAnswerPane
-                  state={state}
-                  dispatch={dispatch}
-                  handleSubmit={handleSubmit}
-                />
-              );
-            }
-            return (
-              <WorkingMemoryResultPane state={state} dispatch={dispatch} />
-            );
           })()}
         </div>
       </div>

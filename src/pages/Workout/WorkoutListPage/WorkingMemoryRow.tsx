@@ -1,6 +1,6 @@
 import { Card, CardContent, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
-import { WorkingMemory, WorkingMemoryAnswer } from '../../../Model';
+import { WorkingMemory, WorkingMemoryLog } from '../../../Model';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../App';
 import { ActionTypes } from '../../../Update';
@@ -37,10 +37,13 @@ const WorkingMemoryRow = ({
             display: 'grid',
             rowGap: 8,
             marginBottom: -16,
+            minHeight: 40,
           }}
         >
           <div style={{ fontSize: 14 }}>{workingMemory.title}</div>
-          <RecordList workingMemory={workingMemory} />
+          {!!Object.values(workingMemory.logs).filter(
+            (item) => !!item.result.createdAt
+          ).length && <RecordList workingMemory={workingMemory} />}
         </div>
       </CardContent>
     </Card>
@@ -54,18 +57,19 @@ const RecordList = ({ workingMemory }: { workingMemory: WorkingMemory }) => {
     <div style={{ display: 'grid', rowGap: 8 }}>
       <div style={{ fontSize: 12, color: '#aaa' }}>練習結果</div>
       <div>
-        {Object.values(workingMemory.answers)
+        {Object.values(workingMemory.logs)
+          .filter((item) => !!item.result.createdAt)
           .sort((a, b) => b.createdAt - a.createdAt)
-          .map((answer, index) => (
-            <RecordRow answer={answer} key={index} />
+          .map((log, index) => (
+            <RecordRow log={log} key={index} />
           ))}
       </div>
     </div>
   );
 };
 
-const RecordRow = ({ answer }: { answer: WorkingMemoryAnswer }) => {
-  const date = new Date(answer.createdAt);
+const RecordRow = ({ log }: { log: WorkingMemoryLog }) => {
+  const date = new Date(log.createdAt);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -84,10 +88,10 @@ const RecordRow = ({ answer }: { answer: WorkingMemoryAnswer }) => {
         style={{ fontSize: 12 }}
       >{`${year}/${month}/${day} ${hours}:${minutes}`}</div>
       <div style={{ fontSize: 16, display: 'flex', flexBasis: 100 }}>
-        <div style={{ flexBasis: 60 }}>{`前${answer.offset}項`}</div>
+        <div style={{ flexBasis: 60 }}>{`前${log.offset}項`}</div>
         <div
           style={{ flexBasis: 40, textAlign: 'right' }}
-        >{`${answer.correctRatio}%`}</div>
+        >{`${log.correctRatio}%`}</div>
       </div>
     </div>
   );

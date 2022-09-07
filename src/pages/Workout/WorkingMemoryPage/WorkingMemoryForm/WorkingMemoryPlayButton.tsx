@@ -1,17 +1,14 @@
+import * as R from 'ramda';
 import { css } from '@emotion/css';
 import PlayCircleRounded from '@mui/icons-material/PlayCircleRounded';
 import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
+import { PITCHES } from '../../../../pitch';
 import { createSourceNode } from '../../../../services/utils';
-import { buildCueIds } from '../../../../services/workingMemory';
-import {
-  INITIAL_WORKING_MEMORY_FORM_ANSWER_LOG,
-  WorkingMemoryFormAnswerLog,
-  WorkingMemoryFormState,
-} from '../Model';
+import { WorkingMemoryFormState } from '../Model';
 import WorkingMemoryFormFooter from './common/WorkingMemoryFormFooter';
 
-const WorkingMemoryFormPlayButton = ({
+const WorkingMemoryPlayButton = ({
   state,
   dispatch,
 }: {
@@ -34,27 +31,45 @@ const WorkingMemoryFormPlayButton = ({
   }, [initialize]);
 
   const currentCueId = state.cueIds[state.currentIndex];
-  const currentCue = state.cues[currentCueId];
+  const currentCue = PITCHES[currentCueId];
   const play = async () => {
     if (!state.blob || !state.audioContext) return;
     const sourceNode = await createSourceNode(state.blob, state.audioContext);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
+
+    let updatedPlayedAts: number[] = [];
+    if (state.log.practice[state.currentIndex].playedAts) {
+      updatedPlayedAts = [...state.log.practice[state.currentIndex].playedAts];
+    }
+    updatedPlayedAts.push(Date.now());
+
+    const updatedState = R.assocPath<number[], WorkingMemoryFormState>(
+      ['log', 'practice', state.currentIndex, 'playedAts'],
+      updatedPlayedAts
+    )(state);
+    dispatch(updatedState);
   };
 
   const handleClick = () => {
-    const nextIndext = state.currentIndex + 1;
-    const nextAnswerIndex = nextIndext - state.offset;
-    const firstAnswer: WorkingMemoryFormAnswerLog =
-      INITIAL_WORKING_MEMORY_FORM_ANSWER_LOG;
+    // currentIndex のインクリメント
+    // 次の log の初期化
+    const nextIndex = state.currentIndex + 1;
+    let updatedState = R.compose(
+      R.assocPath<number, WorkingMemoryFormState>(['currentIndex'], nextIndex),
+      R.assocPath<number, WorkingMemoryFormState>(
+        ['log', 'practice', nextIndex, 'createdAt'],
+        Date.now()
+      )
+    )(state);
 
-    if (nextAnswerIndex === 0) {
-      firstAnswer.startAt = Math.round(performance.now());
+    // 次から回答選択が始まる場合
+    if (nextIndex === state.offset) {
+      updatedState = R.assocPath<string, WorkingMemoryFormState>(
+        ['scene'],
+        'answer'
+      )(updatedState);
     }
-    const updatedState: WorkingMemoryFormState = {
-      ...state,
-      currentIndex: nextIndext,
-      answers: [firstAnswer],
-    };
+
     setInitialize(true);
     dispatch(updatedState);
   };
@@ -125,4 +140,4 @@ const WorkingMemoryFormPlayButton = ({
   );
 };
 
-export default WorkingMemoryFormPlayButton;
+export default WorkingMemoryPlayButton;

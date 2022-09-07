@@ -94,7 +94,7 @@ const QuizPage = () => {
     });
     const score: QuizScore = {
       score: points,
-      createdAt: new Date().getTime(),
+      createdAt: Date.now(),
       pitchAnswers,
       rhythmAnswers,
     };

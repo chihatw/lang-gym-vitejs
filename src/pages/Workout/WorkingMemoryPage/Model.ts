@@ -1,35 +1,26 @@
-import { WorkingMemoryCue } from '../../../Model';
-
-export type WorkingMemoryFormAnswerLog = {
-  tapped: string[];
-  startAt: number;
-  endAt: number;
-};
-
-export const INITIAL_WORKING_MEMORY_FORM_ANSWER_LOG: WorkingMemoryFormAnswerLog =
-  {
-    tapped: [],
-    startAt: 0,
-    endAt: 0,
-  };
+import { INITIAL_WORKING_MEMORY_LOG, WorkingMemoryLog } from '../../../Model';
 
 export type WorkingMemoryFormState = {
-  cues: { [id: string]: WorkingMemoryCue };
+  id: string;
+  log: WorkingMemoryLog;
   blob: Blob | null;
+  scene: string;
   cueIds: string[];
   offset: number;
-  cueCount: number;
-  answers: WorkingMemoryFormAnswerLog[];
+  cueRange: string[];
   currentIndex: number;
+  cueCount: number;
   audioContext: AudioContext | null;
 };
 
 export const INITIAL_WORKING_MEMORY_FORM_STATE: WorkingMemoryFormState = {
-  cues: {},
+  id: '',
+  log: INITIAL_WORKING_MEMORY_LOG,
   blob: null,
+  scene: '',
   cueIds: [],
   offset: 0,
-  answers: [],
+  cueRange: [],
   cueCount: 0,
   currentIndex: 0,
   audioContext: null,

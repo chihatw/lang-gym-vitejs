@@ -1,25 +1,20 @@
+import downpitch_120 from '../../../assets/audios/downpitch_120.mp3';
 import * as R from 'ramda';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../../App';
-import {
-  INITIAL_WORKING_MEMORY_FORM_STATE,
-  WorkingMemoryFormState,
-} from './Model';
+import { INITIAL_WORKING_MEMORY_FORM_STATE } from './Model';
 import { workingMemoryFormReducer } from './Update';
-import { State, WorkingMemory, WorkingMemoryAnswer } from '../../../Model';
+import { State } from '../../../Model';
 import { ActionTypes } from '../../../Update';
-import {
-  getBlob,
-  buildWorkingMemoryFormState,
-  buildWorkingMemoryAnswer,
-  setWorkingMemory,
-} from '../../../services/workingMemory';
+import { buildWorkingMemoryFormState } from '../../../services/workingMemory';
 import WorkingMemoryForm from './WorkingMemoryForm';
+import { getBlobFromAssets } from '../../../services/utils';
 
 const WorkingMemoryPage = () => {
   const { workoutId } = useParams();
   const { state, dispatch } = useContext(AppContext);
+  const [initializing, setInitializing] = useState(true);
   if (!state.auth.uid) return <Navigate to='/login' />;
   if (!workoutId) return <></>;
 
@@ -32,77 +27,35 @@ const WorkingMemoryPage = () => {
   );
 
   useEffect(() => {
-    if (!dispatch) return;
-    if (!state.isFetching) {
-      const updatedWorkingMemoryFormState: WorkingMemoryFormState = {
-        ...workingMemoryFormState,
-        audioContext: state.audioContext,
-      };
-      workingMemoryFormDispatch(updatedWorkingMemoryFormState);
-      return;
-    }
+    if (!initializing) return;
+
     const fetchData = async () => {
-      const { blob, downloadURL } = await getBlob(
-        workingMemory.storagePath,
-        state.blobs
-      );
-      let updatedState: State = { ...state, isFetching: false };
-      if (blob) {
-        updatedState = R.assocPath<Blob, State>(
-          ['blobs', downloadURL],
-          blob
-        )(updatedState);
-      }
+      const _blob = state.blobs[downpitch_120]
+        ? state.blobs[downpitch_120]
+        : await getBlobFromAssets(downpitch_120);
+
+      const updatedState = R.assocPath<Blob, State>(
+        ['blobs', downpitch_120],
+        _blob
+      )(state);
+
       dispatch({ type: ActionTypes.setState, payload: updatedState });
 
       const workingMemoryFormState = buildWorkingMemoryFormState(
-        state,
-        blob,
+        updatedState,
         workoutId
       );
       workingMemoryFormDispatch(workingMemoryFormState);
+      setInitializing(false);
     };
 
     fetchData();
-  }, [
-    state.blobs,
-    state.isFetching,
-    state.audioContext,
-    workingMemory.storagePath,
-  ]);
-
-  const handleSubmit = (workingMemoryFormState: WorkingMemoryFormState) => {
-    if (!dispatch) return;
-    const answer = buildWorkingMemoryAnswer(workingMemoryFormState);
-
-    const updatedAnswers = {
-      ...workingMemory.answers,
-      [answer.createdAt]: answer,
-    };
-
-    // remote
-    const updatedWorkingMemory = R.assocPath<
-      { [createdAt: number]: WorkingMemoryAnswer },
-      WorkingMemory
-    >(
-      ['answers'],
-      updatedAnswers
-    )(workingMemory);
-
-    setWorkingMemory(updatedWorkingMemory);
-
-    const updatedState = R.assocPath<WorkingMemory, State>(
-      ['workingMemories', workoutId],
-      updatedWorkingMemory
-    )(state);
-    dispatch({ type: ActionTypes.setState, payload: updatedState });
-  };
+  }, [state.blobs, state.audioContext, initializing]);
 
   return (
     <WorkingMemoryForm
       state={workingMemoryFormState}
       dispatch={workingMemoryFormDispatch}
-      handleSubmit={handleSubmit}
     />
   );
 };

@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { Container } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../App';
 import CustomLabel from '../../../components/CustomLabel';
 import { RandomWorkoutState, State } from '../../../Model';
@@ -12,8 +12,9 @@ import WorkingMemoryRow from './WorkingMemoryRow';
 
 const WorkoutListPage = () => {
   const { state, dispatch } = useContext(AppContext);
+  const [initialize, setInitialize] = useState(true);
   useEffect(() => {
-    if (!state.isFetching || !dispatch) return;
+    if (!initialize) return;
     const fetchData = async () => {
       const initialWorkoutState = await buildWorkoutState(state);
       const updatedState = R.compose(
@@ -22,9 +23,10 @@ const WorkoutListPage = () => {
       )(state);
 
       dispatch({ type: ActionTypes.setState, payload: updatedState });
+      setInitialize(false);
     };
     fetchData();
-  }, [state.isFetching, state.workout.blobs]);
+  }, [state.workout.blobs, initialize]);
   return (
     <Container maxWidth='sm' sx={{ paddingBottom: 20 }}>
       <div style={{ height: 48 }} />
