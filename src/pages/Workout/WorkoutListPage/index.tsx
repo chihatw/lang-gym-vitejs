@@ -32,7 +32,7 @@ const WorkoutListPage = () => {
       <div style={{ height: 48 }} />
       <div style={{ height: 16 }} />
       <div style={{ display: 'grid', rowGap: 8 }}>
-        <CustomLabel label='練習' />
+        <CustomLabel label='反応練習' />
         {Object.values(state.workout.workouts).map((workout, index) => (
           <WorkoutRow
             key={index}
