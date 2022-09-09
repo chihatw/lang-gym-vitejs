@@ -8,7 +8,7 @@ const PitchesPane = ({ sentenceIndex }: { sentenceIndex: number }) => {
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
       <SentencePitches sentenceIndex={sentenceIndex} />
-      <AssignmentPitches sentenceIndex={sentenceIndex} />
+      {/* <AssignmentPitches sentenceIndex={sentenceIndex} /> */}
     </div>
   );
 };
