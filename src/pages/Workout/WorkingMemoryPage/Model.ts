@@ -1,9 +1,15 @@
-import { INITIAL_WORKING_MEMORY_LOG, WorkingMemoryLog } from '../../../Model';
+import {
+  INITIAL_WORKING_MEMORY_LOG,
+  WorkingMemoryCard,
+  WorkingMemoryLog,
+} from '../../../Model';
 
 export type WorkingMemoryFormState = {
   id: string;
   log: WorkingMemoryLog;
-  blob: Blob | null;
+  pitchBlob: Blob | null;
+  toneBlob: Blob | null;
+  cards: WorkingMemoryCard[];
   scene: string;
   cueIds: string[];
   offset: number;
@@ -16,7 +22,9 @@ export type WorkingMemoryFormState = {
 export const INITIAL_WORKING_MEMORY_FORM_STATE: WorkingMemoryFormState = {
   id: '',
   log: INITIAL_WORKING_MEMORY_LOG,
-  blob: null,
+  pitchBlob: null,
+  toneBlob: null,
+  cards: [],
   scene: '',
   cueIds: [],
   offset: 0,

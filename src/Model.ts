@@ -1,7 +1,16 @@
+export type WorkingMemoryCard = {
+  id: string;
+  end: number;
+  type: string;
+  start: number;
+  label?: string;
+  pitchStr?: string;
+};
+
 export type PitchCard = {
   id: string;
-  start: number;
   end: number;
+  start: number;
   pitchStr: string;
 };
 

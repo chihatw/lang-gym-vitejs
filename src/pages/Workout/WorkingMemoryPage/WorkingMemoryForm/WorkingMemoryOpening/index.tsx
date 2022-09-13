@@ -25,7 +25,7 @@ const WorkingMemoryOpening = ({
   const day = today.getDate();
 
   const workingMemory = appState.workingMemories[workoutId];
-  const todaysLogCount = getTodaysLogCount(workingMemory);
+  const todaysLogCount = !!workingMemory ? getTodaysLogCount(workingMemory) : 0;
 
   const handleStart = () => {
     const updatedState = R.compose(

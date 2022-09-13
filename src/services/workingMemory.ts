@@ -1,4 +1,5 @@
 import downpitch_120 from '../assets/audios/downpitch_120.mp3';
+import ma_tones from '../assets/audios/ma_tones.mp3';
 import {
   collection,
   doc,
@@ -23,6 +24,8 @@ import {
 import { db, storage } from '../repositories/firebase';
 import { getRandomInt } from './utils';
 import { nanoid } from 'nanoid';
+import { TONES } from '../assets/tone';
+import { PITCHES } from '../assets/pitch';
 
 const COLLECTIONS = {
   workingMemories: 'workingMemories',
@@ -103,11 +106,17 @@ export const buildWorkingMemoryFormState = (
     workingMemory.cueIds,
     workingMemory.cueCount
   );
+  const cards = [
+    ...Object.values(TONES).map((item) => ({ ...item, type: 'tone' })),
+    ...Object.values(PITCHES).map((item) => ({ ...item, type: 'pitch' })),
+  ];
   return {
     id: workoutId,
-    blob: state.blobs[downpitch_120],
+    pitchBlob: state.blobs[downpitch_120],
+    toneBlob: state.blobs[ma_tones],
     scene: 'opening',
     offset: workingMemory.offset,
+    cards,
     cueIds,
     cueRange: workingMemory.cueIds,
     log: {

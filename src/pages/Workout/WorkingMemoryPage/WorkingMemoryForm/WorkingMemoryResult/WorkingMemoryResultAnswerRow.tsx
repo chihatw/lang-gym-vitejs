@@ -6,7 +6,6 @@ import PlayArrow from '@mui/icons-material/PlayArrow';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
 import string2PitchesArray from 'string2pitches-array';
-import { PITCHES } from '../../../../../pitch';
 import { createSourceNode } from '../../../../../services/utils';
 import { WorkingMemoryFormState } from '../../Model';
 import { AppContext } from '../../../../../App';
@@ -27,13 +26,16 @@ const WorkingMemoryResultAnswerRow = ({
   const { state: appState } = useContext(AppContext);
   if (!workoutId) return <></>;
   const cueId = state.cueIds[index];
-  const cue = PITCHES[cueId];
+  const cue = state.cards.find((item) => item.id === cueId);
+  if (!cue) return <></>;
   const answerId = state.log.practice[index + state.log.offset].selected;
-  const answer = PITCHES[answerId];
+  const answer = state.cards.find((item) => item.id === answerId);
+  if (!answer) return <></>;
 
   const handleClick = async (start: number, end: number, tapped: string) => {
-    if (!state.audioContext || !state.blob) return;
-    const sourceNode = await createSourceNode(state.blob, state.audioContext);
+    if (!state.audioContext || !state.pitchBlob || !state.toneBlob) return;
+    const blob = cue.type === 'tone' ? state.toneBlob : state.pitchBlob;
+    const sourceNode = await createSourceNode(blob, state.audioContext);
     sourceNode.start(0, start, end - start);
 
     let updatedTappeds: string[] = [];
@@ -56,6 +58,8 @@ const WorkingMemoryResultAnswerRow = ({
     setWorkingMemory(updatedWorkingMemory);
   };
 
+  const isCorrect = cue.id === answer.id;
+
   return (
     <div
       key={index}
@@ -70,11 +74,11 @@ const WorkingMemoryResultAnswerRow = ({
         style={{
           flexBasis: 20,
           textAlign: 'center',
-          color: answer.pitchStr === cue.pitchStr ? '#52a2aa' : '#f50057',
+          color: isCorrect ? '#52a2aa' : '#f50057',
           lineHeight: 0,
         }}
       >
-        {answer.pitchStr === cue.pitchStr ? <Check /> : <Clear />}
+        {isCorrect ? <Check /> : <Clear />}
       </div>
       <div
         style={{
@@ -83,8 +87,20 @@ const WorkingMemoryResultAnswerRow = ({
           justifyContent: 'center',
         }}
       >
-        <SentencePitchLine pitchesArray={string2PitchesArray(cue.pitchStr)} />
-        {state.blob && state.audioContext && (
+        {!!cue.pitchStr && (
+          <SentencePitchLine pitchesArray={string2PitchesArray(cue.pitchStr)} />
+        )}
+        {!!cue.label && (
+          <div
+            style={{
+              fontSize: 16,
+              lineHeight: '40px',
+            }}
+          >
+            {cue.label}
+          </div>
+        )}
+        {!!state.pitchBlob && !!state.toneBlob && !!state.audioContext && (
           <IconButton
             color='primary'
             onClick={() => handleClick(cue.start, cue.end, `cue_${cue.id}`)}
@@ -99,16 +115,18 @@ const WorkingMemoryResultAnswerRow = ({
           display: 'flex',
           justifyContent: 'center',
           borderRadius: 4,
-          background:
-            answer.pitchStr === cue.pitchStr
-              ? 'transparent'
-              : 'rgba(255,0,0,0.1)',
+          background: isCorrect ? 'transparent' : 'rgba(255,0,0,0.1)',
         }}
       >
-        <SentencePitchLine
-          pitchesArray={string2PitchesArray(answer.pitchStr)}
-        />
-        {state.blob && state.audioContext && (
+        {!!answer.pitchStr && (
+          <SentencePitchLine
+            pitchesArray={string2PitchesArray(answer.pitchStr)}
+          />
+        )}
+        {!!answer.label && (
+          <div style={{ fontSize: 16, lineHeight: '40px' }}>{answer.label}</div>
+        )}
+        {!!state.pitchBlob && !!state.toneBlob && state.audioContext && (
           <IconButton
             color='primary'
             onClick={() =>

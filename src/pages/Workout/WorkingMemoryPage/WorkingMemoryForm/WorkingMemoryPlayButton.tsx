@@ -3,7 +3,6 @@ import { css } from '@emotion/css';
 import PlayCircleRounded from '@mui/icons-material/PlayCircleRounded';
 import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { PITCHES } from '../../../../pitch';
 import { createSourceNode } from '../../../../services/utils';
 import { WorkingMemoryFormState } from '../Model';
 import WorkingMemoryFormFooter from './common/WorkingMemoryFormFooter';
@@ -31,10 +30,15 @@ const WorkingMemoryPlayButton = ({
   }, [initialize]);
 
   const currentCueId = state.cueIds[state.currentIndex];
-  const currentCue = PITCHES[currentCueId];
+  const currentCue = state.cards.find((item) => item.id === currentCueId);
+  if (!currentCue) return <></>;
+
   const play = async () => {
-    if (!state.blob || !state.audioContext) return;
-    const sourceNode = await createSourceNode(state.blob, state.audioContext);
+    if (!state.pitchBlob || !state.toneBlob || !state.audioContext) return;
+
+    const blob = currentCue.type === 'tone' ? state.toneBlob : state.pitchBlob;
+
+    const sourceNode = await createSourceNode(blob, state.audioContext);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
 
     let updatedPlayedAts: number[] = [];
@@ -69,7 +73,6 @@ const WorkingMemoryPlayButton = ({
         'answer'
       )(updatedState);
     }
-
     setInitialize(true);
     dispatch(updatedState);
   };
@@ -107,7 +110,7 @@ const WorkingMemoryPlayButton = ({
           },
         })}
       >
-        {!!state.audioContext && !!state.blob ? (
+        {!!state.audioContext && !!state.pitchBlob && !!state.toneBlob ? (
           <IconButton color='primary' onClick={play}>
             <PlayCircleRounded sx={{ fontSize: 120 }} />
           </IconButton>

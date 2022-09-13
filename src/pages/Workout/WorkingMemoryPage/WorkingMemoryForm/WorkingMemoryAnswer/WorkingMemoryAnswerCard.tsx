@@ -4,15 +4,16 @@ import React from 'react';
 import string2PitchesArray from 'string2pitches-array';
 
 const WorkingMemoryAnswerCard = ({
+  label,
   selected,
   pitchStr,
   handleClick,
 }: {
+  label?: string;
   selected: boolean;
-  pitchStr: string;
+  pitchStr?: string;
   handleClick: () => void;
 }) => {
-  const pitchesArray = string2PitchesArray(pitchStr);
   return (
     <div
       style={{
@@ -47,7 +48,10 @@ const WorkingMemoryAnswerCard = ({
             justifyContent: 'center',
           }}
         >
-          <SentencePitchLine pitchesArray={pitchesArray} />
+          {!!pitchStr && (
+            <SentencePitchLine pitchesArray={string2PitchesArray(pitchStr)} />
+          )}
+          {!!label && <div style={{ fontSize: 16 }}>{label}</div>}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import downpitch_120 from '../../../assets/audios/downpitch_120.mp3';
+import ma_tones from '../../../assets/audios/ma_tones.mp3';
 import * as R from 'ramda';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
@@ -30,13 +31,17 @@ const WorkingMemoryPage = () => {
     if (!initializing) return;
 
     const fetchData = async () => {
-      const _blob = state.blobs[downpitch_120]
+      const _blob_1 = state.blobs[downpitch_120]
         ? state.blobs[downpitch_120]
         : await getBlobFromAssets(downpitch_120);
 
-      const updatedState = R.assocPath<Blob, State>(
-        ['blobs', downpitch_120],
-        _blob
+      const _blob_2 = state.blobs[ma_tones]
+        ? state.blobs[ma_tones]
+        : await getBlobFromAssets(ma_tones);
+
+      const updatedState = R.compose(
+        R.assocPath<Blob, State>(['blobs', downpitch_120], _blob_1),
+        R.assocPath<Blob, State>(['blobs', ma_tones], _blob_2)
       )(state);
 
       dispatch({ type: ActionTypes.setState, payload: updatedState });

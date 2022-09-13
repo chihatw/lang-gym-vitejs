@@ -7,7 +7,6 @@ import { WorkingMemoryFormState } from '../../Model';
 import WorkingMemoryAnswerCard from './WorkingMemoryAnswerCard';
 import WorkingMemoryAnswerPaneMessage from './WorkingMemoryAnswerPaneMessage';
 import WorkingMemoryFormFooter from '../common/WorkingMemoryFormFooter';
-import { PITCHES } from '../../../../../pitch';
 import { AppContext } from '../../../../../App';
 import { State, WorkingMemory, WorkingMemoryLog } from '../../../../../Model';
 import { useParams } from 'react-router-dom';
@@ -26,7 +25,7 @@ const WorkingMemoryAnswerPane = ({
   if (!workoutId) return <></>;
 
   const currentCueId = state.cueIds[state.currentIndex];
-  const currentCue = PITCHES[currentCueId];
+  const currentCue = state.cards.find((item) => item.id === currentCueId);
 
   const [selectedId, setSelectedId] = useState('');
   const [initialize, setInitialize] = useState(true);
@@ -66,8 +65,15 @@ const WorkingMemoryAnswerPane = ({
   };
 
   const play = async () => {
-    if (!state.blob || !state.audioContext) return;
-    const sourceNode = await createSourceNode(state.blob, state.audioContext);
+    if (
+      !state.pitchBlob ||
+      !state.toneBlob ||
+      !state.audioContext ||
+      !currentCue
+    )
+      return;
+    const blob = currentCue.type === 'tone' ? state.toneBlob : state.pitchBlob;
+    const sourceNode = await createSourceNode(blob, state.audioContext);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
   };
 
@@ -97,6 +103,7 @@ const WorkingMemoryAnswerPane = ({
     }
     //　結果表示をする場合
     else {
+      // 正解率の計算
       let correctCount = 0;
       Object.values(updatedState.log.practice).forEach((log, index) => {
         if (index - state.offset > -1) {
@@ -107,15 +114,16 @@ const WorkingMemoryAnswerPane = ({
       });
       const correctRatio = Math.round((correctCount / state.cueCount) * 100);
 
+      // 次回オフセットの更新
       let updatedOffset = state.offset;
       if (correctRatio <= 65) {
         updatedOffset = Math.max(1, updatedOffset - 1);
       } else if (correctRatio >= 85) {
         updatedOffset++;
       }
-
       const updatedCueCount = 4 + updatedOffset;
 
+      // フォームステートの更新
       updatedState = R.compose(
         R.assocPath<number, WorkingMemoryFormState>(['offset'], updatedOffset),
         R.assocPath<number, WorkingMemoryFormState>(
@@ -133,6 +141,7 @@ const WorkingMemoryAnswerPane = ({
         R.assocPath<string, WorkingMemoryFormState>(['scene'], 'result')
       )(updatedState);
 
+      // リモートの更新
       const updatedWorkingMemory = R.compose(
         R.assocPath<WorkingMemoryLog, WorkingMemory>(
           ['logs', updatedState.log.id],
@@ -141,9 +150,9 @@ const WorkingMemoryAnswerPane = ({
         R.assocPath<number, WorkingMemory>(['offset'], updatedOffset),
         R.assocPath<number, WorkingMemory>(['cueCount'], updatedCueCount)
       )(appState.workingMemories[workoutId]);
-
       setWorkingMemory(updatedWorkingMemory);
 
+      // アプリステートの更新
       const updatedAppState = R.assocPath<WorkingMemory, State>(
         ['workingMemories', workoutId],
         updatedWorkingMemory
@@ -155,6 +164,7 @@ const WorkingMemoryAnswerPane = ({
     setInitialize(true);
     dispatch(updatedState);
   };
+
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
       <WorkingMemoryAnswerPaneMessage state={state} />
@@ -177,13 +187,14 @@ const WorkingMemoryAnswerPane = ({
       >
         <div>
           <div style={{ display: 'grid', rowGap: 16 }}>
-            {Object.values(PITCHES)
+            {state.cards
               .filter((item) => state.cueRange.includes(item.id))
               .map((cue) => (
                 <WorkingMemoryAnswerCard
                   key={cue.id}
                   selected={selectedId === cue.id}
                   pitchStr={cue.pitchStr}
+                  label={cue.label}
                   handleClick={() => handleTap(cue.id)}
                 />
               ))}

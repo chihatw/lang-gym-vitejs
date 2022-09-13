@@ -1,4 +1,4 @@
-import { PitchCard } from './Model';
+import { PitchCard } from '../Model';
 
 export const PITCHES: { [id: string]: PitchCard } = {
   ta: { id: 'ta', start: 0.6, end: 1.3, pitchStr: 'タ＼ッ' },
