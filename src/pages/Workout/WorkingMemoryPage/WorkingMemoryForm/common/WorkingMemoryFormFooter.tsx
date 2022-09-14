@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import React, { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../../../../App';
+import { WORKING_MEMORY_MAX_ROUND } from '../../../../../assets/constants';
 import { INITIAL_WORKING_MEMORY_LOG } from '../../../../../Model';
 import {
   buildCueIds,
@@ -33,10 +34,10 @@ const WorkingMemoryFormFooter = ({
   if (state.scene !== 'result') {
     hasResetButton = true;
   } else {
-    if (logCount < 3) {
+    if (logCount < WORKING_MEMORY_MAX_ROUND) {
       hasResetButton = true;
       resetButtonLabel = '再一次挑戰';
-      retryMsg = `今天還可以挑戰${3 - logCount}次`;
+      retryMsg = `今天還可以挑戰${WORKING_MEMORY_MAX_ROUND - logCount}次`;
     } else {
       backButtonLabel = '今天到此為止';
     }

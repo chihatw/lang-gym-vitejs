@@ -1,0 +1,1 @@
+export const WORKING_MEMORY_MAX_ROUND = 5;
