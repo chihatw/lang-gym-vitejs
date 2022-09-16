@@ -36,6 +36,7 @@ export const getWorkingMemories = async (uid: string) => {
   const q = query(
     collection(db, COLLECTIONS.workingMemories),
     where('uid', '==', uid),
+    where('isActive', '==', true),
     orderBy('createdAt')
   );
   console.log('get workingMemories');
