@@ -17,6 +17,8 @@ export type WorkingMemoryFormState = {
   currentIndex: number;
   cueCount: number;
   audioContext: AudioContext | null;
+  step: number;
+  baseCueCount: number;
 };
 
 export const INITIAL_WORKING_MEMORY_FORM_STATE: WorkingMemoryFormState = {
@@ -32,4 +34,6 @@ export const INITIAL_WORKING_MEMORY_FORM_STATE: WorkingMemoryFormState = {
   cueCount: 0,
   currentIndex: 0,
   audioContext: null,
+  step: 0,
+  baseCueCount: 0,
 };

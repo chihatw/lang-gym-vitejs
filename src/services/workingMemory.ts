@@ -48,18 +48,30 @@ export const getWorkingMemories = async (uid: string) => {
 };
 
 const buildWorkingMemory = (doc: DocumentData): WorkingMemory => {
-  const { uid, logs, cueIds, title, offset, cueCount, isActive, createdAt } =
-    doc.data();
+  const {
+    uid,
+    logs,
+    cueIds,
+    title,
+    offset,
+    cueCount,
+    isActive,
+    createdAt,
+    step,
+    baseCueCount,
+  } = doc.data();
   return {
     id: doc.id,
     uid: uid || '',
-    cueIds: cueIds || [],
-    title: title || '',
-    offset: offset || 0,
     logs: logs || {},
+    step: step || 1,
+    title: title || '',
+    cueIds: cueIds || [],
+    offset: offset || 0,
     cueCount: cueCount || 0,
     isActive: isActive || false,
     createdAt: createdAt || 0,
+    baseCueCount: baseCueCount || 4,
   };
 };
 
@@ -117,6 +129,8 @@ export const buildWorkingMemoryFormState = (
     toneBlob: state.blobs[ma_tones],
     scene: 'opening',
     offset: workingMemory.offset,
+    step: workingMemory.step,
+    baseCueCount: workingMemory.baseCueCount,
     cards,
     cueIds,
     cueRange: workingMemory.cueIds,

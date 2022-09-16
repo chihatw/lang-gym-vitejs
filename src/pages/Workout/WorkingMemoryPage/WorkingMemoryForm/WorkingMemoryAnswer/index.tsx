@@ -121,7 +121,7 @@ const WorkingMemoryAnswerPane = ({
       } else if (correctRatio >= 85) {
         updatedOffset++;
       }
-      const updatedCueCount = 4 + updatedOffset;
+      const updatedCueCount = state.baseCueCount + state.step * updatedOffset;
 
       // フォームステートの更新
       updatedState = R.compose(
