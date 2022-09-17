@@ -6,6 +6,7 @@ const WorkingMemoryAnswerPaneMessage = ({
 }: {
   state: WorkingMemoryFormState;
 }) => {
+  const cueCount = state.baseCueCount + state.step * state.offset;
   return (
     <div
       style={{
@@ -22,7 +23,7 @@ const WorkingMemoryAnswerPaneMessage = ({
           <span style={{ fontWeight: 'bold', margin: '0 2px' }}>點觸</span>
           <span>{`前${state.offset}項的語音`}</span>
         </div>
-        {state.currentIndex < state.cueCount && (
+        {state.currentIndex < cueCount && (
           <div>
             <span>請</span>
             <span style={{ fontWeight: 'bold', margin: '0 2px' }}>記住</span>

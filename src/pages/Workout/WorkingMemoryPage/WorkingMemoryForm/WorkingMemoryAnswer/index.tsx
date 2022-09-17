@@ -32,6 +32,8 @@ const WorkingMemoryAnswerPane = ({
 
   const AnswerListRef = useRef<HTMLDivElement>(null);
 
+  const cueCount = state.baseCueCount + state.step * state.offset;
+
   useEffect(() => {
     if (initialize) {
       const AnswerList = AnswerListRef.current;
@@ -93,7 +95,7 @@ const WorkingMemoryAnswerPane = ({
       )
     )(state);
 
-    const isLast = state.currentIndex + 1 === state.cueCount + state.offset;
+    const isLast = state.currentIndex + 1 === cueCount + state.offset;
     // 次の問題がある場合
     if (!isLast) {
       updatedState = R.assocPath<number, WorkingMemoryFormState>(
@@ -112,7 +114,7 @@ const WorkingMemoryAnswerPane = ({
           }
         }
       });
-      const correctRatio = Math.round((correctCount / state.cueCount) * 100);
+      const correctRatio = Math.round((correctCount / cueCount) * 100);
 
       // 次回オフセットの更新
       let updatedOffset = state.offset;
@@ -208,7 +210,7 @@ const WorkingMemoryAnswerPane = ({
           disabled={!selectedId}
           onClick={handleNext}
         >
-          {state.currentIndex < state.cueCount ? '記住了' : '選好了'}
+          {state.currentIndex < cueCount ? '記住了' : '選好了'}
         </Button>
       </div>
       <WorkingMemoryFormFooter state={state} dispatch={dispatch} />

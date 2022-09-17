@@ -54,7 +54,6 @@ const buildWorkingMemory = (doc: DocumentData): WorkingMemory => {
     cueIds,
     title,
     offset,
-    cueCount,
     isActive,
     createdAt,
     step,
@@ -68,7 +67,6 @@ const buildWorkingMemory = (doc: DocumentData): WorkingMemory => {
     title: title || '',
     cueIds: cueIds || [],
     offset: offset || 0,
-    cueCount: cueCount || 0,
     isActive: isActive || false,
     createdAt: createdAt || 0,
     baseCueCount: baseCueCount || 4,
@@ -115,10 +113,10 @@ export const buildWorkingMemoryFormState = (
   const workingMemory = state.workingMemories[workoutId];
   if (!workingMemory) return INITIAL_WORKING_MEMORY_FORM_STATE;
 
-  const cueIds: string[] = buildCueIds(
-    workingMemory.cueIds,
-    workingMemory.cueCount
-  );
+  const cueCount =
+    workingMemory.baseCueCount + workingMemory.step * workingMemory.offset;
+
+  const cueIds: string[] = buildCueIds(workingMemory.cueIds, cueCount);
   const cards = [
     ...Object.values(TONES).map((item) => ({ ...item, type: 'tone' })),
     ...Object.values(PITCHES).map((item) => ({ ...item, type: 'pitch' })),
@@ -141,7 +139,6 @@ export const buildWorkingMemoryFormState = (
       offset: workingMemory.offset,
       createdAt: Date.now(),
     },
-    cueCount: workingMemory.cueCount,
     currentIndex: 0,
     audioContext: state.audioContext,
   };

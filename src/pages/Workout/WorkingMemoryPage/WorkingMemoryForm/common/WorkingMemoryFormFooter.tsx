@@ -44,7 +44,8 @@ const WorkingMemoryFormFooter = ({
   }
 
   const handleReset = () => {
-    const cueIds = buildCueIds(state.cueRange, state.cueCount);
+    const count = state.baseCueCount + state.step * state.offset;
+    const cueIds = buildCueIds(state.cueRange, count);
     const updatedState: WorkingMemoryFormState = {
       ...state,
       scene: 'opening',
