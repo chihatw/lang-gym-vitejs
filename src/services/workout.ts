@@ -119,7 +119,6 @@ export const buildWorkoutState = async (
   const _workouts = Object.keys(state.workout.workouts).length
     ? state.workout.workouts
     : await getRandomWorkouts(state.auth.uid);
-
   const storagePathToFetch: { workoutId: string; storagePath: string }[] = [];
   for (const workout of Object.values(_workouts)) {
     const { id: workoutId, storagePath } = workout;

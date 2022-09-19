@@ -90,38 +90,33 @@ const App = () => {
     }
     if (!state.auth.uid || isFetched.current) return;
     const fetchData = async () => {
-      let _articles: Article[] = [];
-      let _params = INITIAL_ARTICLE_LIST_PARAMS;
+      let articles: Article[] = [];
+      let articleListParams = INITIAL_ARTICLE_LIST_PARAMS;
       if (!!state.articleList.length) {
-        _articles = state.articleList;
-        _params = state.articleListParams;
+        articles = state.articleList;
+        articleListParams = state.articleListParams;
       } else {
-        const { articles, params } = await getArticleList(state.auth.uid, 10);
-        _articles = articles;
-        _params = params;
+        const { articles: _articles, params } = await getArticleList(
+          state.auth.uid,
+          10
+        );
+        articles = _articles;
+        articleListParams = params;
       }
 
-      const _quizzes = !!state.quizzes.length
+      const quizzes = !!state.quizzes.length
         ? state.quizzes
         : await getQuizzes(state.auth.uid);
 
-      const _workingMemories = !!Object.keys(state.workingMemories).length
-        ? state.workingMemories
-        : await getWorkingMemories(state.auth.uid);
-
       isFetched.current = true;
-
-      const updatedState: State = R.compose(
-        R.assocPath<boolean, State>(['auth', 'initializing'], false),
-        R.assocPath<Article[], State>(['articleList'], _articles),
-        R.assocPath<ArticleListParams, State>(['articleListParams'], _params),
-        R.assocPath<Quiz[], State>(['quizzes'], _quizzes),
-        R.assocPath<{ [id: string]: WorkingMemory }, State>(
-          ['workingMemories'],
-          _workingMemories
-        )
-      )(state);
-      dispatch({ type: ActionTypes.setState, payload: updatedState });
+      dispatch({
+        type: ActionTypes.initializeApp,
+        payload: {
+          quizzes,
+          articles,
+          articleListParams,
+        },
+      });
     };
     fetchData();
   }, [state.auth.uid, state.quizzes, state.articleList.length]);

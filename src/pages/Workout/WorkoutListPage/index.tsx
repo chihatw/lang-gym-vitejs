@@ -3,30 +3,41 @@ import { Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../App';
 import CustomLabel from '../../../components/CustomLabel';
-import { RandomWorkoutState, State } from '../../../Model';
+import { RandomWorkoutState, State, WorkingMemory } from '../../../Model';
 
 import { buildWorkoutState } from '../../../services/workout';
 import { ActionTypes } from '../../../Update';
 import WorkoutRow from './WorkoutRow';
 import WorkingMemoryRow from './WorkingMemoryRow';
+import { getWorkingMemories } from '../../../services/workingMemory';
 
 const WorkoutListPage = () => {
   const { state, dispatch } = useContext(AppContext);
   const [initialize, setInitialize] = useState(true);
   useEffect(() => {
+    if (state.auth.initializing) return;
     if (!initialize) return;
     const fetchData = async () => {
-      const initialWorkoutState = await buildWorkoutState(state);
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<RandomWorkoutState, State>(['workout'], initialWorkoutState)
-      )(state);
+      const randomWorkoutState = !!Object.keys(state.workout.workouts).length
+        ? state.workout
+        : await buildWorkoutState(state);
 
+      const workingMemories = !!Object.keys(state.workingMemories).length
+        ? state.workingMemories
+        : await getWorkingMemories(state.auth.uid);
+
+      const updatedState = R.compose(
+        R.assocPath<RandomWorkoutState, State>(['workout'], randomWorkoutState),
+        R.assocPath<{ [id: string]: WorkingMemory }, State>(
+          ['workingMemories'],
+          workingMemories
+        )
+      )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
       setInitialize(false);
     };
     fetchData();
-  }, [state.workout.blobs, initialize]);
+  }, [state.workout.blobs, initialize, state.auth.initializing]);
   return (
     <Container maxWidth='sm' sx={{ paddingBottom: 20 }}>
       <div style={{ height: 48 }} />
