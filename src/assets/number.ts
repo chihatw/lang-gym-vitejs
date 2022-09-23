@@ -6,9 +6,9 @@ type NumberCard = {
 };
 
 export const NUMBERS: { [id: string]: NumberCard } = {
-  '0': { id: '0', end: 0.3, start: 1.2, label: '零' },
+  '0': { id: '0', end: 1.2, start: 0.3, label: '零' },
   '1': { id: '1', end: 2.4, start: 1.7, label: '一' },
-  '2': { id: '2', end: 2.9, start: 2.5, label: '二' },
+  '2': { id: '2', end: 3.5, start: 2.8, label: '二' },
   '3': { id: '3', end: 4.6, start: 4.0, label: '三' },
   '4': { id: '4', end: 5.9, start: 5.3, label: '四' },
   '5': { id: '5', end: 7.2, start: 6.5, label: '五' },

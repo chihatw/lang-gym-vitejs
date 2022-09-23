@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../../../../App';
 import { WorkingMemoryFormState } from '../../Model';
 import { getTodaysLogCount } from '../../../../../services/workingMemory';
+import { WORKING_MEMORY_MAX_ROUND } from '../../../../../assets/constants';
 
 const WorkingMemoryOpening = ({
   state,
@@ -59,7 +60,7 @@ const WorkingMemoryOpening = ({
         <span>日</span>
       </div>
       {(() => {
-        if (todaysLogCount > 2) {
+        if (todaysLogCount > WORKING_MEMORY_MAX_ROUND - 1) {
           return (
             <div style={{ display: 'grid', rowGap: 120 }}>
               <div
