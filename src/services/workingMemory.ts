@@ -1,5 +1,6 @@
 import downpitch_120 from '../assets/audios/downpitch_120.mp3';
 import ma_tones from '../assets/audios/ma_tones.mp3';
+import number_chinese from '../assets/audios/number_chinese.mp3';
 import {
   collection,
   doc,
@@ -26,6 +27,7 @@ import { getRandomInt } from './utils';
 import { nanoid } from 'nanoid';
 import { TONES } from '../assets/tone';
 import { PITCHES } from '../assets/pitch';
+import { NUMBERS } from '../assets/number';
 
 const COLLECTIONS = {
   workingMemories: 'workingMemories',
@@ -120,11 +122,13 @@ export const buildWorkingMemoryFormState = (
   const cards = [
     ...Object.values(TONES).map((item) => ({ ...item, type: 'tone' })),
     ...Object.values(PITCHES).map((item) => ({ ...item, type: 'pitch' })),
+    ...Object.values(NUMBERS).map((item) => ({ ...item, type: 'number' })),
   ];
   return {
     id: workoutId,
     pitchBlob: state.blobs[downpitch_120],
     toneBlob: state.blobs[ma_tones],
+    numberBlob: state.blobs[number_chinese],
     scene: 'opening',
     offset: workingMemory.offset,
     step: workingMemory.step,

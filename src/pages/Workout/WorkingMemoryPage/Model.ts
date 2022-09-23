@@ -9,6 +9,7 @@ export type WorkingMemoryFormState = {
   log: WorkingMemoryLog;
   pitchBlob: Blob | null;
   toneBlob: Blob | null;
+  numberBlob: Blob | null;
   cards: WorkingMemoryCard[];
   scene: string;
   cueIds: string[];
@@ -25,6 +26,7 @@ export const INITIAL_WORKING_MEMORY_FORM_STATE: WorkingMemoryFormState = {
   log: INITIAL_WORKING_MEMORY_LOG,
   pitchBlob: null,
   toneBlob: null,
+  numberBlob: null,
   cards: [],
   scene: '',
   cueIds: [],

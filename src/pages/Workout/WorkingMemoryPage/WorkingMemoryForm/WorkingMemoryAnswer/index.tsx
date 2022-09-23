@@ -70,11 +70,21 @@ const WorkingMemoryAnswerPane = ({
     if (
       !state.pitchBlob ||
       !state.toneBlob ||
+      !state.numberBlob ||
       !state.audioContext ||
       !currentCue
     )
       return;
-    const blob = currentCue.type === 'tone' ? state.toneBlob : state.pitchBlob;
+    const blob = (() => {
+      switch (currentCue.type) {
+        case 'tone':
+          return state.toneBlob;
+        case 'number':
+          return state.numberBlob;
+        default:
+          return state.pitchBlob;
+      }
+    })();
     const sourceNode = await createSourceNode(blob, state.audioContext);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
   };
