@@ -3,6 +3,7 @@ import {
   doc,
   DocumentData,
   getDocs,
+  orderBy,
   query,
   setDoc,
   where,
@@ -39,7 +40,8 @@ export const getRandomWorkouts = async (uid: string) => {
   const randomWorkouts: { [key: string]: RandomWorkout } = {};
   let q = query(
     collection(db, COLLECTIONS.randomWorkouts),
-    where('uid', '==', uid)
+    where('uid', '==', uid),
+    orderBy('createdAt')
   );
   console.log('get randomWorkouts');
   let querySnapshot = await getDocs(q);
@@ -65,9 +67,10 @@ const buildRandomWorkout = (doc: DocumentData) => {
     resultBpm,
     targetBpm,
     roundCount,
-    resultSeconds,
+    createdAt,
     storagePath,
     recordCount,
+    resultSeconds,
   } = doc.data();
   const randomWorkout: RandomWorkout = {
     id: doc.id,
@@ -77,6 +80,7 @@ const buildRandomWorkout = (doc: DocumentData) => {
     cueIds: cueIds || [],
     targetBpm: targetBpm || 0,
     resultBpm: resultBpm || 0,
+    createdAt: createdAt || 0,
     beatCount: beatCount || 0,
     roundCount: roundCount || 0,
     storagePath: storagePath || '',

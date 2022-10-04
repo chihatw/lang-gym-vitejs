@@ -213,6 +213,7 @@ export type RandomWorkout = {
   beatCount: number;
   targetBpm: number;
   resultBpm: number;
+  createdAt: number;
   roundCount: number;
   storagePath: string;
   recordCount: number;
@@ -228,10 +229,11 @@ export const INITIAL_RANDOM_WORKOUT: RandomWorkout = {
   beatCount: 0,
   targetBpm: 0,
   resultBpm: 0,
-  resultSeconds: 0,
+  createdAt: 0,
   roundCount: 1,
   storagePath: '',
   recordCount: 0,
+  resultSeconds: 0,
 };
 
 export type RandomWorkoutParams = {
