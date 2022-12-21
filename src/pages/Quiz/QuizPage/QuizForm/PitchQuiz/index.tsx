@@ -1,7 +1,7 @@
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { useTheme } from '@mui/material';
 import React from 'react';
-import SpeakerButton from '../../../commons/SpeakerButton';
+import AudioSlider from '../../../../../components/AudioSlider';
 import { QuizFormQuestion, QuizFormState } from '../../Model';
 import WordPitch from './WordPitch';
 
@@ -20,11 +20,12 @@ const PitchQuiz = ({
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
       {!!state.audioContext && !!state.quizBlob && (
-        <SpeakerButton
+        <AudioSlider
           end={question.end}
           start={question.start}
-          quizBlob={state.quizBlob}
+          blob={state.quizBlob}
           audioContext={state.audioContext}
+          spacer={5}
         />
       )}
       <div
