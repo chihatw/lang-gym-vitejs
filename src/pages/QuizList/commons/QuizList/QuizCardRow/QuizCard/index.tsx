@@ -1,15 +1,12 @@
 import { Card, CardContent } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../../../App';
 import { Quiz } from '../../../../../../Model';
-import { ActionTypes } from '../../../../../../Update';
 import DateDisplay from './DateDisplay';
 import ScoreList from './ScoreList';
 
 const QuizCard = ({ quiz }: { quiz: Quiz }) => {
   const navigate = useNavigate();
-  const { dispatch } = useContext(AppContext);
   return (
     <Card
       sx={{
@@ -17,11 +14,7 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
         WebkitTapHighlightColor: '#EAF4F5',
         '&:active,&:focus': { background: '#EAF4F5' },
       }}
-      onClick={() => {
-        if (!dispatch) return;
-        dispatch({ type: ActionTypes.startFetching });
-        navigate(`/quiz/${quiz.id}`);
-      }}
+      onClick={() => navigate(`/quiz/${quiz.id}`)}
       elevation={0}
     >
       <CardContent>

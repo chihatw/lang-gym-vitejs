@@ -4,32 +4,28 @@ import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
 import React from 'react';
 import { changePitchesArray } from '../../../../../../../services/quiz';
-import { ActionTypes } from '../../../../../../../Update';
 import MoraSeparater from './MoraSeparater';
-import { QuizFormAction } from '../../../../Update';
 import { QuizFormState } from '../../../../Model';
 
 const TouchIcon = ({
   state,
+  isAccent,
+  disabled,
   wordIndex,
   moraIndex,
   questionIndex,
+  inputPitchesArray,
   dispatch,
 }: {
   state: QuizFormState;
+  isAccent: boolean;
+  disabled: boolean;
   wordIndex: number;
   moraIndex: number;
   questionIndex: number;
-  dispatch: React.Dispatch<QuizFormAction>;
+  inputPitchesArray: string[][][];
+  dispatch: React.Dispatch<QuizFormState>;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { inputPitchesArray, disableds } = question;
-  const disabled = disableds.includes(wordIndex);
-  const wordPitches = inputPitchesArray[wordIndex];
-  const mora = wordPitches[moraIndex];
-  const next = wordPitches[moraIndex + 1];
-  const isAccent = !!next && next.length === 1 && mora.length === 2;
   const handleClick = () => {
     if (!dispatch) return;
     const updated: string[][][] = changePitchesArray(
@@ -43,7 +39,7 @@ const TouchIcon = ({
         updated
       )
     )(state);
-    dispatch({ type: ActionTypes.setState, payload: updatedState });
+    dispatch(updatedState);
   };
 
   return (

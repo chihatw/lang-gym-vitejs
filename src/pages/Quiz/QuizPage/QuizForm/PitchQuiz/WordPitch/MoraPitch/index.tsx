@@ -1,14 +1,18 @@
 import React from 'react';
 import { QuizFormState } from '../../../../Model';
-import { QuizFormAction } from '../../../../Update';
 import Kana from './Kana';
 import Sokuon from './Sokuon';
 import TouchIcon from './TouchIcon';
 
 const MoraPitch = ({
+  mora,
   state,
+  isLast,
+  disabled,
+  isAccent,
   wordIndex,
   moraIndex,
+  inputPitchesArray,
   questionIndex,
   dispatch,
 }: {
@@ -16,14 +20,13 @@ const MoraPitch = ({
   wordIndex: number;
   moraIndex: number;
   questionIndex: number;
-  dispatch: React.Dispatch<QuizFormAction>;
+  isLast: boolean;
+  mora: string[];
+  disabled: boolean;
+  inputPitchesArray: string[][][];
+  isAccent: boolean;
+  dispatch: React.Dispatch<QuizFormState>;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { inputPitchesArray } = question;
-  const wordPitches = inputPitchesArray[wordIndex];
-  const mora = wordPitches[moraIndex];
-  const isLast = moraIndex === wordPitches.length - 1;
   const kana = mora[0];
   const isSokuon = ['っ', 'ッ'].includes(kana);
   return (
@@ -35,9 +38,12 @@ const MoraPitch = ({
         ) : (
           <TouchIcon
             state={state}
+            isAccent={isAccent}
+            disabled={disabled}
             wordIndex={wordIndex}
             moraIndex={moraIndex}
             questionIndex={questionIndex}
+            inputPitchesArray={inputPitchesArray}
             dispatch={dispatch}
           />
         ))}

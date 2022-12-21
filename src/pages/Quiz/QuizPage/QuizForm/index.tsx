@@ -3,7 +3,7 @@ import React from 'react';
 import QuestionIndex from '../../commons/QuestionIndex';
 import QuizPageHeader from '../../commons/QuizPageHeader';
 import { QuizFormState } from '../Model';
-import { QuizFormAction } from '../Update';
+// import { QuizFormAction } from '../Update';
 import PitchQuiz from './PitchQuiz';
 import QuizPageFooter from './QuizPageFooter';
 import RhythmQuiz from './RhythmQuiz';
@@ -14,27 +14,27 @@ const QuizForm = ({
   handleSubmit,
 }: {
   state: QuizFormState;
-  dispatch: React.Dispatch<QuizFormAction>;
+  dispatch: React.Dispatch<QuizFormState>;
   handleSubmit: () => void;
 }) => {
-  const { title, questions, createdAt, type } = state;
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16, paddingBottom: 80 }}>
         <div style={{ display: 'grid', rowGap: 24 }}>
-          <QuizPageHeader title={title} createdAt={createdAt} />
-          {questions.map((_, questionIndex) => (
+          <QuizPageHeader title={state.title} createdAt={state.createdAt} />
+          {state.questions.map((question, questionIndex) => (
             <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
               <QuestionIndex index={questionIndex + 1} />
-              {type === 'articleAccents' && (
+              {state.type === 'articleAccents' && (
                 <PitchQuiz
                   state={state}
-                  questionIndex={questionIndex}
                   dispatch={dispatch}
+                  question={question}
+                  questionIndex={questionIndex}
                 />
               )}
-              {type === 'articleRhythms' && (
+              {state.type === 'articleRhythms' && (
                 <RhythmQuiz
                   state={state}
                   dispatch={dispatch}

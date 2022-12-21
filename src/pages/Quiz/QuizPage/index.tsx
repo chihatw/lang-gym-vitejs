@@ -1,7 +1,7 @@
 import pitchesArray2String from 'pitches-array2string';
 import * as R from 'ramda';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 
 import { Quiz, QuizScore, QuizScores, State } from '../../../Model';
 import { ActionTypes } from '../../../Update';
@@ -16,55 +16,56 @@ import {
 import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../../App';
 import QuizForm from './QuizForm';
-import { QuizFormActionTypes, quizFormReducer } from './Update';
-import { INITIAL_QUIZ_FORM_STATE } from './Model';
+import { INITIAL_QUIZ_FORM_STATE, QuizFormState } from './Model';
+
+const reducer = (state: QuizFormState, action: QuizFormState) => action;
 
 const QuizPage = () => {
-  const { state, dispatch } = useContext(AppContext);
-  if (!state.auth.uid) return <Navigate to='/login' />;
-
   const navigate = useNavigate();
   const { quizId } = useParams();
+  const { state, dispatch } = useContext(AppContext);
+  const [initialization, setInitialization] = useState(true);
+  const [quizFormState, quizFormDispatch] = useReducer(
+    reducer,
+    INITIAL_QUIZ_FORM_STATE
+  );
+
+  if (!state.auth.uid) return <Navigate to='/login' />;
+
   if (!quizId) return <></>;
   const quiz = state.quizzes.find((item) => item.id === quizId);
   if (!quiz) return <></>;
 
-  const [quizFormState, quizFormDispatch] = useReducer(
-    quizFormReducer,
-    INITIAL_QUIZ_FORM_STATE
-  );
-
   useEffect(() => {
-    if (!state.isFetching || !dispatch) return;
+    if (!initialization) return;
     const fetchData = async () => {
-      let _blob: Blob | null = null;
+      let blob: Blob | null = null;
       if (quiz.downloadURL) {
-        _blob =
+        blob =
           state.blobs[quiz.downloadURL] || (await getBlob(quiz.downloadURL));
       }
 
       const updatedBlobs = { ...state.blobs };
-      if (_blob) {
-        updatedBlobs[quiz.downloadURL] = _blob;
+      if (blob) {
+        updatedBlobs[quiz.downloadURL] = blob;
       }
 
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<{ [downloadURL: string]: Blob }, State>(
-          ['blobs'],
-          updatedBlobs
-        )
+      const updatedState = R.assocPath<{ [downloadURL: string]: Blob }, State>(
+        ['blobs'],
+        updatedBlobs
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
 
       const quizFormState = buildQuizFormState(updatedState, quizId);
-      quizFormDispatch({
-        type: QuizFormActionTypes.setState,
-        payload: quizFormState,
-      });
+      quizFormDispatch(quizFormState);
+      setInitialization(false);
     };
     fetchData();
-  }, [state.isFetching, quiz]);
+  }, [
+    // state.isFetching,
+    quiz,
+    initialization,
+  ]);
 
   if (state.isFetching) return <SkeletonPage />;
   if (!quiz.title) return <Navigate to='/' />;

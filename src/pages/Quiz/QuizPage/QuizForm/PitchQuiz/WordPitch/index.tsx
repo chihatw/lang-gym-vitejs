@@ -1,24 +1,22 @@
 import React from 'react';
-import { QuizFormState } from '../../../Model';
-import { QuizFormAction } from '../../../Update';
+import { QuizFormQuestion, QuizFormState } from '../../../Model';
 import MoraPitch from './MoraPitch';
 
 const WordPitch = ({
   state,
+  question,
   wordIndex,
   questionIndex,
   dispatch,
 }: {
   state: QuizFormState;
+  question: QuizFormQuestion;
   wordIndex: number;
   questionIndex: number;
-  dispatch: React.Dispatch<QuizFormAction>;
+  dispatch: React.Dispatch<QuizFormState>;
 }) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { disableds, inputPitchesArray } = question;
-  const disabled = disableds.includes(wordIndex);
-  const wordPitches = inputPitchesArray[wordIndex];
+  const disabled = question.disableds.includes(wordIndex);
+  const wordPitches = question.inputPitchesArray[wordIndex];
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -30,16 +28,24 @@ const WordPitch = ({
           backgroundColor: disabled ? '#eee' : 'transparent',
         }}
       >
-        {wordPitches.map((_, moraIndex) => (
-          <MoraPitch
-            state={state}
-            key={moraIndex}
-            questionIndex={questionIndex}
-            wordIndex={wordIndex}
-            moraIndex={moraIndex}
-            dispatch={dispatch}
-          />
-        ))}
+        {wordPitches.map((mora, moraIndex) => {
+          const next = wordPitches[moraIndex + 1];
+          return (
+            <MoraPitch
+              key={moraIndex}
+              mora={mora}
+              state={state}
+              isLast={moraIndex === wordPitches.length - 1}
+              disabled={disabled}
+              isAccent={!!next && next.length === 1 && mora.length === 2}
+              wordIndex={wordIndex}
+              moraIndex={moraIndex}
+              questionIndex={questionIndex}
+              inputPitchesArray={question.inputPitchesArray}
+              dispatch={dispatch}
+            />
+          );
+        })}
       </div>
       <div style={{ width: 8 }} />
     </div>

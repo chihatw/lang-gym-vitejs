@@ -4,7 +4,6 @@ import RhythmMonitor from './RhythmMonitor';
 import SpeakerButton from '../../../commons/SpeakerButton';
 import SpecialMoraSelector from './SpecialMoraSelector';
 import { QuizFormState } from '../../Model';
-import { QuizFormAction } from '../../Update';
 
 const RhythmQuiz = ({
   state,
@@ -13,7 +12,7 @@ const RhythmQuiz = ({
 }: {
   state: QuizFormState;
   questionIndex: number;
-  dispatch: React.Dispatch<QuizFormAction>;
+  dispatch: React.Dispatch<QuizFormState>;
 }) => {
   const question = state.questions[questionIndex];
   const { syllablesArray, start, end } = question;

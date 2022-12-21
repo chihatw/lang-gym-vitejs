@@ -1,12 +1,10 @@
 import * as R from 'ramda';
 import { useTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { ActionTypes } from '../../../../../../Update';
 import Monitor from './Monitor';
 import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
 import { QuizFormState } from '../../../Model';
-import { QuizFormAction } from '../../../Update';
 
 const SpecialMoraSelector = ({
   state,
@@ -19,7 +17,7 @@ const SpecialMoraSelector = ({
   wordIndex: number;
   syllableIndex: number;
   questionIndex: number;
-  dispatch: React.Dispatch<QuizFormAction>;
+  dispatch: React.Dispatch<QuizFormState>;
 }) => {
   const question = state.questions[questionIndex];
   const { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray } =
@@ -52,7 +50,7 @@ const SpecialMoraSelector = ({
         updatedMonitor
       )
     )(state);
-    dispatch({ type: ActionTypes.setState, payload: updatedState });
+    dispatch(updatedState);
   };
   const theme = useTheme();
 

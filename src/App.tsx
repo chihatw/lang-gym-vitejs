@@ -1,25 +1,20 @@
-import * as R from 'ramda';
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
 import AppComponent from './routes/AppRoutes';
 import { Action, ActionTypes, reducer } from './Update';
 import {
   Article,
-  ArticleListParams,
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
   LayoutState,
-  Quiz,
   State,
   User,
-  WorkingMemory,
 } from './Model';
 import { auth as firebaseAuth } from './repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
 import { getArticleList } from './services/article';
 import { getUsers } from './services/auth';
 import { getQuizzes } from './services/quiz';
-import { getWorkingMemories } from './services/workingMemory';
 
 export const AppContext = createContext<{
   state: State;

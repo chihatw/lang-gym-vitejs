@@ -208,56 +208,17 @@ export const buildQuizFormState = (
 ): QuizFormState => {
   const { audioContext, quizzes } = state;
   const quiz = quizzes.find((item) => item.id === quizId) || INITIAL_QUIZ;
-  const { title, createdAt, type, questionCount } = quiz;
+
   const questions: QuizFormQuestion[] = [];
 
   Object.values(quiz.questions).forEach((question, index) => {
-    const correctPitchesArray = string2PitchesArray(question.pitchStr);
-    const inputPitchesArray = correctPitchesArray.map(
-      (wordPitch, wordIndex) => {
-        const isDisabled = question.disableds.includes(wordIndex);
-        if (isDisabled) {
-          return wordPitch;
-        } else {
-          return wordPitch.map((mora, moraIndex) => {
-            const kana = mora[0];
-            return moraIndex === 0 ? [kana] : [kana, 'h'];
-          });
-        }
-      }
+    const { correctPitchesArray, inputPitchesArray } = buildPitchQuizProps(
+      question.pitchStr,
+      question.disableds
     );
 
-    const syllablesArray: Syllable[][] = [];
-    const inputSpecialMoraArray: string[][] = [];
-    const monitorSpecialMoraArray: string[][] = [];
-
-    Object.values(question.syllables).forEach((wordSyllable, wordIndex) => {
-      syllablesArray.push(wordSyllable);
-
-      const monitorWordSpecialMora: string[] = [];
-      const inputWordSpecialMora: string[] = [];
-      const correctWordSpecialMora: string[] = [];
-
-      const isDisabled = question.disableds.includes(wordIndex);
-
-      wordSyllable.forEach((syllable) => {
-        correctWordSpecialMora.push(syllable.specialMora);
-        if (isDisabled) {
-          inputWordSpecialMora.push(syllable.specialMora);
-          const monitorString = getKanaSpecialMora({
-            mora: syllable.kana,
-            fixedVowel: syllable.longVowel,
-            specialMora: syllable.specialMora,
-          });
-          monitorWordSpecialMora.push(monitorString);
-        } else {
-          inputWordSpecialMora.push('');
-          monitorWordSpecialMora.push('');
-        }
-      });
-      inputSpecialMoraArray.push(inputWordSpecialMora);
-      monitorSpecialMoraArray.push(monitorWordSpecialMora);
-    });
+    const { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray } =
+      buildRhythmQuizProps(question.syllables, question.disableds);
 
     const quizQuestion: QuizFormQuestion = {
       id: String(index),
@@ -275,14 +236,71 @@ export const buildQuizFormState = (
   });
 
   return {
-    type: type || '',
-    title: title || '',
+    type: quiz.type || '',
+    title: quiz.title || '',
     quizBlob: state.blobs[quiz.downloadURL] || null,
-    createdAt: createdAt || 0,
+    createdAt: quiz.createdAt || 0,
     questions,
     audioContext,
-    questionCount: questionCount || 0,
+    questionCount: quiz.questionCount || 0,
   };
+};
+
+const buildPitchQuizProps = (pitchStr: string, disableds: number[]) => {
+  const correctPitchesArray = string2PitchesArray(pitchStr);
+  const inputPitchesArray = correctPitchesArray.map((wordPitch, wordIndex) => {
+    const isDisabled = disableds.includes(wordIndex);
+    if (isDisabled) {
+      return wordPitch;
+    } else {
+      return wordPitch.map((mora, moraIndex) => {
+        const kana = mora[0];
+        return moraIndex === 0 ? [kana] : [kana, 'h'];
+      });
+    }
+  });
+  return { correctPitchesArray, inputPitchesArray };
+};
+
+const buildRhythmQuizProps = (
+  syllables: {
+    [index: number]: Syllable[];
+  },
+  disableds: number[]
+) => {
+  const syllablesArray: Syllable[][] = [];
+  const inputSpecialMoraArray: string[][] = [];
+  const monitorSpecialMoraArray: string[][] = [];
+
+  Object.values(syllables).forEach((wordSyllable, wordIndex) => {
+    syllablesArray.push(wordSyllable);
+
+    const monitorWordSpecialMora: string[] = [];
+    const inputWordSpecialMora: string[] = [];
+    const correctWordSpecialMora: string[] = [];
+
+    const isDisabled = disableds.includes(wordIndex);
+
+    wordSyllable.forEach((syllable) => {
+      correctWordSpecialMora.push(syllable.specialMora);
+      if (isDisabled) {
+        inputWordSpecialMora.push(syllable.specialMora);
+        const monitorString = getKanaSpecialMora({
+          mora: syllable.kana,
+          fixedVowel: syllable.longVowel,
+          specialMora: syllable.specialMora,
+        });
+        monitorWordSpecialMora.push(monitorString);
+      } else {
+        inputWordSpecialMora.push('');
+        monitorWordSpecialMora.push('');
+      }
+    });
+    inputSpecialMoraArray.push(inputWordSpecialMora);
+    monitorSpecialMoraArray.push(monitorWordSpecialMora);
+  });
+
+  return { syllablesArray, inputSpecialMoraArray, monitorSpecialMoraArray };
 };
 
 const buildQuiz = (doc: DocumentData): Quiz => {
