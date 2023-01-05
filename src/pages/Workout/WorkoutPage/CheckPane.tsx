@@ -1,106 +1,35 @@
-import * as R from 'ramda';
 import { Button, Container, Divider, Modal, useTheme } from '@mui/material';
+import React from 'react';
 
-import React, { useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../../App';
-
-import {
-  INITIAL_CUE,
-  RandomWorkout,
-  RandomWorkoutParams,
-  RandomWorkoutState,
-  State,
-} from '../../../Model';
-import { ActionTypes } from '../../../Update';
-import { setRandomWorkout } from '../../../services/workout';
+import { INITIAL_CUE, RandomWorkout } from '../../../Model';
 import TimeDisplay from './TimeDisplay';
-
 import BlobSlider from '../../../components/BlobSlider';
 import string2PitchesArray from 'string2pitches-array';
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
-import { uploadStorage } from '../../../repositories/storage';
+import { WorkoutFormState } from './Model';
 
 const CheckPane = React.memo(
-  ({ blob, clearBlob }: { blob: Blob | null; clearBlob: () => void }) => {
-    const navigate = useNavigate();
-    const { workoutId } = useParams();
+  ({
+    blob,
+    workout,
+    formState,
+    miliSeconds,
+    audioContext,
+    saveRecordedBlob,
+    abandonRecordedBlob,
+  }: {
+    blob: Blob;
+    workout: RandomWorkout;
+    formState: WorkoutFormState;
+    miliSeconds: number;
+    audioContext: AudioContext;
+    saveRecordedBlob: () => void;
+    abandonRecordedBlob: () => void;
+  }) => {
     const theme = useTheme();
-    const { state, dispatch } = useContext(AppContext);
-    const { workout: stateWorkout, audioContext } = state;
-    const { params, workouts } = stateWorkout;
-
-    if (!workoutId) return <></>;
-
-    const workout = workouts[workoutId];
-    const { cues, cueIds, resultBpm } = workout;
-    const { isChecking, miliSeconds } = params;
-
-    const storagePath = `/randomWorkout/${workoutId}`;
-
-    const handleSave = async () => {
-      if (!blob || !dispatch) return;
-      await uploadStorage(blob, storagePath);
-      const updatedWorkout: RandomWorkout = {
-        ...workout,
-        storagePath,
-      };
-
-      await setRandomWorkout(updatedWorkout);
-      navigate('/workout/list');
-
-      const updatedWorkoutState: RandomWorkoutState = R.compose(
-        R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
-          miliSeconds: 0,
-          isRunning: false,
-          isChecking: false,
-          currentIndex: 0,
-        }),
-        R.assocPath<RandomWorkout, RandomWorkoutState>(
-          ['workouts', workoutId],
-          updatedWorkout
-        ),
-        R.assocPath<Blob, RandomWorkoutState>(['blobs', workoutId], blob)
-      )(stateWorkout);
-
-      // リストへ遷移してから、変更
-      setTimeout(() => {
-        const updatedState = R.compose(
-          R.assocPath<boolean, State>(['isFetching'], false),
-          R.assocPath<RandomWorkoutState, State>(
-            ['workout'],
-            updatedWorkoutState
-          )
-        )(state);
-
-        dispatch({
-          type: ActionTypes.setState,
-          payload: updatedState,
-        });
-      }, 200);
-    };
-    const handleCancel = () => {
-      if (!dispatch) return;
-      clearBlob();
-      const updatedWorkoutState: RandomWorkoutState = R.compose(
-        R.assocPath<RandomWorkoutParams, RandomWorkoutState>(['params'], {
-          miliSeconds: 0,
-          isRunning: false,
-          isChecking: false,
-          currentIndex: 0,
-        })
-      )(stateWorkout);
-
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
-      )(state);
-
-      dispatch({ type: ActionTypes.setState, payload: updatedState });
-    };
 
     return (
-      <Modal open={isChecking}>
+      <Modal open={formState.isChecking}>
         <div
           style={{
             width: '100vw',
@@ -124,7 +53,7 @@ const CheckPane = React.memo(
                 }}
               >
                 <span style={{ fontSize: 16 }}>BPM: </span>
-                <span>{resultBpm}</span>
+                <span>{workout.resultBpm}</span>
               </div>
               <div
                 style={{
@@ -136,14 +65,12 @@ const CheckPane = React.memo(
               >
                 録音をチェックしてください
               </div>
-              {!!blob && !!audioContext && (
-                <BlobSlider
-                  blob={blob}
-                  spacer={5}
-                  duration={miliSeconds / 1000 + 0.3}
-                  audioContext={audioContext}
-                />
-              )}
+              <BlobSlider
+                blob={blob}
+                spacer={5}
+                duration={miliSeconds / 1000 + 0.3}
+                audioContext={audioContext}
+              />
               <div
                 style={{
                   display: 'grid',
@@ -155,9 +82,10 @@ const CheckPane = React.memo(
                 }}
               >
                 <div style={{ padding: '24px 0' }}>
-                  {cueIds.map((cueId, index) => {
+                  {workout.cueIds.map((cueId, index) => {
                     const cue =
-                      cues.find((item) => item.id === cueId) || INITIAL_CUE;
+                      workout.cues.find((item) => item.id === cueId) ||
+                      INITIAL_CUE;
                     const { pitchStr } = cue;
                     const pitchesArray = string2PitchesArray(pitchStr);
                     return (
@@ -174,7 +102,7 @@ const CheckPane = React.memo(
                 </div>
                 <div style={{ display: 'grid', rowGap: 16 }}>
                   <Button
-                    onClick={handleSave}
+                    onClick={saveRecordedBlob}
                     variant='contained'
                     color='primary'
                     sx={{ color: 'white' }}
@@ -182,7 +110,7 @@ const CheckPane = React.memo(
                     きれいに読めました
                   </Button>
                   <Button
-                    onClick={handleCancel}
+                    onClick={abandonRecordedBlob}
                     variant='outlined'
                     color='primary'
                   >

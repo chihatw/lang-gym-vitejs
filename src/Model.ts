@@ -236,32 +236,16 @@ export const INITIAL_RANDOM_WORKOUT: RandomWorkout = {
   resultSeconds: 0,
 };
 
-export type RandomWorkoutParams = {
-  miliSeconds: number;
-  isRunning: boolean;
-  currentIndex: number;
-  isChecking: boolean;
-};
-
-export const INITIAL_RANDOM_WORKOUT_PARAMS: RandomWorkoutParams = {
-  miliSeconds: 0,
-  isRunning: false,
-  currentIndex: 0,
-  isChecking: false,
-};
-
 // todo 将来的に blobs を、App に統合、params は局部的な RandomWorkoutFormState で対応する
 // workouts は App 層で取得するようにして、
 // RandomWorkoutFormState 作成時点で blob を作成、メモ化
 export type RandomWorkoutState = {
   blobs: { [workoutId: string]: Blob | null };
-  params: RandomWorkoutParams;
   workouts: { [workoutId: string]: RandomWorkout };
 };
 
 export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
   blobs: {},
-  params: INITIAL_RANDOM_WORKOUT_PARAMS,
   workouts: {},
 };
 

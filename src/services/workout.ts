@@ -2,6 +2,7 @@ import {
   collection,
   doc,
   DocumentData,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -10,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import {
-  INITIAL_RANDOM_WORKOUT_PARAMS,
+  INITIAL_RANDOM_WORKOUT,
   RandomWorkout,
   RandomWorkoutState,
   State,
@@ -35,6 +36,16 @@ export const IMAGE_PATHS = [
   '/images/kabuseru.png',
   '/images/noseru.png',
 ];
+
+export const getRandomWorkout = async (id: string) => {
+  console.log('get workout');
+  const snapshot = await getDoc(doc(db, COLLECTIONS.randomWorkouts, id));
+  if (!snapshot.exists()) {
+    return INITIAL_RANDOM_WORKOUT;
+  }
+  const workout = buildRandomWorkout(snapshot);
+  return workout;
+};
 
 export const getRandomWorkouts = async (uid: string) => {
   const randomWorkouts: { [key: string]: RandomWorkout } = {};
@@ -147,6 +158,5 @@ export const buildWorkoutState = async (
   return {
     workouts: _workouts,
     blobs: { ...state.workout.blobs, ...gotBlobs },
-    params: INITIAL_RANDOM_WORKOUT_PARAMS,
   };
 };
