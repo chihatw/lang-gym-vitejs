@@ -1,8 +1,11 @@
 import { PitchLine } from '@chihatw/lang-gym-h.ui.pitch-line';
 import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { Divider, useTheme } from '@mui/material';
-import React from 'react';
+import { useContext, useEffect, useState } from 'react';
+
 import string2PitchesArray from 'string2pitches-array';
+import { AppContext } from '../../../App';
+import AudioSlider from '../../../components/AudioSlider';
 import { Quiz } from '../../../Model';
 import CorrectAnswer from './commons/CorrectAnswer';
 

@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { Navigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { Container } from '@mui/material';
 
@@ -14,45 +14,51 @@ import RhythmsAnswer from './RhythmsAnswer';
 import ScoreFooter from './ScoreFooter';
 import { AppContext } from '../../../App';
 import { getBlob } from '../../../services/quiz';
-import { State } from '../../../Model';
+import { INITIAL_QUIZ, State } from '../../../Model';
 import { ActionTypes } from '../../../Update';
+import AudioSlider from '../../../components/AudioSlider';
 
 const ScorePage = () => {
   const { quizId, scoreId } = useParams();
-  if (!quizId || !scoreId) return <></>;
   const { state, dispatch } = useContext(AppContext);
+  const [quiz, setQuiz] = useState(INITIAL_QUIZ);
+  const [blob, setBlob] = useState<Blob | null>(null);
 
-  if (!state.auth.uid) return <Navigate to='/login' />;
-
-  const quiz = state.quizzes.find((item) => item.id === quizId);
-  if (!quiz) return <></>;
+  /** quiz の代入 */
+  useEffect(() => {
+    const quiz = state.quizzes.find((item) => item.id === quizId);
+    if (!quiz) return;
+    setQuiz(quiz);
+  }, [state.quizzes, quizId]);
 
   useEffect(() => {
-    if (!state.isFetching || !dispatch) return;
+    const blob = state.blobs[quiz.downloadURL];
+    if (!blob) return;
+    setBlob(blob);
+  }, [state.blobs, quiz.downloadURL]);
+
+  // state.blobs の更新
+  useEffect(() => {
+    if (!quiz.downloadURL) return;
+
+    // ローカルにあれば、終了
+    if (!!state.blobs[quiz.downloadURL]) return;
 
     const fetchData = async () => {
-      let _blob: Blob | null = null;
-      if (quiz.downloadURL) {
-        _blob =
-          state.blobs[quiz.downloadURL] || (await getBlob(quiz.downloadURL));
-      }
-
-      const updatedBlobs = { ...state.blobs };
-      if (_blob) {
-        updatedBlobs[quiz.downloadURL] = _blob;
-      }
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<{ [downloadURL: string]: Blob }, State>(
-          ['blobs'],
-          updatedBlobs
-        )
+      const blob = await getBlob(quiz.downloadURL);
+      if (!blob) return;
+      const updatedState = R.assocPath<Blob, State>(
+        ['blobs', quiz.downloadURL],
+        blob
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
   }, [quiz, state.blobs]);
-  if (state.isFetching) return <></>;
+
+  if (!quizId || !scoreId) return <></>;
+  if (!state.auth.uid) return <Navigate to='/login' />;
+
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
@@ -65,11 +71,24 @@ const ScorePage = () => {
               <div key={questionIndex} style={{ display: 'grid', rowGap: 8 }}>
                 <QuestionIndex index={questionIndex + 1} />
                 {quiz.type === 'articleAccents' && (
-                  <AccentsAnswer
-                    quiz={quiz}
-                    scoreId={scoreId}
-                    questionIndex={questionIndex}
-                  />
+                  <>
+                    {!!state.audioContext && !!blob && (
+                      <AudioSlider
+                        end={question.end}
+                        start={question.start}
+                        blob={blob}
+                        audioContext={state.audioContext}
+                        spacer={5}
+                      />
+                    )}
+                    <div style={{ display: 'grid', rowGap: 8 }}>
+                      <AccentsAnswer
+                        quiz={quiz}
+                        scoreId={scoreId}
+                        questionIndex={questionIndex}
+                      />
+                    </div>
+                  </>
                 )}
                 {quiz.type === 'articleRhythms' && (
                   <div>

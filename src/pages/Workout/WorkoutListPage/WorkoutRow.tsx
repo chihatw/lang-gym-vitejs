@@ -25,8 +25,6 @@ const WorkoutRow = ({
     navigate(`/workout/${workout.id}`);
   };
   const handleDelete = async () => {
-    if (!dispatch) return;
-
     const updatedWorkout: RandomWorkout = {
       ...workout,
       resultBpm: 0,
