@@ -1,11 +1,12 @@
 import { useTheme } from '@mui/material';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
+
 import React, { useContext } from 'react';
 
 import AudioSlider from '../../../../../components/AudioSlider';
 
 import { AppContext } from '../../../../../../App';
 import { useParams } from 'react-router-dom';
+import SentencePitchLine from '../../../../../components/SentencePitchLine';
 
 const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { articleId } = useParams();
@@ -20,7 +21,7 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const sentence = articleSentence;
 
   const blob = articleBlob;
-  const { start, end, pitchesArray } = sentence;
+  const { start, end, pitchStr } = sentence;
 
   return (
     <div
@@ -58,7 +59,7 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
           />
         </div>
       )}
-      <SentencePitchLine pitchesArray={pitchesArray} />
+      <SentencePitchLine pitchStr={pitchStr} />
     </div>
   );
 };

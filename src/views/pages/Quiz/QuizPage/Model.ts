@@ -13,8 +13,8 @@ export type QuizFormQuestion = {
   japanese: string;
   disableds: number[]; // pitchQuiz の非題化を wordIndex で指定
   syllablesArray: Syllable[][];
-  inputPitchesArray: string[][][];
-  correctPitchesArray: string[][][];
+  inputPitchStr: string;
+  correctPitchStr: string;
   inputSpecialMoraArray: string[][];
   monitorSpecialMoraArray: string[][];
 };

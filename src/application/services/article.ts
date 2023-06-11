@@ -23,6 +23,7 @@ import {
 } from '../../Model';
 import { db, storage } from '../../infrastructure/repositories/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
+import pitchesArray2String from 'pitches-array2string';
 
 const COLLECTIONS = {
   articles: 'articles',
@@ -184,6 +185,8 @@ const buildSentence = (doc: DocumentData) => {
     storagePath,
     storageDuration,
   } = doc.data();
+  const pitchesArray = accentsForPitchesArray(accents);
+  const pitchStr = pitchesArray2String(pitchesArray);
   const sentence: Sentence = {
     id: doc.id,
     end: end || 0,
@@ -196,7 +199,7 @@ const buildSentence = (doc: DocumentData) => {
     japanese: japanese || '',
     original: original || '',
     createdAt: createdAt || 0,
-    pitchesArray: accentsForPitchesArray(accents),
+    pitchStr: pitchStr || '',
     storagePath: storagePath || '',
     storageDuration: storageDuration || 0,
   };

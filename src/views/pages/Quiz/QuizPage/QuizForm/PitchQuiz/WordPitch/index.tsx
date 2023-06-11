@@ -1,6 +1,7 @@
 import React from 'react';
 import { QuizFormQuestion, QuizFormState } from '../../../Model';
 import MoraPitch from './MoraPitch';
+import string2PitchesArray from 'string2pitches-array';
 
 const WordPitch = ({
   state,
@@ -16,7 +17,9 @@ const WordPitch = ({
   dispatch: React.Dispatch<QuizFormState>;
 }) => {
   const disabled = question.disableds.includes(wordIndex);
-  const wordPitches = question.inputPitchesArray[wordIndex];
+  // todo check split
+  const wordPitchStr = question.inputPitchStr.split(' ')[wordIndex];
+  const wordPitches = string2PitchesArray(wordPitchStr)[0];
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -41,7 +44,7 @@ const WordPitch = ({
               wordIndex={wordIndex}
               moraIndex={moraIndex}
               questionIndex={questionIndex}
-              inputPitchesArray={question.inputPitchesArray}
+              inputPitchStr={question.inputPitchStr}
               dispatch={dispatch}
             />
           );

@@ -14,7 +14,7 @@ const TouchIcon = ({
   wordIndex,
   moraIndex,
   questionIndex,
-  inputPitchesArray,
+  inputPitchStr,
   dispatch,
 }: {
   state: QuizFormState;
@@ -23,20 +23,21 @@ const TouchIcon = ({
   wordIndex: number;
   moraIndex: number;
   questionIndex: number;
-  inputPitchesArray: string[][][];
+  inputPitchStr: string;
   dispatch: React.Dispatch<QuizFormState>;
 }) => {
   const handleClick = () => {
     if (!dispatch) return;
-    const updated: string[][][] = changePitchesArray(
-      inputPitchesArray,
+    const updatedPitchStr: string = changePitchesArray(
+      inputPitchStr,
       wordIndex,
       moraIndex
     );
+    console.log({ updatedPitchStr });
     const updatedState = R.compose(
-      R.assocPath<string[][][], QuizFormState>(
-        ['questions', questionIndex, 'inputPitchesArray'],
-        updated
+      R.assocPath<string, QuizFormState>(
+        ['questions', questionIndex, 'inputPitchStr'],
+        updatedPitchStr
       )
     )(state);
     dispatch(updatedState);

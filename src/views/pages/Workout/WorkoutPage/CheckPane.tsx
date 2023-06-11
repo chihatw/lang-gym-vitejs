@@ -4,9 +4,8 @@ import React from 'react';
 import { INITIAL_CUE, RandomWorkout } from '../../../../Model';
 import TimeDisplay from './TimeDisplay';
 import BlobSlider from '../../../components/BlobSlider';
-import string2PitchesArray from 'string2pitches-array';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import { WorkoutFormState } from './Model';
+import SentencePitchLine from '../../../components/SentencePitchLine';
 
 const CheckPane = React.memo(
   ({
@@ -87,13 +86,12 @@ const CheckPane = React.memo(
                       workout.cues.find((item) => item.id === cueId) ||
                       INITIAL_CUE;
                     const { pitchStr } = cue;
-                    const pitchesArray = string2PitchesArray(pitchStr);
                     return (
                       <div key={index}>
                         <div
                           style={{ display: 'flex', justifyContent: 'center' }}
                         >
-                          <SentencePitchLine pitchesArray={pitchesArray} />
+                          <SentencePitchLine pitchStr={pitchStr} />
                         </div>
                         <Divider />
                       </div>

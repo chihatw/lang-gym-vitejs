@@ -77,7 +77,8 @@ export type Sentence = {
   japanese: string;
   original: string;
   createdAt: number;
-  pitchesArray: string[][][];
+  // pitchesArray: string[][][];
+  pitchStr: string;
   storagePath: string;
   storageDuration: number;
 };
@@ -94,7 +95,8 @@ export const INITIAL_SENTENCE: Sentence = {
   japanese: '',
   original: '',
   createdAt: 0,
-  pitchesArray: [],
+  // pitchesArray: [],
+  pitchStr: '',
   storagePath: '',
   storageDuration: 0,
 };

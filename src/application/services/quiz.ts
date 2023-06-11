@@ -22,6 +22,7 @@ import {
 } from '../../views/pages/Quiz/QuizPage/Model';
 import string2PitchesArray from 'string2pitches-array';
 import { getDownloadURL, ref } from 'firebase/storage';
+import pitchesArray2String from 'pitches-array2string';
 
 export const SPECIAL_MORAS = ['っ', 'ん', 'ー', 'ーん', 'ーっ'];
 
@@ -66,11 +67,12 @@ export const setQuiz = async (quiz: Quiz) => {
 };
 
 export const changePitchesArray = (
-  pitchesArray: string[][][],
+  inputPitchStr: string,
   wordIndex: number,
   moraIndex: number
-): string[][][] => {
-  let targetWord = pitchesArray[wordIndex];
+): string => {
+  const inputPitchesArray = string2PitchesArray(inputPitchStr);
+  let targetWord = inputPitchesArray[wordIndex];
   const target = targetWord[moraIndex];
   const next = targetWord[moraIndex + 1];
   const isAccent = !!next && next.length === 1 && target.length === 2;
@@ -80,8 +82,8 @@ export const changePitchesArray = (
     targetWord = targetWord.map(([moraString], index) =>
       index === 0 ? [moraString] : [moraString, 'h']
     );
-    pitchesArray.splice(wordIndex, 1, targetWord);
-    return pitchesArray;
+    inputPitchesArray.splice(wordIndex, 1, targetWord);
+    return pitchesArray2String(inputPitchesArray);
   }
   // アクセント核を付加
 
@@ -90,8 +92,8 @@ export const changePitchesArray = (
     targetWord = targetWord.map(([moraString], index) =>
       index === moraIndex ? [moraString, 'h'] : [moraString]
     );
-    pitchesArray.splice(wordIndex, 1, targetWord);
-    return pitchesArray;
+    inputPitchesArray.splice(wordIndex, 1, targetWord);
+    return pitchesArray2String(inputPitchesArray);
   }
   // 頭高以外
   targetWord = targetWord.map((mora, index) => {
@@ -104,21 +106,23 @@ export const changePitchesArray = (
     return [kana];
   });
 
-  pitchesArray.splice(wordIndex, 1, targetWord);
-  return pitchesArray;
+  inputPitchesArray.splice(wordIndex, 1, targetWord);
+  return pitchesArray2String(inputPitchesArray);
 };
 
 export const calcPitchesQuiz = (questions: QuizFormQuestion[]) => {
   let points = 0;
 
   questions.forEach((question) => {
-    question.inputPitchesArray.forEach((wordPitches, wordIndex) => {
+    //  todo check split
+    question.inputPitchStr.split(' ').forEach((wordPitchStr, wordIndex) => {
       // アクセント固定は採点しない
       if (question.disableds.includes(wordIndex)) return;
 
       // 正解数を増やす
-      const correctPitches = question.correctPitchesArray[wordIndex];
-      if (JSON.stringify(wordPitches) === JSON.stringify(correctPitches)) {
+      const correctWordPitchStr =
+        question.correctPitchStr.split(' ')[wordIndex];
+      if (wordPitchStr === JSON.stringify(correctWordPitchStr)) {
         points++;
       }
     });
@@ -215,7 +219,7 @@ export const buildQuizFormState = (
   const questions: QuizFormQuestion[] = [];
 
   Object.values(quiz.questions).forEach((question, index) => {
-    const { correctPitchesArray, inputPitchesArray } = buildPitchQuizProps(
+    const inputPitchStr = buildInputPitchStr(
       question.pitchStr,
       question.disableds
     );
@@ -230,8 +234,8 @@ export const buildQuizFormState = (
       japanese: question.japanese,
       disableds: question.disableds,
       syllablesArray,
-      inputPitchesArray,
-      correctPitchesArray,
+      inputPitchStr,
+      correctPitchStr: question.pitchStr,
       inputSpecialMoraArray,
       monitorSpecialMoraArray,
     };
@@ -249,20 +253,21 @@ export const buildQuizFormState = (
   };
 };
 
-const buildPitchQuizProps = (pitchStr: string, disableds: number[]) => {
-  const correctPitchesArray = string2PitchesArray(pitchStr);
-  const inputPitchesArray = correctPitchesArray.map((wordPitch, wordIndex) => {
-    const isDisabled = disableds.includes(wordIndex);
-    if (isDisabled) {
-      return wordPitch;
-    } else {
-      return wordPitch.map((mora, moraIndex) => {
-        const kana = mora[0];
-        return moraIndex === 0 ? [kana] : [kana, 'h'];
-      });
-    }
-  });
-  return { correctPitchesArray, inputPitchesArray };
+const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
+  // todo check split
+  const inputPitchStr = pitchStr
+    .split(' ')
+    .map((wordPitchStr, wordIndex) => {
+      const isDisabled = disableds.includes(wordIndex);
+      if (isDisabled) {
+        return wordPitchStr;
+      } else {
+        return wordPitchStr.replace('＼', '');
+      }
+      // todo check join
+    })
+    .join(' ');
+  return inputPitchStr;
 };
 
 const buildRhythmQuizProps = (

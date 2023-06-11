@@ -1,5 +1,4 @@
 import * as R from 'ramda';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 import PlayArrow from '@mui/icons-material/PlayArrow';
@@ -12,6 +11,7 @@ import { AppContext } from '../../../../../../App';
 import { useParams } from 'react-router-dom';
 import { WorkingMemory } from '../../../../../../Model';
 import { setWorkingMemory } from '../../../../../../application/services/workingMemory';
+import SentencePitchLine from '../../../../../components/SentencePitchLine';
 
 const WorkingMemoryResultAnswerRow = ({
   state,
@@ -102,9 +102,7 @@ const WorkingMemoryResultAnswerRow = ({
           justifyContent: 'center',
         }}
       >
-        {!!cue.pitchStr && (
-          <SentencePitchLine pitchesArray={string2PitchesArray(cue.pitchStr)} />
-        )}
+        {!!cue.pitchStr && <SentencePitchLine pitchStr={cue.pitchStr} />}
         {!!cue.label && (
           <div
             style={{
@@ -136,11 +134,7 @@ const WorkingMemoryResultAnswerRow = ({
           background: isCorrect ? 'transparent' : 'rgba(255,0,0,0.1)',
         }}
       >
-        {!!answer.pitchStr && (
-          <SentencePitchLine
-            pitchesArray={string2PitchesArray(answer.pitchStr)}
-          />
-        )}
+        {!!answer.pitchStr && <SentencePitchLine pitchStr={answer.pitchStr} />}
         {!!answer.label && (
           <div style={{ fontSize: 16, lineHeight: '40px' }}>{answer.label}</div>
         )}

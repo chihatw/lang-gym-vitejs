@@ -1,7 +1,6 @@
-import pitchesArray2String from 'pitches-array2string';
 import * as R from 'ramda';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 
 import { Quiz, QuizScore, QuizScores, State } from '../../../../Model';
 import { ActionTypes } from '../../../../Update';
@@ -84,7 +83,7 @@ const QuizPage = () => {
 
     quizFormState.questions.forEach((question) => {
       if (quizFormState.type === 'articleAccents') {
-        const pitchStr = pitchesArray2String(question.inputPitchesArray);
+        const pitchStr = question.inputPitchStr;
         pitchAnswers.push(pitchStr);
       } else {
         const rhythmAnswerStr = rhythmAnswerToString(

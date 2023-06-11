@@ -12,7 +12,7 @@ const MoraPitch = ({
   isAccent,
   wordIndex,
   moraIndex,
-  inputPitchesArray,
+  inputPitchStr,
   questionIndex,
   dispatch,
 }: {
@@ -23,7 +23,7 @@ const MoraPitch = ({
   isLast: boolean;
   mora: string[];
   disabled: boolean;
-  inputPitchesArray: string[][][];
+  inputPitchStr: string;
   isAccent: boolean;
   dispatch: React.Dispatch<QuizFormState>;
 }) => {
@@ -43,7 +43,7 @@ const MoraPitch = ({
             wordIndex={wordIndex}
             moraIndex={moraIndex}
             questionIndex={questionIndex}
-            inputPitchesArray={inputPitchesArray}
+            inputPitchStr={inputPitchStr}
             dispatch={dispatch}
           />
         ))}
