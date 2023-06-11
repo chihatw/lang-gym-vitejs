@@ -6,7 +6,6 @@ import {
   Article,
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
-  LayoutState,
   State,
   User,
 } from './Model';
@@ -56,25 +55,8 @@ const App = () => {
       }
     });
 
-    // layout
-    let layout: LayoutState = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
-
-    const onResize = () => {
-      layout = {
-        ...layout,
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-      dispatch({ type: ActionTypes.setLayout, payload: layout });
-    };
-    window.addEventListener('resize', onResize);
-
     return () => {
       unsubscribe();
-      window.removeEventListener('resize', onResize);
     };
   }, [dispatch, state.auth.users, state.auth.uid]);
 
@@ -116,18 +98,6 @@ const App = () => {
     fetchData();
   }, [state.auth.uid, state.quizzes, state.articleList.length]);
 
-  // useEffect(() => {
-  //   const createAudioContext = () => {
-  //     console.log('create audio context');
-  //     const factory = new AudioContextFactory();
-  //     const _audioContext = factory.create();
-  //     dispatch({ type: ActionTypes.setAudioContext, payload: _audioContext });
-  //     window.removeEventListener('click', createAudioContext);
-  //   };
-  //   if (!state.audioContext) {
-  //     window.addEventListener('click', createAudioContext);
-  //   }
-  // }, [state.audioContext]);
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       <AppComponent />
@@ -135,17 +105,3 @@ const App = () => {
   );
 };
 export default App;
-
-// class AudioContextFactory {
-//   create() {
-//     const audioContext = new window.AudioContext();
-//     const osc = audioContext.createOscillator();
-//     const gainNode = audioContext.createGain();
-//     osc.connect(gainNode);
-//     gainNode.connect(audioContext.destination);
-//     gainNode.gain.value = 0;
-//     osc.start(audioContext.currentTime);
-//     osc.stop(audioContext.currentTime + 0.1);
-//     return audioContext;
-//   }
-// }

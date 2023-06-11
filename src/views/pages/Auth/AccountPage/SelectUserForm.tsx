@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Select,
   MenuItem,
@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { INITIAL_STATE, State } from '../../../../Model';
 import { AUTH_LOCAL_STORAGE } from '../../../../constants';
-import { Action, ActionTypes } from '../../../../Update';
+import { ActionTypes } from '../../../../Update';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../../../App';
 
@@ -16,7 +16,7 @@ const SelectUserForm = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const theme = useTheme();
-  const { auth, layout } = state;
+  const { auth } = state;
   const { uid, users } = auth;
 
   const [selectedUid, setSelectedUid] = useState(uid);
@@ -29,7 +29,6 @@ const SelectUserForm = () => {
     const updatedState: State = {
       ...INITIAL_STATE,
       auth: { ...auth, uid: selectedUid, initializing: true },
-      layout,
     };
     dispatch({ type: ActionTypes.setState, payload: updatedState });
     navigate('/');

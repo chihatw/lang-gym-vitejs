@@ -310,13 +310,11 @@ export const INITIAL_WORKING_MEMORY: WorkingMemory = {
 
 export type State = {
   auth: AuthState;
-  layout: LayoutState;
   workout: RandomWorkoutState;
   workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
   articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
-  // audioContext: AudioContext | null;
   articleListParams: ArticleListParams;
   quizzes: Quiz[];
   blobs: { [downloadURL: string]: Blob };
@@ -327,12 +325,10 @@ export type State = {
 
 export const INITIAL_STATE: State = {
   auth: INITIAL_AUTH_STATE,
-  layout: INITIAL_LAYOUT_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
   articleList: [],
   articlePages: {},
-  // audioContext: null,
   workingMemories: {},
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},

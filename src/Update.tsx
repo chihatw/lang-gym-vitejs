@@ -10,7 +10,6 @@ import {
 
 export const ActionTypes = {
   setState: 'setState',
-  setLayout: 'setLayout',
   authenticate: 'authenticate',
   startFetching: 'startFetching',
   initializeApp: 'initializeApp',
@@ -62,12 +61,6 @@ export const reducer = (state: State, action: Action): State => {
     }
     case ActionTypes.startFetching: {
       return { ...state, isFetching: true };
-    }
-    case ActionTypes.setLayout: {
-      const layout = payload as LayoutState;
-      return R.compose(R.assocPath<LayoutState, State>(['layout'], layout))(
-        state
-      );
     }
     default:
       return state;
