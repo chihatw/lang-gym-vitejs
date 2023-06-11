@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 import { INITIAL_CUE, RandomWorkout } from '../../../../Model';
 

@@ -10,7 +10,7 @@ import { INITIAL_STATE, State } from '../../../../Model';
 import { AUTH_LOCAL_STORAGE } from '../../../../constants';
 import { ActionTypes } from '../../../../Update';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 const SelectUserForm = () => {
   const { state, dispatch } = useContext(AppContext);

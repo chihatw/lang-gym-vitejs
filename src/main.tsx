@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
-import App from './App';
+import App from './views';
 import './index.css';
 import services from 'infrastructure/services';
 import { configureStore } from 'application/0-store/store';
@@ -86,9 +85,9 @@ const store = configureStore(services);
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      {/* <BrowserRouter> */}
+      <App />
+      {/* </BrowserRouter> */}
     </ThemeProvider>
   </Provider>
 );

@@ -8,7 +8,7 @@ import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import React, { useContext, useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppContext } from '../../App';
+import { AppContext } from '..';
 import { ActionTypes } from '../../Update';
 
 const PageFooter = () => {

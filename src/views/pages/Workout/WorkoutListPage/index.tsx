@@ -1,14 +1,13 @@
 import * as R from 'ramda';
 import { Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import CustomLabel from '../../../components/CustomLabel';
 import { RandomWorkoutState, State, WorkingMemory } from '../../../../Model';
 
 import { buildWorkoutState } from '../../../../application/services/workout';
 import { ActionTypes } from '../../../../Update';
 import WorkoutRow from './WorkoutRow';
-import WorkingMemoryRow from './WorkingMemoryRow';
 import { getWorkingMemories } from '../../../../application/services/workingMemory';
 
 const WorkoutListPage = () => {
@@ -53,16 +52,6 @@ const WorkoutListPage = () => {
                 workout={workout}
               />
             ))}
-          </>
-        )}
-        {!!Object.values(state.workingMemories).length && (
-          <>
-            <CustomLabel label='記憶練習' />
-            {Object.values(state.workingMemories)
-              .sort((a, b) => a.createdAt - b.createdAt)
-              .map((workingMemory, index) => (
-                <WorkingMemoryRow workingMemory={workingMemory} key={index} />
-              ))}
           </>
         )}
       </div>

@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../../../App';
+import { AppContext } from '../../../../../../..';
 import { deleteStorage } from '../../../../../../../../infrastructure/repositories/storage';
 import { updateSentence } from '../../../../../../../../application/services/article';
 

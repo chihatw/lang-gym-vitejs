@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import Copyright from './Copyright';
 import PageFooter from './PageFooter';
 import PageHeader from './PageHeader';
-import { AppContext } from '../../App';
+import { AppContext } from '..';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { state } = useContext(AppContext);

@@ -2,7 +2,7 @@ import { Card, CardContent, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { WorkingMemory, WorkingMemoryLog } from '../../../../Model';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { ActionTypes } from '../../../../Update';
 
 const WorkingMemoryRow = ({

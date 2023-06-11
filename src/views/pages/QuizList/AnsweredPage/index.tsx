@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 import StyledButton from '../commons/StyledButton';
 import QuizList from '../commons/QuizList';
 
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 const AnsweredPage = () => {
   const { state } = useContext(AppContext);

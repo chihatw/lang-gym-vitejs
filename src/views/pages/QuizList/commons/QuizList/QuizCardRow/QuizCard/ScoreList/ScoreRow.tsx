@@ -5,7 +5,7 @@ import { Button, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ActionTypes } from '../../../../../../../../Update';
-import { AppContext } from '../../../../../../../../App';
+import { AppContext } from '../../../../../../..';
 import { QuizScore } from '../../../../../../../../Model';
 
 dayjs.extend(relativeTime);

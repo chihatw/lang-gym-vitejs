@@ -1,19 +1,32 @@
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
-import AppComponent from './views/routes/AppRoutes';
-import { Action, ActionTypes, reducer } from './Update';
+import { Action, ActionTypes, reducer } from '../Update';
 import {
   Article,
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
   State,
   User,
-} from './Model';
-import { auth as firebaseAuth } from './infrastructure/repositories/firebase';
-import { AUTH_LOCAL_STORAGE } from './constants';
-import { getArticleList } from './application/services/article';
-import { getUsers } from './application/services/auth';
-import { getQuizzes } from './application/services/quiz';
+} from '../Model';
+import { auth as firebaseAuth } from '../infrastructure/repositories/firebase';
+import { AUTH_LOCAL_STORAGE } from '../constants';
+import { getArticleList } from '../application/services/article';
+import { getUsers } from '../application/services/auth';
+import { getQuizzes } from '../application/services/quiz';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import Layout from 'views/Layout';
+import ArticleListPage from 'views/pages/Article/ArticleListPage';
+import ArticlePage from 'views/pages/Article/ArticlePage';
+import UnAnsweredPage from 'views/pages/QuizList/UnAnsweredPage';
+import AnsweredPage from 'views/pages/QuizList/AnsweredPage';
+import ScorePage from 'views/pages/Quiz/ScorePage';
+import QuizPage from 'views/pages/Quiz/QuizPage';
+import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
+import WorkoutPage from 'views/pages/Workout/WorkoutPage';
+import AccountPage from 'views/pages/Auth/AccountPage';
+import MailPage from 'views/pages/Auth/Setting/MailPage';
+import PasswordPage from 'views/pages/Auth/Setting/PasswordPage';
+import SignInPage from 'views/pages/Auth/SingInPage';
 
 export const AppContext = createContext<{
   state: State;
@@ -100,7 +113,39 @@ const App = () => {
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
-      <AppComponent />
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route index element={<ArticleListPage />} />
+
+            <Route path='/article'>
+              <Route path='list' element={<ArticleListPage />} />
+              <Route path=':articleId' element={<ArticlePage />} />
+            </Route>
+
+            <Route path='/quiz'>
+              <Route path='list'>
+                <Route path='unanswered' element={<UnAnsweredPage />} />
+                <Route path='answered' element={<AnsweredPage />} />
+              </Route>
+              <Route path=':quizId/score/:scoreId' element={<ScorePage />} />
+              <Route path=':quizId' element={<QuizPage />} />
+            </Route>
+
+            <Route path='workout'>
+              <Route path='list' element={<WorkoutListPage />} />
+              <Route path=':workoutId' element={<WorkoutPage />} />
+            </Route>
+            <Route path='/account'>
+              <Route index element={<AccountPage />} />
+              <Route path={'mail'} element={<MailPage />} />
+              <Route path={`password`} element={<PasswordPage />} />
+            </Route>
+            <Route path='/login' element={<SignInPage />} />
+            <Route path='*' element={<Navigate to='/' />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
     </AppContext.Provider>
   );
 };

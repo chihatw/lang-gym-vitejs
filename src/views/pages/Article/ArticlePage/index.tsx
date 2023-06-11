@@ -9,7 +9,7 @@ import { ActionTypes } from '../../../../Update';
 import { getArticleState } from '../../../../application/services/article';
 
 import SkeletonPage from '../../../components/SkeletonPage';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { ArticleState, INITIAL_ARTICLE_STATE, State } from '../../../../Model';
 
 const ArticlePage = () => {

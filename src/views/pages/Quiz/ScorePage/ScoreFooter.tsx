@@ -1,7 +1,7 @@
 import { Button, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { ActionTypes } from '../../../../Update';
 
 const ScoreFooter = () => {

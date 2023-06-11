@@ -6,7 +6,7 @@ import { Button, Container, useTheme } from '@mui/material';
 import SelectUserForm from './SelectUserForm';
 import { INITIAL_STATE, State } from '../../../../Model';
 import { useContext } from 'react';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 const VERSION = '1.2.6';
 

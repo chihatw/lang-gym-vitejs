@@ -4,7 +4,7 @@ import number_chinese from '../../../../assets/audios/number_chinese.mp3';
 import * as R from 'ramda';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { INITIAL_WORKING_MEMORY_FORM_STATE } from './Model';
 import { workingMemoryFormReducer } from './Update';
 import { State } from '../../../../Model';

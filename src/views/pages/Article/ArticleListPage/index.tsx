@@ -3,7 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Container, useTheme } from '@mui/material';
 import { useContext } from 'react';
 
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { getArticleList } from '../../../../application/services/article';
 import { Article, ArticleListParams, State } from '../../../../Model';
 import { ActionTypes } from '../../../../Update';

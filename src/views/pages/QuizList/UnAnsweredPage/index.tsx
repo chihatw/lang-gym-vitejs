@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import { useContext } from 'react';
 
 import { Navigate, useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import QuizList from '../commons/QuizList';
 import StyledButton from '../commons/StyledButton';
 

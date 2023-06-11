@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { IconButton } from '@mui/material';
 import { useContext } from 'react';
-import { AppContext } from '../../../../../../../App';
+import { AppContext } from '../../../../../..';
 import { State, Syllable } from '../../../../../../../Model';
 import {
   getKanaSpecialMora,

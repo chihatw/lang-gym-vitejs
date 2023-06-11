@@ -7,7 +7,7 @@ import { WorkingMemoryFormState } from '../../Model';
 import WorkingMemoryAnswerCard from './WorkingMemoryAnswerCard';
 import WorkingMemoryAnswerPaneMessage from './WorkingMemoryAnswerPaneMessage';
 import WorkingMemoryFormFooter from '../common/WorkingMemoryFormFooter';
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import {
   State,
   WorkingMemory,

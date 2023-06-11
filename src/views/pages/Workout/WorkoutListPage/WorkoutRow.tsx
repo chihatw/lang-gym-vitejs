@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { Card, CardContent, IconButton, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { RandomWorkout, RandomWorkoutState, State } from '../../../../Model';
 import BlobSlider from '../../../components/BlobSlider';
 import Delete from '@mui/icons-material/Delete';

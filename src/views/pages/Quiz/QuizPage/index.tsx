@@ -13,7 +13,7 @@ import {
   setQuiz,
 } from '../../../../application/services/quiz';
 import SkeletonPage from '../../../components/SkeletonPage';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import QuizForm from './QuizForm';
 import { INITIAL_QUIZ_FORM_STATE, QuizFormState } from './Model';
 

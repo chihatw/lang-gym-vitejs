@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { ActionTypes } from '../../../../Update';
 import LogoButton from '../../commons/LogoButton';
 import BadgeButton from './BadgeButton';

@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { shuffle } from '../../../../application/services/utils';
 import Header from './Header';
 import {

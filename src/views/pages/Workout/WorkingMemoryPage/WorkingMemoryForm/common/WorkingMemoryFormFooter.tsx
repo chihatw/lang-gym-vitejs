@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import { nanoid } from 'nanoid';
 import React, { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import { WORKING_MEMORY_MAX_ROUND } from '../../../../../../assets/constants';
 import { INITIAL_WORKING_MEMORY_LOG } from '../../../../../../Model';
 import {

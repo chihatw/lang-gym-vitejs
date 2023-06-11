@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import { Quiz, State } from '../../../../../../Model';
 import { ActionTypes } from '../../../../../../Update';
 import QuizCard from './QuizCard';

@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { Button, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import { WorkingMemoryFormState } from '../../Model';
 import { getTodaysLogCount } from '../../../../../../application/services/workingMemory';
 import { WORKING_MEMORY_MAX_ROUND } from '../../../../../../assets/constants';

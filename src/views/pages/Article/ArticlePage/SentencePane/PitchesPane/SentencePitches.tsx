@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 
 import AudioSlider from '../../../../../components/AudioSlider';
 
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import { useParams } from 'react-router-dom';
 import SentencePitchLine from '../../../../../components/SentencePitchLine';
 

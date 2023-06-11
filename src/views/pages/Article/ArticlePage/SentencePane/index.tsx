@@ -4,7 +4,7 @@ import Index from './StyledIndex';
 
 import TextLines from './TextLines';
 import PitchesPane from './PitchesPane';
-import { AppContext } from '../../../../../App';
+import { AppContext } from '../../../..';
 import { useParams } from 'react-router-dom';
 
 const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {

@@ -12,7 +12,7 @@ import QuizPageHeader from '../commons/QuizPageHeader';
 import Score from './Score';
 import RhythmsAnswer from './RhythmsAnswer';
 import ScoreFooter from './ScoreFooter';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 import { getBlob } from '../../../../application/services/quiz';
 import { INITIAL_QUIZ, State } from '../../../../Model';
 import { ActionTypes } from '../../../../Update';

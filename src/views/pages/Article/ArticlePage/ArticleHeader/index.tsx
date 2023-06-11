@@ -4,7 +4,7 @@ import React, { useContext, useMemo } from 'react';
 import CreatedAt from './CreatedAt';
 import Title from './Title';
 import AudioSlider from '../../../../components/AudioSlider';
-import { AppContext } from '../../../../../App';
+import { AppContext } from '../../../..';
 import { useParams } from 'react-router-dom';
 
 const ArticleHeader = () => {

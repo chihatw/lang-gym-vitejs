@@ -2,7 +2,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import { IconButton } from '@mui/material';
 import { useContext, useRef, useState } from 'react';
-import { AppContext } from '../../../../../../../../../App';
+import { AppContext } from '../../../../../../../..';
 import CheckPane from './CheckPane';
 
 const RecButton = ({ sentenceIndex }: { sentenceIndex: number }) => {

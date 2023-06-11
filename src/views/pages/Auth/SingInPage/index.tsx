@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 
 import { SignInPageComponent } from './SignInPageComponent';
 import { signIn } from '../../../../application/services/auth';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 const SignInPage = () => {
   const { state } = useContext(AppContext);

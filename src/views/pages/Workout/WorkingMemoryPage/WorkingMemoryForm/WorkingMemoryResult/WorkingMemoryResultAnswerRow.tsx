@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 import string2PitchesArray from 'string2pitches-array';
 import { createSourceNode } from '../../../../../../application/services/utils';
 import { WorkingMemoryFormState } from '../../Model';
-import { AppContext } from '../../../../../../App';
+import { AppContext } from '../../../../..';
 import { useParams } from 'react-router-dom';
 import { WorkingMemory } from '../../../../../../Model';
 import { setWorkingMemory } from '../../../../../../application/services/workingMemory';

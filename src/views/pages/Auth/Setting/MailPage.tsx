@@ -6,7 +6,7 @@ import { handleUpdateEmail } from '../../../../application/services/auth';
 import CancelButton from '../commons/CancelButton';
 import StyledMessage from '../commons/StyledMessage';
 import SubmitButton from '../commons/SubmitButton';
-import { AppContext } from '../../../../App';
+import { AppContext } from '../../..';
 
 const MailPage = () => {
   const { state } = useContext(AppContext);
