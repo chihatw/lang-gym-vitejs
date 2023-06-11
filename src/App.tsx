@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
-import AppComponent from './routes/AppRoutes';
+import AppComponent from './views/routes/AppRoutes';
 import { Action, ActionTypes, reducer } from './Update';
 import {
   Article,
@@ -10,11 +10,11 @@ import {
   State,
   User,
 } from './Model';
-import { auth as firebaseAuth } from './repositories/firebase';
+import { auth as firebaseAuth } from './infrastructure/repositories/firebase';
 import { AUTH_LOCAL_STORAGE } from './constants';
-import { getArticleList } from './services/article';
-import { getUsers } from './services/auth';
-import { getQuizzes } from './services/quiz';
+import { getArticleList } from './application/services/article';
+import { getUsers } from './application/services/auth';
+import { getQuizzes } from './application/services/quiz';
 
 export const AppContext = createContext<{
   state: State;
