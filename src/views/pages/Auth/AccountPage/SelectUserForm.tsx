@@ -16,7 +16,7 @@ const SelectUserForm = () => {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const theme = useTheme();
-  const { auth, audioContext, layout } = state;
+  const { auth, layout } = state;
   const { uid, users } = auth;
 
   const [selectedUid, setSelectedUid] = useState(uid);
@@ -29,7 +29,6 @@ const SelectUserForm = () => {
     const updatedState: State = {
       ...INITIAL_STATE,
       auth: { ...auth, uid: selectedUid, initializing: true },
-      audioContext,
       layout,
     };
     dispatch({ type: ActionTypes.setState, payload: updatedState });

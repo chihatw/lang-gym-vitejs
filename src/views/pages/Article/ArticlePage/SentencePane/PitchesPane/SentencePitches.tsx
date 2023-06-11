@@ -13,7 +13,7 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   if (!articleId) return <></>;
   const { state } = useContext(AppContext);
   const theme = useTheme();
-  const { articlePages, audioContext } = state;
+  const { articlePages } = state;
   const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
 
@@ -41,7 +41,7 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
       >
         {`${'音調'}:`}
       </div>
-      {audioContext && blob && (
+      {blob && (
         <div
           style={{
             display: 'grid',
@@ -50,13 +50,7 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
             marginTop: -16,
           }}
         >
-          <AudioSlider
-            end={end}
-            start={start}
-            spacer={5}
-            audioContext={audioContext}
-            blob={blob}
-          />
+          <AudioSlider end={end} start={start} spacer={5} blob={blob} />
         </div>
       )}
       <SentencePitchLine pitchStr={pitchStr} />

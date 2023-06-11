@@ -12,7 +12,7 @@ const ArticleHeader = () => {
   if (!articleId) return <></>;
 
   const { state } = useContext(AppContext);
-  const { articlePages, audioContext } = state;
+  const { articlePages } = state;
   const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
 
@@ -25,15 +25,9 @@ const ArticleHeader = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}>
         <CreatedAt state={state} />
       </div>
-      {!!audioContext && !!articleBlob && articleBlob.size > 2000 && (
+      {!!articleBlob && articleBlob.size > 2000 && (
         <>
-          <AudioSlider
-            end={end}
-            blob={articleBlob}
-            start={start}
-            spacer={5}
-            audioContext={audioContext}
-          />
+          <AudioSlider end={end} blob={articleBlob} start={start} spacer={5} />
           <Divider />
         </>
       )}

@@ -213,7 +213,7 @@ export const buildQuizFormState = (
   state: State,
   quizId: string
 ): QuizFormState => {
-  const { audioContext, quizzes } = state;
+  const { quizzes } = state;
   const quiz = quizzes.find((item) => item.id === quizId) || INITIAL_QUIZ;
 
   const questions: QuizFormQuestion[] = [];
@@ -248,7 +248,6 @@ export const buildQuizFormState = (
     quizBlob: state.blobs[quiz.downloadURL] || null,
     createdAt: quiz.createdAt || 0,
     questions,
-    audioContext,
     questionCount: quiz.questionCount || 0,
   };
 };

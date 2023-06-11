@@ -1,10 +1,8 @@
 import { useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../../../../../../../App';
 import BlobSlider from '../../../../../../../components/BlobSlider';
-import { State } from '../../../../../../../../Model';
-import { Action } from '../../../../../../../../Update';
 
 import RemoveAudioButton from './RemoveAudioButton';
 
@@ -15,9 +13,9 @@ const AssignmentAudioPlayer = ({
 }) => {
   const { articleId } = useParams();
   if (!articleId) return <></>;
-  const { state, dispatch } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const theme = useTheme();
-  const { articlePages, audioContext } = state;
+  const { articlePages } = state;
   const articlePage = articlePages[articleId];
   const { assignmentBlobs, sentences } = articlePage;
 
@@ -58,13 +56,8 @@ const AssignmentAudioPlayer = ({
             marginTop: -16,
           }}
         >
-          {audioContext && blob && (
-            <BlobSlider
-              duration={storageDuration}
-              spacer={5}
-              blob={blob}
-              audioContext={audioContext}
-            />
+          {blob && (
+            <BlobSlider duration={storageDuration} spacer={5} blob={blob} />
           )}
         </div>
       </div>

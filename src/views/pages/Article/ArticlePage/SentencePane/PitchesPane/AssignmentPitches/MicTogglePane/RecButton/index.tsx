@@ -1,15 +1,12 @@
 import MicIcon from '@mui/icons-material/Mic';
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import { IconButton } from '@mui/material';
-import React, { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { AppContext } from '../../../../../../../../../App';
-import { State } from '../../../../../../../../../Model';
-import { Action } from '../../../../../../../../../Update';
 import CheckPane from './CheckPane';
 
 const RecButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { state, dispatch } = useContext(AppContext);
-  const { audioContext } = state;
   const [isRecording, setIsRecording] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [blob, setBlob] = useState<Blob | null>(null);
@@ -29,7 +26,7 @@ const RecButton = ({ sentenceIndex }: { sentenceIndex: number }) => {
 
   const startRec = async () => {
     // localhost の場合、 ios chrome では navigator が取得できない
-    if (!navigator.mediaDevices || !audioContext) return;
+    if (!navigator.mediaDevices) return;
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false,

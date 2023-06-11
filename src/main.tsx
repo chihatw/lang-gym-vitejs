@@ -5,6 +5,9 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import App from './App';
 import './index.css';
+import services from 'infrastructure/services';
+import { configureStore } from 'application/0-store/store';
+import { Provider } from 'react-redux';
 
 interface ExtendedTypographyOptions extends TypographyOptions {
   lato: React.CSSProperties;
@@ -71,10 +74,21 @@ const theme = createTheme({
   } as ExtendedTypographyOptions,
 });
 
+if (import.meta.env.PROD) {
+  console.log = () => {};
+  console.error = () => {};
+  console.debug = () => {};
+  console.warn = () => {};
+}
+
+const store = configureStore(services);
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ThemeProvider theme={theme}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </ThemeProvider>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
+  </Provider>
 );

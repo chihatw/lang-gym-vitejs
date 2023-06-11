@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Container, useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { AppContext } from '../../../../App';
 import { getArticleList } from '../../../../application/services/article';

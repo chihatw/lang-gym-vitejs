@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { Navigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Container } from '@mui/material';
 
@@ -72,12 +72,11 @@ const ScorePage = () => {
                 <QuestionIndex index={questionIndex + 1} />
                 {quiz.type === 'articleAccents' && (
                   <>
-                    {!!state.audioContext && !!blob && (
+                    {!!blob && (
                       <AudioSlider
                         end={question.end}
                         start={question.start}
                         blob={blob}
-                        audioContext={state.audioContext}
                         spacer={5}
                       />
                     )}
@@ -92,15 +91,13 @@ const ScorePage = () => {
                 )}
                 {quiz.type === 'articleRhythms' && (
                   <div>
-                    {!!state.blobs[quiz.downloadURL] &&
-                      !!state.audioContext && (
-                        <SpeakerButton
-                          start={question.start}
-                          end={question.end}
-                          quizBlob={state.blobs[quiz.downloadURL]}
-                          audioContext={state.audioContext}
-                        />
-                      )}
+                    {!!state.blobs[quiz.downloadURL] && (
+                      <SpeakerButton
+                        start={question.start}
+                        end={question.end}
+                        quizBlob={state.blobs[quiz.downloadURL]}
+                      />
+                    )}
 
                     <RhythmsAnswer
                       scoreId={scoreId}

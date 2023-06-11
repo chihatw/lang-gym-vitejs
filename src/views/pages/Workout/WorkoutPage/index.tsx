@@ -106,7 +106,7 @@ const WorkoutPage = () => {
 
   const start = async () => {
     // localhost の場合、 ios chrome では navigator が取得できない
-    if (!workoutId || !navigator.mediaDevices || !state.audioContext) return;
+    if (!workoutId || !navigator.mediaDevices) return;
 
     startRecording(micAudioElemRef, mediaRecorderRef, setBlob);
     startAnimation();
@@ -290,13 +290,12 @@ const WorkoutPage = () => {
           />
           <div style={{ height: 24 }} />
           <ResetButton reset={handleClickReset} />
-          {!!blob && !!state.audioContext && (
+          {!!blob && (
             <CheckPane
               blob={blob}
               workout={workout}
               formState={formState}
               miliSeconds={miliSeconds}
-              audioContext={state.audioContext}
               saveRecordedBlob={saveRecordedBlob}
               abandonRecordedBlob={abandonRecordedBlob}
             />

@@ -7,19 +7,17 @@ const SpeakerButton = ({
   start,
   end,
   quizBlob,
-  audioContext,
 }: {
   end: number;
   start: number;
   quizBlob: Blob;
-  audioContext: AudioContext;
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
 
   const play = async () => {
-    if (!quizBlob || !audioContext) return;
-    const sourceNode = await createSourceNode(quizBlob, audioContext);
+    if (!quizBlob) return;
+    const sourceNode = await createSourceNode(quizBlob);
     sourceNode.onended = () => {
       setIsPlaying(false);
     };

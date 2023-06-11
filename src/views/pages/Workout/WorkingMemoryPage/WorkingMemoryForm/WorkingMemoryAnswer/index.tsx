@@ -71,13 +71,7 @@ const WorkingMemoryAnswerPane = ({
   };
 
   const play = async () => {
-    if (
-      !state.pitchBlob ||
-      !state.toneBlob ||
-      !state.numberBlob ||
-      !state.audioContext ||
-      !currentCue
-    )
+    if (!state.pitchBlob || !state.toneBlob || !state.numberBlob || !currentCue)
       return;
     const blob = (() => {
       switch (currentCue.type) {
@@ -89,7 +83,7 @@ const WorkingMemoryAnswerPane = ({
           return state.pitchBlob;
       }
     })();
-    const sourceNode = await createSourceNode(blob, state.audioContext);
+    const sourceNode = await createSourceNode(blob);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
   };
 

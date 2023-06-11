@@ -1,7 +1,7 @@
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { IconButton, Slider, useTheme } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createSourceNode } from '../../../application/services/utils';
 import TimePane from './TimePane';
 import { currentTimeToSliderValue, sliderValueToCurrentTime } from './utils';
@@ -10,12 +10,10 @@ const BlobSlider = ({
   blob,
   spacer,
   duration,
-  audioContext,
 }: {
   blob: Blob;
   spacer: number;
   duration: number;
-  audioContext: AudioContext;
 }) => {
   const theme = useTheme();
 
@@ -29,6 +27,7 @@ const BlobSlider = ({
   const startTimeRef = useRef(0);
   const offsetTimeRef = useRef(0);
   const pausedRef = useRef(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     return () => {
@@ -37,8 +36,10 @@ const BlobSlider = ({
   }, []);
 
   const play = async () => {
-    if (!blob || !audioContext) return;
-    const sourceNode = await createSourceNode(blob, audioContext);
+    const audioContext = new AudioContext();
+    audioContextRef.current = audioContext;
+    if (!blob) return;
+    const sourceNode = await createSourceNode(blob);
 
     // 停止された場合
     sourceNode.onended = () => {
@@ -62,6 +63,7 @@ const BlobSlider = ({
     loop();
   };
   const loop = () => {
+    const audioContext = audioContextRef.current;
     if (!audioContext) return;
     const startTime = startTimeRef.current;
     const currentTime =
@@ -79,6 +81,7 @@ const BlobSlider = ({
   };
 
   const pause = () => {
+    const audioContext = audioContextRef.current;
     const sourceNode = sourseNodeRef.current;
     sourceNode && sourceNode.stop(0);
     // AudioBufferSourceNodeは使い捨て

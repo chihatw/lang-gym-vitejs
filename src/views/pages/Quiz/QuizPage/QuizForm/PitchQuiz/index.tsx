@@ -19,12 +19,11 @@ const PitchQuiz = ({
   const theme = useTheme();
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
-      {!!state.audioContext && !!state.quizBlob && (
+      {!!state.quizBlob && (
         <AudioSlider
           end={question.end}
           start={question.start}
           blob={state.quizBlob}
-          audioContext={state.audioContext}
           spacer={5}
         />
       )}

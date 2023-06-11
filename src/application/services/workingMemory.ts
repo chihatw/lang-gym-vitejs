@@ -144,7 +144,6 @@ export const buildWorkingMemoryFormState = (
       createdAt: Date.now(),
     },
     currentIndex: 0,
-    audioContext: state.audioContext,
   };
 };
 

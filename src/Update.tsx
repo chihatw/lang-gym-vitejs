@@ -63,10 +63,6 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.startFetching: {
       return { ...state, isFetching: true };
     }
-    case ActionTypes.setAudioContext: {
-      const audioContext = payload as AudioContext | null;
-      return { ...state, audioContext };
-    }
     case ActionTypes.setLayout: {
       const layout = payload as LayoutState;
       return R.compose(R.assocPath<LayoutState, State>(['layout'], layout))(

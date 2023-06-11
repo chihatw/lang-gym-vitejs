@@ -33,13 +33,7 @@ const WorkingMemoryResultAnswerRow = ({
   if (!answer) return <></>;
 
   const handleClick = async (start: number, end: number, tapped: string) => {
-    if (
-      !state.audioContext ||
-      !state.pitchBlob ||
-      !state.toneBlob ||
-      !state.numberBlob
-    )
-      return;
+    if (!state.pitchBlob || !state.toneBlob || !state.numberBlob) return;
     const blob = (() => {
       switch (cue.type) {
         case 'tone':
@@ -50,7 +44,7 @@ const WorkingMemoryResultAnswerRow = ({
           return state.pitchBlob;
       }
     })();
-    const sourceNode = await createSourceNode(blob, state.audioContext);
+    const sourceNode = await createSourceNode(blob);
     sourceNode.start(0, start, end - start);
 
     let updatedTappeds: string[] = [];
@@ -113,17 +107,14 @@ const WorkingMemoryResultAnswerRow = ({
             {cue.label}
           </div>
         )}
-        {!!state.pitchBlob &&
-          !!state.toneBlob &&
-          !!state.numberBlob &&
-          !!state.audioContext && (
-            <IconButton
-              color='primary'
-              onClick={() => handleClick(cue.start, cue.end, `cue_${cue.id}`)}
-            >
-              <PlayArrow />
-            </IconButton>
-          )}
+        {!!state.pitchBlob && !!state.toneBlob && !!state.numberBlob && (
+          <IconButton
+            color='primary'
+            onClick={() => handleClick(cue.start, cue.end, `cue_${cue.id}`)}
+          >
+            <PlayArrow />
+          </IconButton>
+        )}
       </div>
       <div
         style={{
@@ -138,19 +129,16 @@ const WorkingMemoryResultAnswerRow = ({
         {!!answer.label && (
           <div style={{ fontSize: 16, lineHeight: '40px' }}>{answer.label}</div>
         )}
-        {!!state.pitchBlob &&
-          !!state.toneBlob &&
-          !!state.numberBlob &&
-          state.audioContext && (
-            <IconButton
-              color='primary'
-              onClick={() =>
-                handleClick(answer.start, answer.end, `answer_${answer.id}`)
-              }
-            >
-              <PlayArrow />
-            </IconButton>
-          )}
+        {!!state.pitchBlob && !!state.toneBlob && !!state.numberBlob && (
+          <IconButton
+            color='primary'
+            onClick={() =>
+              handleClick(answer.start, answer.end, `answer_${answer.id}`)
+            }
+          >
+            <PlayArrow />
+          </IconButton>
+        )}
       </div>
     </div>
   );

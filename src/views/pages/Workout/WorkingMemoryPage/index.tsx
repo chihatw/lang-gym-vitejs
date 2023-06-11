@@ -61,7 +61,7 @@ const WorkingMemoryPage = () => {
     };
 
     fetchData();
-  }, [state.blobs, state.audioContext, initializing]);
+  }, [state.blobs, initializing]);
 
   return (
     <WorkingMemoryForm

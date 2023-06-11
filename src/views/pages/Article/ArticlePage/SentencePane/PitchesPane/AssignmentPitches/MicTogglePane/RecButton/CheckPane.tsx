@@ -33,7 +33,7 @@ const CheckPane = ({
   const { articleId } = useParams();
   if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { articlePages, audioContext } = state;
+  const { articlePages } = state;
   const articlePage = articlePages[articleId];
   const { sentences, articleBlob } = articlePage;
   const sentence = sentences[sentenceIndex];
@@ -50,9 +50,8 @@ const CheckPane = ({
     if (!dispatch) return;
     handleChecked();
     setPlayed(false);
-    if (!audioContext) return;
     uploadStorage(blob, storagePath);
-    const audioBuffer = await blobToAudioBuffer(blob, audioContext);
+    const audioBuffer = await blobToAudioBuffer(blob);
     const storageDuration = audioBuffer.duration;
     const updatedSentence = { ...sentence, storageDuration, storagePath };
 
@@ -84,8 +83,7 @@ const CheckPane = ({
   };
 
   const play = async () => {
-    if (!audioContext) return;
-    const sourceNode = await createSourceNode(blob, audioContext);
+    const sourceNode = await createSourceNode(blob);
     sourceNode.onended = () => {
       setIsPlaying(false);
     };

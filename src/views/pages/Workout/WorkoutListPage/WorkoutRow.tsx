@@ -89,14 +89,13 @@ const WorkoutRow = ({
         </CardContent>
       </Card>
 
-      {!!blob && !!state.audioContext && (
+      {!!blob && (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ flexGrow: 1 }}>
             <BlobSlider
               blob={blob}
               spacer={5}
               duration={workout.resultSeconds + 0.3}
-              audioContext={state.audioContext}
             />
           </div>
           <IconButton size='small' onClick={handleDelete}>

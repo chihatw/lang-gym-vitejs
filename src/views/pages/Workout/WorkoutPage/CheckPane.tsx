@@ -13,7 +13,6 @@ const CheckPane = React.memo(
     workout,
     formState,
     miliSeconds,
-    audioContext,
     saveRecordedBlob,
     abandonRecordedBlob,
   }: {
@@ -21,7 +20,6 @@ const CheckPane = React.memo(
     workout: RandomWorkout;
     formState: WorkoutFormState;
     miliSeconds: number;
-    audioContext: AudioContext;
     saveRecordedBlob: () => void;
     abandonRecordedBlob: () => void;
   }) => {
@@ -68,7 +66,6 @@ const CheckPane = React.memo(
                 blob={blob}
                 spacer={5}
                 duration={miliSeconds / 1000 + 0.3}
-                audioContext={audioContext}
               />
               <div
                 style={{

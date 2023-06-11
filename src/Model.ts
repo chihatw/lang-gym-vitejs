@@ -316,7 +316,7 @@ export type State = {
   isFetching: boolean;
   articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
-  audioContext: AudioContext | null;
+  // audioContext: AudioContext | null;
   articleListParams: ArticleListParams;
   quizzes: Quiz[];
   blobs: { [downloadURL: string]: Blob };
@@ -332,7 +332,7 @@ export const INITIAL_STATE: State = {
   isFetching: false,
   articleList: [],
   articlePages: {},
-  audioContext: null,
+  // audioContext: null,
   workingMemories: {},
   articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},

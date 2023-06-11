@@ -18,13 +18,8 @@ const RhythmQuiz = ({
   const { syllablesArray, start, end } = question;
   return (
     <div>
-      {!!state.audioContext && !!state.quizBlob && (
-        <SpeakerButton
-          start={start}
-          end={end}
-          quizBlob={state.quizBlob}
-          audioContext={state.audioContext}
-        />
+      {!!state.quizBlob && (
+        <SpeakerButton start={start} end={end} quizBlob={state.quizBlob} />
       )}
 
       <div style={{ padding: '0 8px', display: 'grid', rowGap: 24 }}>

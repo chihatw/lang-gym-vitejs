@@ -20,7 +20,6 @@ export type QuizFormQuestion = {
 };
 
 export type QuizFormState = {
-  audioContext: AudioContext | null;
   title: string;
   createdAt: number;
   type: string;
@@ -35,6 +34,5 @@ export const INITIAL_QUIZ_FORM_STATE: QuizFormState = {
   quizBlob: null,
   createdAt: 0,
   questions: [],
-  audioContext: null,
   questionCount: 0,
 };

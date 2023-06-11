@@ -34,13 +34,7 @@ const WorkingMemoryPlayButton = ({
   if (!currentCue) return <></>;
 
   const play = async () => {
-    if (
-      !state.pitchBlob ||
-      !state.toneBlob ||
-      !state.numberBlob ||
-      !state.audioContext
-    )
-      return;
+    if (!state.pitchBlob || !state.toneBlob || !state.numberBlob) return;
 
     const blob = (() => {
       switch (currentCue.type) {
@@ -53,7 +47,7 @@ const WorkingMemoryPlayButton = ({
       }
     })();
 
-    const sourceNode = await createSourceNode(blob, state.audioContext);
+    const sourceNode = await createSourceNode(blob);
     sourceNode.start(0, currentCue.start, currentCue.end - currentCue.start);
 
     let updatedPlayedAts: number[] = [];
@@ -125,10 +119,7 @@ const WorkingMemoryPlayButton = ({
           },
         })}
       >
-        {!!state.audioContext &&
-        !!state.pitchBlob &&
-        !!state.toneBlob &&
-        !!state.numberBlob ? (
+        {!!state.pitchBlob && !!state.toneBlob && !!state.numberBlob ? (
           <IconButton color='primary' onClick={play}>
             <PlayCircleRounded sx={{ fontSize: 120 }} />
           </IconButton>
