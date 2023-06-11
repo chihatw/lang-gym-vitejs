@@ -27,7 +27,7 @@ const ArticlePage = () => {
   const { id } = article;
 
   useEffect(() => {
-    if (!isFetching || !dispatch) return;
+    if (!isFetching) return;
     const fetchData = async () => {
       const _articlePage = articlePage.article.id
         ? articlePage

@@ -27,6 +27,7 @@ import SignInPage from 'views/pages/Auth/SingInPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { authUserActions } from 'application/authUser/framework/0-reducer';
+import TopPage from './pages/TopPage';
 
 export const AppContext = createContext<{
   state: State;
@@ -95,10 +96,7 @@ const App = () => {
       <BrowserRouter>
         <Layout>
           <Routes>
-            <Route
-              index
-              element={<PrivateRoute element={<ArticleListPage />} />}
-            />
+            <Route index element={<PrivateRoute element={<TopPage />} />} />
 
             <Route path='/article'>
               <Route

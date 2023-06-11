@@ -58,11 +58,7 @@ const QuizPage = () => {
       setInitialization(false);
     };
     fetchData();
-  }, [
-    // state.isFetching,
-    quiz,
-    initialization,
-  ]);
+  }, [quiz, initialization]);
 
   if (state.isFetching) return <SkeletonPage />;
   if (!quiz.title) return <Navigate to='/' />;

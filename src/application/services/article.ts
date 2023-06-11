@@ -145,7 +145,8 @@ export const getArticleList = async (
   if (params.hasMore) {
     articles.pop();
   }
-  params.startAfter = [...articles].slice(-1)[0].createdAt;
+  const temp = [...articles].slice(-1)[0];
+  params.startAfter = temp.createdAt;
 
   return {
     articles,
@@ -154,14 +155,11 @@ export const getArticleList = async (
 };
 
 const buildArticle = (doc: DocumentData) => {
-  const { uid, marks, title, embedID, createdAt, downloadURL, isShowAccents } =
-    doc.data();
+  const { uid, title, createdAt, downloadURL, isShowAccents } = doc.data();
   const article: Article = {
     id: doc.id,
     uid: uid || '',
-    marks: marks || [],
     title: title || '',
-    embedID: embedID || '',
     createdAt: createdAt || 0,
     downloadURL: downloadURL || '',
     isShowAccents: isShowAccents || false,

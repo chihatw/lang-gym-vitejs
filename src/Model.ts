@@ -19,26 +19,10 @@ export type User = {
   displayname: string;
 };
 
-export type AuthState = {
-  uid: string;
-  users: User[];
-  isAdmin: boolean;
-  initializing: boolean; // auth を cloud から受け取る前にサインイン画面が表示されるのを防ぐ
-};
-
-const INITIAL_AUTH_STATE: AuthState = {
-  uid: '',
-  users: [],
-  isAdmin: false,
-  initializing: true,
-};
-
 export type Article = {
   id: string;
   uid: string;
-  marks: string[];
   title: string;
-  embedID: string;
   createdAt: number;
   downloadURL: string;
   isShowAccents: boolean;
@@ -48,8 +32,6 @@ const INITIAL_ARTICLE: Article = {
   id: '',
   uid: '',
   title: '',
-  marks: [],
-  embedID: '',
   createdAt: 0,
   downloadURL: '',
   isShowAccents: false,
@@ -309,7 +291,6 @@ export const INITIAL_WORKING_MEMORY: WorkingMemory = {
 };
 
 export type State = {
-  // auth: AuthState;
   workout: RandomWorkoutState;
   workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
@@ -324,7 +305,6 @@ export type State = {
 };
 
 export const INITIAL_STATE: State = {
-  // auth: INITIAL_AUTH_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
   articleList: [],

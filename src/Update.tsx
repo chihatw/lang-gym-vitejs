@@ -1,12 +1,5 @@
 import * as R from 'ramda';
-import {
-  Quiz,
-  State,
-  Article,
-  AuthState,
-  LayoutState,
-  ArticleListParams,
-} from './Model';
+import { Quiz, State, Article, LayoutState, ArticleListParams } from './Model';
 
 export const ActionTypes = {
   setState: 'setState',
@@ -20,7 +13,6 @@ export type Action = {
   payload?:
     | State
     | string
-    | AuthState
     | LayoutState
     | AudioContext
     | {
