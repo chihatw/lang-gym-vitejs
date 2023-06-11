@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import MicTogglePane from './MicTogglePane';
 
-import { AppContext } from '../../../../../..';
+import { AppContext } from '../../../../..';
 import { useParams } from 'react-router-dom';
 
 const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {

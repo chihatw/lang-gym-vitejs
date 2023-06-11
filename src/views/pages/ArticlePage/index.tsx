@@ -5,12 +5,12 @@ import React, { useContext, useEffect } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
-import { ActionTypes } from '../../../../Update';
-import { getArticleState } from '../../../../application/services/article';
+import { ActionTypes } from '../../../Update';
+import { getArticleState } from '../../../application/services/article';
 
-import SkeletonPage from '../../../components/SkeletonPage';
-import { AppContext } from '../../..';
-import { ArticleState, INITIAL_ARTICLE_STATE, State } from '../../../../Model';
+import SkeletonPage from '../../components/SkeletonPage';
+import { AppContext } from '../..';
+import { ArticleState, INITIAL_ARTICLE_STATE, State } from '../../../Model';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 

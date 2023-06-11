@@ -10,12 +10,12 @@ import SentencePitches from '../../../SentencePitches';
 import {
   blobToAudioBuffer,
   createSourceNode,
-} from '../../../../../../../../../application/services/utils';
-import { Sentence, State } from '../../../../../../../../../Model';
-import { uploadStorage } from '../../../../../../../../../infrastructure/repositories/storage';
-import { updateSentence } from '../../../../../../../../../application/services/article';
-import { Action, ActionTypes } from '../../../../../../../../../Update';
-import { AppContext } from '../../../../../../../..';
+} from '../../../../../../../../application/services/utils';
+import { Sentence, State } from '../../../../../../../../Model';
+import { uploadStorage } from '../../../../../../../../infrastructure/repositories/storage';
+import { updateSentence } from '../../../../../../../../application/services/article';
+import { Action, ActionTypes } from '../../../../../../../../Update';
+import { AppContext } from '../../../../../../..';
 import { useParams } from 'react-router-dom';
 
 const CheckPane = ({

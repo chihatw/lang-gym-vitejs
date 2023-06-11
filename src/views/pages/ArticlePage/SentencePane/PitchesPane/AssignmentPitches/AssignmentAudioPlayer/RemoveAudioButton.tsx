@@ -2,12 +2,12 @@ import * as R from 'ramda';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import React, { useContext } from 'react';
-import { AppContext } from '../../../../../../..';
-import { deleteStorage } from '../../../../../../../../infrastructure/repositories/storage';
-import { updateSentence } from '../../../../../../../../application/services/article';
+import { AppContext } from '../../../../../..';
+import { deleteStorage } from '../../../../../../../infrastructure/repositories/storage';
+import { updateSentence } from '../../../../../../../application/services/article';
 
-import { ActionTypes } from '../../../../../../../../Update';
-import { Sentence, State } from '../../../../../../../../Model';
+import { ActionTypes } from '../../../../../../../Update';
+import { Sentence, State } from '../../../../../../../Model';
 import { useParams } from 'react-router-dom';
 
 const RemoveAudioButton = ({ sentenceIndex }: { sentenceIndex: number }) => {

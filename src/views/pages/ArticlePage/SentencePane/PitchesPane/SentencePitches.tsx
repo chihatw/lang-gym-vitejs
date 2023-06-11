@@ -2,11 +2,11 @@ import { useTheme } from '@mui/material';
 
 import React, { useContext } from 'react';
 
-import AudioSlider from '../../../../../components/AudioSlider';
+import AudioSlider from '../../../../components/AudioSlider';
 
-import { AppContext } from '../../../../..';
+import { AppContext } from '../../../..';
 import { useParams } from 'react-router-dom';
-import SentencePitchLine from '../../../../../components/SentencePitchLine';
+import SentencePitchLine from '../../../../components/SentencePitchLine';
 
 const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
   const { articleId } = useParams();

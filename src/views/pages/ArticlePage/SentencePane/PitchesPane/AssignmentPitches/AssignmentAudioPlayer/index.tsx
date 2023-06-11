@@ -1,8 +1,8 @@
 import { useTheme } from '@mui/material';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppContext } from '../../../../../../..';
-import BlobSlider from '../../../../../../../components/BlobSlider';
+import { AppContext } from '../../../../../..';
+import BlobSlider from '../../../../../../components/BlobSlider';
 
 import RemoveAudioButton from './RemoveAudioButton';
 

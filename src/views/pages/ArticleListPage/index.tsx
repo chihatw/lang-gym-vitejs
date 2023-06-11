@@ -4,7 +4,7 @@ import { Button, Container, useTheme } from '@mui/material';
 
 import { RootState } from 'main';
 
-import CustomLabel from '../../../components/CustomLabel';
+import CustomLabel from '../../components/CustomLabel';
 
 import ArticleListRow from 'views/components/ArticleListRow';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
