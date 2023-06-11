@@ -1,2 +1,4 @@
 import authUser from './authUser';
-export default { authUser };
+import users from './users';
+
+export default { authUser, users };

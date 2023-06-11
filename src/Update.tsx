@@ -10,7 +10,6 @@ import {
 
 export const ActionTypes = {
   setState: 'setState',
-  authenticate: 'authenticate',
   startFetching: 'startFetching',
   initializeApp: 'initializeApp',
   setAudioContext: 'setAudioContext',
@@ -54,10 +53,6 @@ export const reducer = (state: State, action: Action): State => {
     case ActionTypes.setState: {
       const newState = payload as State;
       return newState;
-    }
-    case ActionTypes.authenticate: {
-      const auth = payload as AuthState;
-      return { ...state, auth };
     }
     case ActionTypes.startFetching: {
       return { ...state, isFetching: true };

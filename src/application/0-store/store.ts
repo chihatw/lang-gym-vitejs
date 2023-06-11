@@ -6,8 +6,15 @@ import middleware from './middleware';
 import { Services } from 'infrastructure/services';
 
 const serializableCheck = {
-  ignoredActions: [],
-  ignoredPaths: [],
+  ignoredActions: [
+    // authUser
+    'authUser/setUser',
+    'authUser/setLoginUser',
+  ],
+  ignoredPaths: [
+    // authUser
+    'authUser.loginUser',
+  ],
 };
 
 export const configureStore = import.meta.env.DEV

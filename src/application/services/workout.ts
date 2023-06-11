@@ -16,7 +16,7 @@ import {
   RandomWorkoutState,
   State,
 } from '../../Model';
-import { db, storage } from '../../infrastructure/repositories/firebase';
+import { db, storage } from '../../infrastructure/firebase';
 
 const COLLECTIONS = {
   randomWorkouts: 'randomWorkouts',
@@ -129,11 +129,12 @@ export const miliSecondsToSeconds = (miliSeconds: number) => {
 };
 
 export const buildWorkoutState = async (
-  state: State
+  state: State,
+  uid: string
 ): Promise<RandomWorkoutState> => {
   const _workouts = Object.keys(state.workout.workouts).length
     ? state.workout.workouts
-    : await getRandomWorkouts(state.auth.uid);
+    : await getRandomWorkouts(uid);
   const storagePathToFetch: { workoutId: string; storagePath: string }[] = [];
   for (const workout of Object.values(_workouts)) {
     const { id: workoutId, storagePath } = workout;

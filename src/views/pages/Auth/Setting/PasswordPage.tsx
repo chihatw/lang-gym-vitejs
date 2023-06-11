@@ -1,18 +1,12 @@
-import { Navigate } from 'react-router-dom';
-import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { Container, TextField } from '@mui/material';
 import { handleUpdatePassword } from '../../../../application/services/auth';
 import CancelButton from '../commons/CancelButton';
 import StyledMessage from '../commons/StyledMessage';
 import SubmitButton from '../commons/SubmitButton';
-import { AppContext } from '../../..';
 
 const PasswordPage = () => {
-  const { state } = useContext(AppContext);
-  const { auth } = state;
-  const { uid } = auth;
-
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
@@ -41,8 +35,6 @@ const PasswordPage = () => {
       setNewPassword('');
     }
   };
-
-  if (!uid) return <Navigate to='/login' />;
 
   return (
     <Container maxWidth='xs'>

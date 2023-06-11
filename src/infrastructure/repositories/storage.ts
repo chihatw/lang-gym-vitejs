@@ -1,5 +1,5 @@
 import { deleteObject, ref, uploadBytes } from 'firebase/storage';
-import { storage } from './firebase';
+import { storage } from '../firebase';
 
 export const uploadStorage = (blob: Blob, path: string) => {
   const storageRef = ref(storage, path);

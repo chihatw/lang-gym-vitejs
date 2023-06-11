@@ -9,21 +9,26 @@ import { buildWorkoutState } from '../../../../application/services/workout';
 import { ActionTypes } from '../../../../Update';
 import WorkoutRow from './WorkoutRow';
 import { getWorkingMemories } from '../../../../application/services/workingMemory';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 const WorkoutListPage = () => {
   const { state, dispatch } = useContext(AppContext);
+
   const [initialize, setInitialize] = useState(true);
+
+  const { currentUid } = useSelector((state: RootState) => state.authUser);
+
   useEffect(() => {
-    if (state.auth.initializing) return;
     if (!initialize) return;
     const fetchData = async () => {
       const randomWorkoutState = !!Object.keys(state.workout.workouts).length
         ? state.workout
-        : await buildWorkoutState(state);
+        : await buildWorkoutState(state, currentUid);
 
       const workingMemories = !!Object.keys(state.workingMemories).length
         ? state.workingMemories
-        : await getWorkingMemories(state.auth.uid);
+        : await getWorkingMemories(currentUid);
 
       const updatedState = R.compose(
         R.assocPath<RandomWorkoutState, State>(['workout'], randomWorkoutState),
@@ -36,7 +41,7 @@ const WorkoutListPage = () => {
       setInitialize(false);
     };
     fetchData();
-  }, [state.workout.blobs, initialize, state.auth.initializing]);
+  }, [state.workout.blobs, initialize]);
   return (
     <Container maxWidth='sm' sx={{ paddingBottom: 20 }}>
       <div style={{ height: 48 }} />

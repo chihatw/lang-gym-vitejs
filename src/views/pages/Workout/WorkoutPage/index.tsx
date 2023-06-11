@@ -34,7 +34,7 @@ import PlayButton from './PlayButton';
 import ResetButton from './ResetButton';
 
 import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../../../../infrastructure/repositories/firebase';
+import { storage } from '../../../../infrastructure/firebase';
 import CueCard from './CueCard';
 import CheckPane from './CheckPane';
 import { uploadStorage } from '../../../../infrastructure/repositories/storage';
@@ -258,7 +258,7 @@ const WorkoutPage = () => {
 
   if (!imagesLoaded) return <></>;
 
-  if (!state.auth.uid || !workoutId) return <Navigate to='/login' />;
+  if (!workoutId) return <Navigate to='/login' />;
 
   return (
     <Container maxWidth='sm'>

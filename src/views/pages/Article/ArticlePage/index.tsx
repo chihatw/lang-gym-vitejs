@@ -11,13 +11,17 @@ import { getArticleState } from '../../../../application/services/article';
 import SkeletonPage from '../../../components/SkeletonPage';
 import { AppContext } from '../../..';
 import { ArticleState, INITIAL_ARTICLE_STATE, State } from '../../../../Model';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 const ArticlePage = () => {
+  const { currentUid } = useSelector((state: RootState) => state.authUser);
   const { articleId } = useParams();
   if (!articleId) return <></>;
   const { state, dispatch } = useContext(AppContext);
-  const { auth, isFetching, articlePages } = state;
-  const { uid } = auth;
+
+  const { isFetching, articlePages } = state;
+
   const articlePage = articlePages[articleId] || INITIAL_ARTICLE_STATE;
   const { article, sentences } = articlePage;
   const { id } = article;
@@ -27,7 +31,7 @@ const ArticlePage = () => {
     const fetchData = async () => {
       const _articlePage = articlePage.article.id
         ? articlePage
-        : await getArticleState(uid, articleId);
+        : await getArticleState(currentUid, articleId);
 
       const updatedState = R.compose(
         R.assocPath<boolean, State>(['isFetching'], false),
@@ -39,9 +43,8 @@ const ArticlePage = () => {
       dispatch({ type: ActionTypes.setState, payload: updatedState });
     };
     fetchData();
-  }, [articlePage.article, isFetching, uid]);
+  }, [articlePage.article, isFetching, currentUid]);
 
-  if (!uid) return <Navigate to='/login' />;
   if (isFetching) return <SkeletonPage />;
   if (!id) return <Navigate to='/' />;
   return (

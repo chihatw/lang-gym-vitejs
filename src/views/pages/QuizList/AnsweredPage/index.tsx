@@ -1,5 +1,5 @@
-import { Navigate, useNavigate } from 'react-router-dom';
-import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 import { Container } from '@mui/material';
 import StyledButton from '../commons/StyledButton';
@@ -9,7 +9,6 @@ import { AppContext } from '../../..';
 
 const AnsweredPage = () => {
   const { state } = useContext(AppContext);
-  if (!state.auth.uid) return <Navigate to='/login' />;
 
   const navigate = useNavigate();
   const answeredList = state.quizzes.filter(

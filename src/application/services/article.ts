@@ -21,7 +21,7 @@ import {
   INITIAL_ARTICLE_STATE,
   Sentence,
 } from '../../Model';
-import { db, storage } from '../../infrastructure/repositories/firebase';
+import { db, storage } from '../../infrastructure/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
 import pitchesArray2String from 'pitches-array2string';
 

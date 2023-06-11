@@ -1,16 +1,10 @@
-import { AppBar, Toolbar, useMediaQuery } from '@mui/material';
-import React, { useContext } from 'react';
+import { AppBar, Toolbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../..';
 
 import LogoButton from '../commons/LogoButton';
-import PCContent from './PCContent';
+import PrivatePane from './PrivatePane';
 
 const PageHeader = () => {
-  const { state } = useContext(AppContext);
-  const { auth } = state;
-  const { uid } = auth;
-  const matches = useMediaQuery('(min-width:600px)');
   const navigate = useNavigate();
   return (
     <AppBar
@@ -22,13 +16,15 @@ const PageHeader = () => {
       }}
     >
       <Toolbar variant='dense' sx={{ display: 'grid' }}>
-        {!!uid && matches ? (
-          <PCContent />
-        ) : (
-          <div>
-            <LogoButton handleClick={() => navigate('/')} />
-          </div>
-        )}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <LogoButton handleClick={() => navigate('/')} />
+          <PrivatePane />
+        </div>
       </Toolbar>
     </AppBar>
   );

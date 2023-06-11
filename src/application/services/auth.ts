@@ -13,7 +13,7 @@ import {
   query,
 } from 'firebase/firestore';
 import { User } from '../../Model';
-import { auth, db } from '../../infrastructure/repositories/firebase';
+import { auth, db } from '../../infrastructure/firebase';
 
 const COLLECTIONS = { users: 'users' };
 

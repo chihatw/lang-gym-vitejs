@@ -14,7 +14,7 @@ import {
 } from '@firebase/firestore';
 
 import { State, Quiz, Syllable, INITIAL_QUIZ } from '../../Model';
-import { db, storage } from '../../infrastructure/repositories/firebase';
+import { db, storage } from '../../infrastructure/firebase';
 
 import {
   QuizFormState,

@@ -1,14 +1,13 @@
 import { Container } from '@mui/material';
 import { useContext } from 'react';
 
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../..';
 import QuizList from '../commons/QuizList';
 import StyledButton from '../commons/StyledButton';
 
 const UnAnsweredPage = () => {
   const { state } = useContext(AppContext);
-  if (!state.auth.uid) return <Navigate to='/login' />;
 
   const navigate = useNavigate();
   const unansweredList = state.quizzes.filter(

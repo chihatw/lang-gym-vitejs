@@ -1,5 +1,10 @@
 import * as R from 'ramda';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import { Button, Container, useTheme } from '@mui/material';
 import { useContext } from 'react';
 
@@ -9,9 +14,12 @@ import { Article, ArticleListParams, State } from '../../../../Model';
 import { ActionTypes } from '../../../../Update';
 import CustomLabel from '../../../components/CustomLabel';
 import ArticleRow from './ArticleRow';
+import { RootState } from 'main';
+import { useSelector } from 'react-redux';
 
 const ArticleListPage = () => {
   const { pathname } = useLocation();
+  const { currentUid } = useSelector((state: RootState) => state.authUser);
   const isTopPage = pathname === '/';
 
   const theme = useTheme();
@@ -32,7 +40,7 @@ const ArticleListPage = () => {
     }
 
     const { articles, params } = await getArticleList(
-      state.auth.uid,
+      currentUid,
       10,
       startAfter
     );
@@ -47,7 +55,6 @@ const ArticleListPage = () => {
     dispatch({ type: ActionTypes.setState, payload: updatedState });
   };
 
-  if (!state.auth.uid) return <Navigate to='/login' />;
   return (
     <Container maxWidth='sm' sx={{ paddingTop: 2 }}>
       <div style={{ height: 48 }} className='dummyHeader' />

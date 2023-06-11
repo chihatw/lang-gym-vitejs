@@ -1,14 +1,9 @@
-import { Navigate } from 'react-router-dom';
-import React, { useContext, useState } from 'react';
+import { useState } from 'react';
 
 import { SignInPageComponent } from './SignInPageComponent';
 import { signIn } from '../../../../application/services/auth';
-import { AppContext } from '../../..';
 
 const SignInPage = () => {
-  const { state } = useContext(AppContext);
-  const { auth } = state;
-  const { uid, initializing } = auth;
   const [emailErrMsg, setEmailErrMsg] = useState<string>('');
   const [passwordErrMsg, setPasswordErrMsg] = useState<string>('');
 
@@ -22,8 +17,7 @@ const SignInPage = () => {
     setEmailErrMsg(error.emailErrMsg);
     setPasswordErrMsg(error.passwordErrMsg);
   };
-  if (initializing) return <></>;
-  if (!!uid) return <Navigate to='/' />;
+
   return (
     <SignInPageComponent
       onSignIn={onSignIn}

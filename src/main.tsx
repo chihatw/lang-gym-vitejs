@@ -85,9 +85,11 @@ const store = configureStore(services);
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      {/* <BrowserRouter> */}
       <App />
-      {/* </BrowserRouter> */}
     </ThemeProvider>
   </Provider>
 );
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = ReturnType<typeof configureStore>;
+export type AppDispatch = typeof store.dispatch;

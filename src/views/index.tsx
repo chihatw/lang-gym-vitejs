@@ -6,12 +6,9 @@ import {
   INITIAL_ARTICLE_LIST_PARAMS,
   INITIAL_STATE,
   State,
-  User,
 } from '../Model';
-import { auth as firebaseAuth } from '../infrastructure/repositories/firebase';
-import { AUTH_LOCAL_STORAGE } from '../constants';
+import { auth } from '../infrastructure/firebase';
 import { getArticleList } from '../application/services/article';
-import { getUsers } from '../application/services/auth';
 import { getQuizzes } from '../application/services/quiz';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
@@ -27,6 +24,9 @@ import AccountPage from 'views/pages/Auth/AccountPage';
 import MailPage from 'views/pages/Auth/Setting/MailPage';
 import PasswordPage from 'views/pages/Auth/Setting/PasswordPage';
 import SignInPage from 'views/pages/Auth/SingInPage';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'main';
+import { authUserActions } from 'application/authUser/framework/0-reducer';
 
 export const AppContext = createContext<{
   state: State;
@@ -34,51 +34,28 @@ export const AppContext = createContext<{
 }>({ state: INITIAL_STATE, dispatch: () => {} });
 
 const App = () => {
+  const _dispatch = useDispatch(); // todo rename
+  const { initializing, currentUid } = useSelector(
+    (state: RootState) => state.authUser
+  );
+
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const isFetched = useRef(false);
 
   // 認証判定
   useEffect(() => {
-    const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
-      let _users: User[] = [];
-      let _uid = user?.uid || '';
-      let isAdmin = false;
-      if (_uid === import.meta.env.VITE_ADMIN_UID) {
-        isAdmin = true;
-
-        _users = state.auth.users.length ? state.auth.users : await getUsers();
-
-        const localStorageUid = localStorage.getItem(AUTH_LOCAL_STORAGE);
-
-        if (localStorageUid) {
-          _uid = localStorageUid;
-        } else {
-          const firstUid = _users[0].id;
-          localStorage.setItem(AUTH_LOCAL_STORAGE, firstUid);
-          _uid = firstUid;
-        }
-      }
-
-      // 初期化が true の時、または uid が変更された時
-      if (state.auth.initializing || state.auth.uid !== _uid) {
-        dispatch({
-          type: ActionTypes.authenticate,
-          payload: { uid: _uid, isAdmin, users: _users, initializing: false },
-        });
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        _dispatch(authUserActions.setUser(user));
+      } else {
+        _dispatch(authUserActions.removeUser());
       }
     });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [dispatch, state.auth.users, state.auth.uid]);
+  }, []);
 
   // 初期値取得（作文、問題、記憶問題）
   useEffect(() => {
-    if (state.auth.initializing) {
-      isFetched.current = false;
-    }
-    if (!state.auth.uid || isFetched.current) return;
+    if (isFetched.current) return;
     const fetchData = async () => {
       let articles: Article[] = [];
       let articleListParams = INITIAL_ARTICLE_LIST_PARAMS;
@@ -87,7 +64,7 @@ const App = () => {
         articleListParams = state.articleListParams;
       } else {
         const { articles: _articles, params } = await getArticleList(
-          state.auth.uid,
+          currentUid,
           10
         );
         articles = _articles;
@@ -96,7 +73,7 @@ const App = () => {
 
       const quizzes = !!state.quizzes.length
         ? state.quizzes
-        : await getQuizzes(state.auth.uid);
+        : await getQuizzes(currentUid);
 
       isFetched.current = true;
       dispatch({
@@ -109,39 +86,80 @@ const App = () => {
       });
     };
     fetchData();
-  }, [state.auth.uid, state.quizzes, state.articleList.length]);
+  }, [state.quizzes, state.articleList.length, currentUid]);
+
+  if (initializing) return <></>;
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       <BrowserRouter>
         <Layout>
           <Routes>
-            <Route index element={<ArticleListPage />} />
+            <Route
+              index
+              element={<PrivateRoute element={<ArticleListPage />} />}
+            />
 
             <Route path='/article'>
-              <Route path='list' element={<ArticleListPage />} />
-              <Route path=':articleId' element={<ArticlePage />} />
+              <Route
+                path='list'
+                element={<PrivateRoute element={<ArticleListPage />} />}
+              />
+              <Route
+                path=':articleId'
+                element={<PrivateRoute element={<ArticlePage />} />}
+              />
             </Route>
 
             <Route path='/quiz'>
               <Route path='list'>
-                <Route path='unanswered' element={<UnAnsweredPage />} />
-                <Route path='answered' element={<AnsweredPage />} />
+                <Route
+                  path='unanswered'
+                  element={<PrivateRoute element={<UnAnsweredPage />} />}
+                />
+                <Route
+                  path='answered'
+                  element={<PrivateRoute element={<AnsweredPage />} />}
+                />
               </Route>
-              <Route path=':quizId/score/:scoreId' element={<ScorePage />} />
-              <Route path=':quizId' element={<QuizPage />} />
+              <Route
+                path=':quizId/score/:scoreId'
+                element={<PrivateRoute element={<ScorePage />} />}
+              />
+              <Route
+                path=':quizId'
+                element={<PrivateRoute element={<QuizPage />} />}
+              />
             </Route>
 
             <Route path='workout'>
-              <Route path='list' element={<WorkoutListPage />} />
-              <Route path=':workoutId' element={<WorkoutPage />} />
+              <Route
+                path='list'
+                element={<PrivateRoute element={<WorkoutListPage />} />}
+              />
+              <Route
+                path=':workoutId'
+                element={<PrivateRoute element={<WorkoutPage />} />}
+              />
             </Route>
             <Route path='/account'>
-              <Route index element={<AccountPage />} />
-              <Route path={'mail'} element={<MailPage />} />
-              <Route path={`password`} element={<PasswordPage />} />
+              <Route
+                index
+                element={<PrivateRoute element={<AccountPage />} />}
+              />
+              <Route
+                path={'mail'}
+                element={<PrivateRoute element={<MailPage />} />}
+              />
+              <Route
+                path={`password`}
+                element={<PrivateRoute element={<PasswordPage />} />}
+              />
             </Route>
-            <Route path='/login' element={<SignInPage />} />
+            <Route
+              path='/login'
+              element={<OnlyUnAuthorizedRoute element={<SignInPage />} />}
+            />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
         </Layout>
@@ -150,3 +168,20 @@ const App = () => {
   );
 };
 export default App;
+
+function PrivateRoute({ element }: { element: React.ReactElement }) {
+  const { loginUser } = useSelector((state: RootState) => state.authUser);
+
+  if (!loginUser) {
+    return <Navigate to='/login' />;
+  }
+  return element;
+}
+
+function OnlyUnAuthorizedRoute({ element }: { element: React.ReactElement }) {
+  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  if (loginUser) {
+    return <Navigate to='/' />;
+  }
+  return element;
+}

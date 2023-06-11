@@ -2,8 +2,8 @@ import downpitch_120 from '../../../../assets/audios/downpitch_120.mp3';
 import ma_tones from '../../../../assets/audios/ma_tones.mp3';
 import number_chinese from '../../../../assets/audios/number_chinese.mp3';
 import * as R from 'ramda';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useContext, useEffect, useReducer, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { AppContext } from '../../..';
 import { INITIAL_WORKING_MEMORY_FORM_STATE } from './Model';
 import { workingMemoryFormReducer } from './Update';
@@ -17,7 +17,7 @@ const WorkingMemoryPage = () => {
   const { workoutId } = useParams();
   const { state, dispatch } = useContext(AppContext);
   const [initializing, setInitializing] = useState(true);
-  if (!state.auth.uid) return <Navigate to='/login' />;
+
   if (!workoutId) return <></>;
 
   const workingMemory = state.workingMemories[workoutId];

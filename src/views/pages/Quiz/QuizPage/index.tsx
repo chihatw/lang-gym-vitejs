@@ -29,8 +29,6 @@ const QuizPage = () => {
     INITIAL_QUIZ_FORM_STATE
   );
 
-  if (!state.auth.uid) return <Navigate to='/login' />;
-
   if (!quizId) return <></>;
   const quiz = state.quizzes.find((item) => item.id === quizId);
   if (!quiz) return <></>;

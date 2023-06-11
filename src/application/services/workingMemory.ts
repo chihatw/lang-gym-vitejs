@@ -22,7 +22,7 @@ import {
   WorkingMemoryFormState,
   INITIAL_WORKING_MEMORY_FORM_STATE,
 } from '../../views/pages/Workout/WorkingMemoryPage/Model';
-import { db, storage } from '../../infrastructure/repositories/firebase';
+import { db, storage } from '../../infrastructure/firebase';
 import { getRandomInt } from './utils';
 import { nanoid } from 'nanoid';
 import { TONES } from '../../assets/tone';

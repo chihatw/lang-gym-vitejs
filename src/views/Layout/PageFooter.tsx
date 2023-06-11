@@ -5,13 +5,16 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '..';
 import { ActionTypes } from '../../Update';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 const PageFooter = () => {
+  const { loginUser } = useSelector((state: RootState) => state.authUser);
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -70,6 +73,8 @@ const PageFooter = () => {
     }
     path && navigate(path);
   };
+
+  if (!loginUser) return <></>;
 
   return (
     <BottomNavigation

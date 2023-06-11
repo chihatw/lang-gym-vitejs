@@ -309,7 +309,7 @@ export const INITIAL_WORKING_MEMORY: WorkingMemory = {
 };
 
 export type State = {
-  auth: AuthState;
+  // auth: AuthState;
   workout: RandomWorkoutState;
   workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
@@ -324,7 +324,7 @@ export type State = {
 };
 
 export const INITIAL_STATE: State = {
-  auth: INITIAL_AUTH_STATE,
+  // auth: INITIAL_AUTH_STATE,
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
   articleList: [],

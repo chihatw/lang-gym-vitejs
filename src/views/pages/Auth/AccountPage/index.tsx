@@ -1,9 +1,8 @@
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { signOut } from '../../../../application/services/auth';
-import { Action, ActionTypes } from '../../../../Update';
+import { ActionTypes } from '../../../../Update';
 import { Button, Container, useTheme } from '@mui/material';
-import SelectUserForm from './SelectUserForm';
 import { INITIAL_STATE, State } from '../../../../Model';
 import { useContext } from 'react';
 import { AppContext } from '../../..';
@@ -11,9 +10,8 @@ import { AppContext } from '../../..';
 const VERSION = '1.2.6';
 
 const AccountPage = () => {
-  const { state, dispatch } = useContext(AppContext);
-  const { auth } = state;
-  const { uid, users } = auth;
+  const { dispatch } = useContext(AppContext);
+
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -22,37 +20,28 @@ const AccountPage = () => {
     dispatch({ type: ActionTypes.setState, payload: INITIAL_STATE });
   };
 
-  if (!uid) return <Navigate to='/login' />;
-
   return (
     <Container maxWidth='xs'>
       <div style={{ height: 48 }} />
       <div style={{ height: 120 }} />
-      <div>
-        {!!users.length && (
-          <div style={{ margin: '16px 0' }}>
-            <SelectUserForm />
-          </div>
-        )}
-        <div style={{ display: 'grid', rowGap: 32 }}>
-          <StyledButton
-            label='メールアドレス変更'
-            handleClick={() => navigate('mail')}
-          />
-          <StyledButton
-            label='パスワード変更'
-            handleClick={() => navigate('password')}
-          />
-          <StyledButton
-            label='サインアウト'
-            handleClick={handleSignOut}
-            isContained
-          />
-        </div>
-        <div style={{ height: 16 }} />
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div style={{ fontSize: 10, color: '#777' }}>{`ver ${VERSION}`}</div>
-        </div>
+      <div style={{ display: 'grid', rowGap: 32 }}>
+        <StyledButton
+          label='メールアドレス変更'
+          handleClick={() => navigate('mail')}
+        />
+        <StyledButton
+          label='パスワード変更'
+          handleClick={() => navigate('password')}
+        />
+        <StyledButton
+          label='サインアウト'
+          handleClick={handleSignOut}
+          isContained
+        />
+      </div>
+      <div style={{ height: 16 }} />
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ fontSize: 10, color: '#777' }}>{`ver ${VERSION}`}</div>
       </div>
     </Container>
   );

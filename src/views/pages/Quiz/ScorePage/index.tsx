@@ -57,7 +57,6 @@ const ScorePage = () => {
   }, [quiz, state.blobs]);
 
   if (!quizId || !scoreId) return <></>;
-  if (!state.auth.uid) return <Navigate to='/login' />;
 
   return (
     <Container maxWidth='sm'>

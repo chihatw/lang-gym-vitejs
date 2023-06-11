@@ -1,7 +1,11 @@
 import { Hidden } from '@mui/material';
-import React from 'react';
+import { RootState } from 'main';
+import { useSelector } from 'react-redux';
 
 const Copyright = () => {
+  const { loginUser } = useSelector((state: RootState) => state.authUser);
+
+  if (!loginUser) return <></>;
   return (
     <div>
       <div
