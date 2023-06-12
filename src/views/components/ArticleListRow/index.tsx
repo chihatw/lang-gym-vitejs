@@ -13,8 +13,11 @@ function ArticleListRow({ articleId }: { articleId: string }) {
   const { year, month, day, article } = useMemo(() => {
     const article = articles[articleId];
 
-    const date = new Date(article.createdAt);
+    if (!article) {
+      return { article: null, year: 0, month: 0, day: 0 };
+    }
 
+    const date = new Date(article.createdAt);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();

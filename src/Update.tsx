@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { Quiz, State, Article, LayoutState, ArticleListParams } from './Model';
+import { Quiz, State } from './Model';
 
 export const ActionTypes = {
   setState: 'setState',
@@ -13,12 +13,8 @@ export type Action = {
   payload?:
     | State
     | string
-    | LayoutState
-    | AudioContext
     | {
         quizzes: Quiz[];
-        articles: Article[];
-        articleListParams: ArticleListParams;
       }
     | null;
 };
@@ -28,19 +24,10 @@ export const reducer = (state: State, action: Action): State => {
 
   switch (type) {
     case ActionTypes.initializeApp: {
-      const { quizzes, articleListParams, articles } = payload as {
+      const { quizzes } = payload as {
         quizzes: Quiz[];
-        articles: Article[];
-        articleListParams: ArticleListParams;
       };
-      return R.compose(
-        R.assocPath<Article[], State>(['articleList'], articles),
-        R.assocPath<ArticleListParams, State>(
-          ['articleListParams'],
-          articleListParams
-        ),
-        R.assocPath<Quiz[], State>(['quizzes'], quizzes)
-      )(state);
+      return R.compose(R.assocPath<Quiz[], State>(['quizzes'], quizzes))(state);
     }
     case ActionTypes.setState: {
       const newState = payload as State;

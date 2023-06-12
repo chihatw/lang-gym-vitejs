@@ -4,6 +4,8 @@ import { RootState } from 'main';
 import { articlesActions } from './0-reducer';
 import { topPageActions } from 'application/topPage/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
+import { articlePageActions } from 'application/articlePage/framework/0-reducer';
+import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 
 const articlesMiddleware =
   (services: Services): Middleware =>
@@ -94,6 +96,46 @@ const articlesMiddleware =
           })
         );
 
+        break;
+      }
+      case 'articlePage/initiate': {
+        const articleId = action.payload as string;
+
+        const uid = (getState() as RootState).authUser.currentUid;
+        const articles = (getState() as RootState).articles;
+
+        const articleIds = Object.keys(articles);
+
+        // fetch済みのarticleIdの場合、audioBuffer と Sentences を取得
+        if (articleIds.includes(articleId)) {
+          dispatch(
+            articlePageActions.getArticleAudioBufferStart(
+              ARTILCE_STORAGE_PATH + articleId
+            )
+          );
+          dispatch(articlePageActions.getSentencesStart(articleId));
+          return;
+        }
+
+        // article の取得
+        const article = await services.api.articles.fetchArtice(uid, articleId);
+        dispatch(
+          articlesActions.concatArticles({ [articleId]: article || null })
+        );
+
+        // article がない場合、終了
+        if (!article) {
+          dispatch(articlePageActions.initiated());
+          break;
+        }
+
+        // articleがあれば、articleIdの場合、audioBuffer と Sentences を取得
+        dispatch(
+          articlePageActions.getArticleAudioBufferStart(
+            ARTILCE_STORAGE_PATH + article.id
+          )
+        );
+        dispatch(articlePageActions.getSentencesStart(article.id));
         break;
       }
       default:

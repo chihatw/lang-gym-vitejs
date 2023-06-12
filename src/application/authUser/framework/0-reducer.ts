@@ -6,10 +6,13 @@ const authUserSlice = createSlice({
   name: 'authUser',
   initialState,
   reducers: {
-    setUser: (state, { payload }: { payload: User }) => {
+    setUser: (
+      state,
+      { payload }: { payload: { loginUser: User; currentUid: string } }
+    ) => {
       state.initializing = false;
-      state.currentUid = payload.uid;
-      state.loginUser = payload;
+      state.currentUid = payload.currentUid;
+      state.loginUser = payload.loginUser;
     },
     setCurrentUid: (state, { payload }: { payload: string }) => {
       state.currentUid = payload;

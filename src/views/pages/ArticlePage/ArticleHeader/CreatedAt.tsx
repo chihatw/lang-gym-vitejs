@@ -1,22 +1,23 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import { RootState } from 'main';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { State } from '../../../../Model';
-
-const CreatedAt = ({ state }: { state: State }) => {
+const CreatedAt = () => {
   const { articleId } = useParams();
-  if (!articleId) return <></>;
-
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { article } = articlePage;
-  const { createdAt } = article;
   const theme = useTheme();
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const articles = useSelector((state: RootState) => state.articles);
+
+  const { year, month, day } = useMemo(() => {
+    const article = articles[articleId!];
+    const date = new Date(article!.createdAt);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return { article, year, month, day };
+  }, [articleId, articles]);
 
   return (
     <div

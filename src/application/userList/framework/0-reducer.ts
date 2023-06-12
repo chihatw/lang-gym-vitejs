@@ -5,7 +5,8 @@ const userListSlice = createSlice({
   name: 'userList',
   initialState,
   reducers: {
-    initiate: (state) => {
+    // currentUid を payload で指定
+    initiate: (state, { payload }: { payload: string }) => {
       state.initializing = false;
     },
     setUserIds: (

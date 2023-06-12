@@ -2,6 +2,7 @@ import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { Services } from 'infrastructure/services';
 
 import { authUserActions } from 'application/authUser/framework/0-reducer';
+import { signinFormActions } from 'application/signinForm/framework/0-reducer';
 
 const userMiddleware =
   (services: Services): Middleware =>
@@ -20,9 +21,9 @@ const userMiddleware =
           );
         if (authUser) {
           dispatch(authUserActions.setLoginUser(authUser));
-          // todo dispatch(signinFormActions.signInSuccess());
+          dispatch(signinFormActions.signInSuccess());
         } else if (errorMsg) {
-          // todo dispatch(signinFormActions.setHasError());
+          dispatch(signinFormActions.setHasError());
         }
         break;
       }

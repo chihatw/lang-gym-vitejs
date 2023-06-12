@@ -1,16 +1,17 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { State } from '../../../../Model';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
-const Title = ({ state }: { state: State }) => {
-  const { articleId } = useParams();
-  if (!articleId) return <></>;
+const Title = () => {
   const theme = useTheme();
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { article } = articlePage;
-  const { title } = article;
+  const { articleId } = useParams();
+  const articles = useSelector((state: RootState) => state.articles);
+
+  const article = useMemo(() => articles[articleId!], [articleId, articles]);
+
+  if (!article) return <></>;
   return (
     <div
       style={{
@@ -18,7 +19,7 @@ const Title = ({ state }: { state: State }) => {
         fontSize: 24,
       }}
     >
-      {title}
+      {article.title}
     </div>
   );
 };

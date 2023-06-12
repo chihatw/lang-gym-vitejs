@@ -1,33 +1,58 @@
+import { useMemo } from 'react';
 import { Divider } from '@mui/material';
-import React, { useContext, useMemo } from 'react';
-
-import CreatedAt from './CreatedAt';
-import Title from './Title';
-import AudioSlider from '../../../components/AudioSlider';
-import { AppContext } from '../../..';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'main';
+
+import Title from './Title';
+import CreatedAt from './CreatedAt';
+import AudioBufferSlider from 'views/components/AudioBufferSlider';
+import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 
 const ArticleHeader = () => {
   const { articleId } = useParams();
-  if (!articleId) return <></>;
+  const articles = useSelector((state: RootState) => state.articles);
+  const articleSentenceIds = useSelector(
+    (state: RootState) => state.articleSentenceIds
+  );
+  const sentences = useSelector((state: RootState) => state.sentences);
+  const { fetchedAudioBuffers } = useSelector(
+    (state: RootState) => state.audio
+  );
 
-  const { state } = useContext(AppContext);
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { sentences, articleBlob } = articlePage;
+  const { article, audioBuffer } = useMemo(() => {
+    const article = articles[articleId!] || null;
+    const path = ARTILCE_STORAGE_PATH + articleId;
+    const audioBuffer = fetchedAudioBuffers[path] || null;
+    return { article, audioBuffer };
+  }, [articleId, articles, fetchedAudioBuffers]);
 
-  const end = useMemo(() => sentences.slice(-1)[0]?.end || 0, [sentences]);
-  const start = useMemo(() => sentences[0]?.start || 0, [sentences]);
+  const { start, end } = useMemo(() => {
+    const sentenceIds = articleSentenceIds[articleId!];
+    try {
+      return {
+        start: sentences[sentenceIds[0]].start,
+        end: sentences[sentenceIds.slice(-1)[0]].end,
+      };
+    } catch (e) {
+      return { start: 0, end: 0 };
+    }
+  }, [articleId, articleSentenceIds, sentences]);
+
+  if (!article) return <></>;
 
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
-      <Title state={state} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}>
-        <CreatedAt state={state} />
-      </div>
-      {!!articleBlob && articleBlob.size > 2000 && (
+      <Title />
+      <CreatedAt />
+      {!!audioBuffer && article.isShowAccents && (
         <>
-          <AudioSlider end={end} blob={articleBlob} start={start} spacer={5} />
+          <AudioBufferSlider
+            end={end}
+            audioBuffer={audioBuffer}
+            start={start}
+          />
           <Divider />
         </>
       )}

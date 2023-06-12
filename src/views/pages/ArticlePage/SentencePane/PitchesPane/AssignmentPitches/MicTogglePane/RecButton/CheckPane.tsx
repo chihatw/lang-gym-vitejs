@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
 import { Button, Collapse, Container, IconButton, Modal } from '@mui/material';
-import React, { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import Japanese from '../../../../TextLines/Japanese';
 import SentencePitches from '../../../SentencePitches';
@@ -14,7 +14,7 @@ import {
 import { Sentence, State } from '../../../../../../../../Model';
 import { uploadStorage } from '../../../../../../../../infrastructure/repositories/storage';
 import { updateSentence } from '../../../../../../../../application/services/article';
-import { Action, ActionTypes } from '../../../../../../../../Update';
+import { ActionTypes } from '../../../../../../../../Update';
 import { AppContext } from '../../../../../../..';
 import { useParams } from 'react-router-dom';
 

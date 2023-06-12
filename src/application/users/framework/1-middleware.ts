@@ -1,7 +1,6 @@
 import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { Services } from 'infrastructure/services';
 import { usersAcions } from './0-reducer';
-import { RootState } from 'main';
 import { userListActions } from 'application/userList/framework/0-reducer';
 
 const usersMiddleWare =
@@ -12,7 +11,7 @@ const usersMiddleWare =
     next(action);
     switch (action.type) {
       case 'userList/initiate': {
-        const { loginUser } = (getState() as RootState).authUser;
+        const currentUid = action.payload as string;
         const users = await services.api.users.fetchUsers();
         dispatch(usersAcions.setUsers(users));
         const uids = Object.keys(users);
@@ -20,7 +19,7 @@ const usersMiddleWare =
         dispatch(
           userListActions.setUserIds({
             uids,
-            selectedUid: loginUser!.uid,
+            selectedUid: currentUid,
           })
         );
         break;

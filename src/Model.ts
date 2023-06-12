@@ -37,16 +37,6 @@ const INITIAL_ARTICLE: Article = {
   isShowAccents: false,
 };
 
-export type ArticleListParams = {
-  hasMore: boolean;
-  startAfter: number;
-};
-
-export const INITIAL_ARTICLE_LIST_PARAMS: ArticleListParams = {
-  hasMore: false,
-  startAfter: 0,
-};
-
 export type Sentence = {
   id: string;
   end: number;
@@ -59,7 +49,6 @@ export type Sentence = {
   japanese: string;
   original: string;
   createdAt: number;
-  // pitchesArray: string[][][];
   pitchStr: string;
   storagePath: string;
   storageDuration: number;
@@ -77,7 +66,6 @@ export const INITIAL_SENTENCE: Sentence = {
   japanese: '',
   original: '',
   createdAt: 0,
-  // pitchesArray: [],
   pitchStr: '',
   storagePath: '',
   storageDuration: 0,
@@ -97,16 +85,6 @@ export const INITIAL_ARTICLE_STATE: ArticleState = {
   sentences: [],
   articleBlob: null,
   assignmentBlobs: {},
-};
-
-export type LayoutState = {
-  width: number;
-  height: number;
-};
-
-const INITIAL_LAYOUT_STATE: LayoutState = {
-  width: window.innerWidth,
-  height: window.innerHeight,
 };
 
 export type QuizScore = {
@@ -294,9 +272,7 @@ export type State = {
   workout: RandomWorkoutState;
   workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
-  articleList: Article[];
   articlePages: { [articleId: string]: ArticleState };
-  articleListParams: ArticleListParams;
   quizzes: Quiz[];
   blobs: { [downloadURL: string]: Blob };
   blobURLs: {
@@ -307,10 +283,8 @@ export type State = {
 export const INITIAL_STATE: State = {
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
-  articleList: [],
   articlePages: {},
   workingMemories: {},
-  articleListParams: INITIAL_ARTICLE_LIST_PARAMS,
   blobURLs: {},
   quizzes: [],
   blobs: {},

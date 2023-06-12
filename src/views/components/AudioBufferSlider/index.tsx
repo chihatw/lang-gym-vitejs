@@ -1,0 +1,168 @@
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { IconButton, Slider, useTheme } from '@mui/material';
+import { createSourceNode } from 'application/audio/core/2-services';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import TimePane from './TimePane';
+
+const AudioBufferSlider = ({
+  end,
+  start,
+  audioBuffer,
+}: {
+  end: number;
+  start: number;
+  audioBuffer: AudioBuffer;
+}) => {
+  const redrawSliderTiming = 5; // 何フレームに1回更新するか
+  const theme = useTheme();
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [sliderValue, setSliderValue] = useState(0);
+
+  const rafIdRef = useRef(0);
+  const frameCountRef = useRef(0);
+  const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const currentPausedAtRef = useRef(start); // 開始時間を start に合わせる
+  const audioContextCurrentTimeAtStartRef = useRef(0);
+
+  const duration = useMemo(() => end - start, [start, end]);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      pause();
+    };
+  }, []);
+
+  const play = async () => {
+    const audioContext = new AudioContext();
+    audioContextRef.current = audioContext;
+    const sourceNode = await createSourceNode(audioBuffer);
+
+    let offset = currentPausedAtRef.current; // 開始位置を秒で指定
+    // 再生開始時間が start, end の範囲外の場合、start の時間に合わせる
+    if (offset < start || offset > end) {
+      offset = start;
+      currentPausedAtRef.current = start;
+    }
+
+    // 最後まで再生した時の処理
+    sourceNode.onended = () => {
+      window.cancelAnimationFrame(rafIdRef.current);
+
+      setIsPlaying(false);
+      if (!pausedRef.current) {
+        setElapsedTime(0);
+        setSliderValue(0);
+        currentPausedAtRef.current = start;
+      }
+    };
+
+    sourceNode.start(0, offset, end - offset);
+
+    setIsPlaying(true);
+    sourseNodeRef.current = sourceNode;
+    audioContextCurrentTimeAtStartRef.current = audioContext.currentTime;
+
+    pausedRef.current = false;
+
+    loop();
+  };
+  const loop = () => {
+    const audioContext = audioContextRef.current;
+    if (!audioContext) return;
+
+    const currentElapsedTime =
+      audioContext.currentTime - audioContextCurrentTimeAtStartRef.current;
+    const elapsedTime = currentElapsedTime + currentPausedAtRef.current;
+
+    setElapsedTime(elapsedTime);
+
+    // 間引かないと slider の描画が更新されない
+    if (frameCountRef.current % redrawSliderTiming === 0) {
+      setSliderValue(currentTimeToSliderValue(elapsedTime, duration, start));
+    }
+
+    frameCountRef.current++;
+    rafIdRef.current = window.requestAnimationFrame(loop);
+  };
+
+  const pause = () => {
+    const audioContext = audioContextRef.current;
+    if (!audioContext) return;
+
+    const sourceNode = sourseNodeRef.current;
+    sourceNode && sourceNode.stop(0);
+    sourseNodeRef.current = null;
+
+    setIsPlaying(false);
+    window.cancelAnimationFrame(rafIdRef.current);
+
+    currentPausedAtRef.current =
+      audioContext.currentTime - audioContextCurrentTimeAtStartRef.current;
+    pausedRef.current = true;
+  };
+
+  const handleChangeSliderValue = (value: number) => {
+    setSliderValue(value);
+    const elapsedTime = sliderValueToCurrentTime(value, duration, start);
+    setElapsedTime(elapsedTime);
+    currentPausedAtRef.current = elapsedTime;
+  };
+
+  return (
+    <div
+      style={{
+        ...(theme.typography as any).mPlusRounded,
+        display: 'flex',
+        fontSize: 12,
+        alignItems: 'center',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <IconButton
+        sx={{ color: '#86bec4' }}
+        onClick={(e) => {
+          e.stopPropagation();
+          isPlaying ? pause() : play();
+        }}
+      >
+        {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+      </IconButton>
+      <TimePane
+        elapsed={Math.min(Math.max(elapsedTime - start, 0), duration)}
+        duration={duration}
+      />
+      <Slider
+        sx={{ paddingTop: '14px', marginRight: '6px' }}
+        color='primary'
+        value={sliderValue}
+        onChange={(_, value) => {
+          handleChangeSliderValue(value as number);
+        }}
+      />
+    </div>
+  );
+};
+
+export default AudioBufferSlider;
+
+const currentTimeToSliderValue = (
+  currentTime: number,
+  duration: number,
+  start: number
+): number => {
+  const value = duration ? ((currentTime - start) / duration) * 100 : 0;
+  return Math.min(Math.max(value, 0), 100);
+};
+
+const sliderValueToCurrentTime = (
+  sliderValue: number,
+  duration: number,
+  start?: number
+): number => {
+  return (duration * sliderValue) / 100 + (start || 0);
+};

@@ -3,6 +3,5 @@ export interface IArticle {
   uid: string;
   title: string;
   createdAt: number;
-  downloadURL: string;
   isShowAccents: boolean;
 }

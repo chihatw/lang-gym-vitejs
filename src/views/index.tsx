@@ -1,14 +1,8 @@
 import React, { createContext, useEffect, useReducer, useRef } from 'react';
 
 import { Action, ActionTypes, reducer } from '../Update';
-import {
-  Article,
-  INITIAL_ARTICLE_LIST_PARAMS,
-  INITIAL_STATE,
-  State,
-} from '../Model';
+import { INITIAL_STATE, State } from '../Model';
 import { auth } from '../infrastructure/firebase';
-import { getArticleList } from '../application/services/article';
 import { getQuizzes } from '../application/services/quiz';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
@@ -28,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { authUserActions } from 'application/authUser/framework/0-reducer';
 import TopPage from './pages/TopPage';
+import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
 
 export const AppContext = createContext<{
   state: State;
@@ -47,8 +42,12 @@ const App = () => {
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        _dispatch(authUserActions.setUser(user));
+        // currentUid は localStorage から受け取る
+        const currentUid =
+          localStorage.getItem(CURRENT_UID_LOCAL_STORAGE_KEY) || user.uid;
+        _dispatch(authUserActions.setUser({ loginUser: user, currentUid }));
       } else {
+        localStorage.setItem(CURRENT_UID_LOCAL_STORAGE_KEY, '');
         _dispatch(authUserActions.removeUser());
       }
     });
@@ -58,20 +57,6 @@ const App = () => {
   useEffect(() => {
     if (isFetched.current) return;
     const fetchData = async () => {
-      let articles: Article[] = [];
-      let articleListParams = INITIAL_ARTICLE_LIST_PARAMS;
-      if (!!state.articleList.length) {
-        articles = state.articleList;
-        articleListParams = state.articleListParams;
-      } else {
-        const { articles: _articles, params } = await getArticleList(
-          currentUid,
-          10
-        );
-        articles = _articles;
-        articleListParams = params;
-      }
-
       const quizzes = !!state.quizzes.length
         ? state.quizzes
         : await getQuizzes(currentUid);
@@ -79,15 +64,11 @@ const App = () => {
       isFetched.current = true;
       dispatch({
         type: ActionTypes.initializeApp,
-        payload: {
-          quizzes,
-          articles,
-          articleListParams,
-        },
+        payload: { quizzes },
       });
     };
     fetchData();
-  }, [state.quizzes, state.articleList.length, currentUid]);
+  }, [state.quizzes, currentUid]);
 
   if (initializing) return <></>;
 

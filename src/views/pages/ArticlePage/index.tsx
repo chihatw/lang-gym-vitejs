@@ -1,61 +1,51 @@
-import * as R from 'ramda';
 import { Container } from '@mui/material';
-import { Navigate, useParams } from 'react-router-dom';
-import React, { useContext, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
-import { ActionTypes } from '../../../Update';
-import { getArticleState } from '../../../application/services/article';
 
 import SkeletonPage from '../../components/SkeletonPage';
-import { AppContext } from '../..';
-import { ArticleState, INITIAL_ARTICLE_STATE, State } from '../../../Model';
-import { useSelector } from 'react-redux';
+
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 
+// debug ArticlePage
 const ArticlePage = () => {
-  const { currentUid } = useSelector((state: RootState) => state.authUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { articleId } = useParams();
-  if (!articleId) return <></>;
-  const { state, dispatch } = useContext(AppContext);
+  const { isLoading } = useSelector((state: RootState) => state.ariclePage);
+  const articleSentenceIds = useSelector(
+    (state: RootState) => state.articleSentenceIds
+  );
 
-  const { isFetching, articlePages } = state;
-
-  const articlePage = articlePages[articleId] || INITIAL_ARTICLE_STATE;
-  const { article, sentences } = articlePage;
-  const { id } = article;
+  const sentenceIds = useMemo(
+    () => articleSentenceIds[articleId || ''] || [],
+    [articleId, articleSentenceIds]
+  );
 
   useEffect(() => {
-    if (!isFetching) return;
-    const fetchData = async () => {
-      const _articlePage = articlePage.article.id
-        ? articlePage
-        : await getArticleState(currentUid, articleId);
+    !articleId && navigate('/');
+  }, [articleId]);
 
-      const updatedState = R.compose(
-        R.assocPath<boolean, State>(['isFetching'], false),
-        R.assocPath<ArticleState, State>(
-          ['articlePages', articleId],
-          _articlePage
-        )
-      )(state);
-      dispatch({ type: ActionTypes.setState, payload: updatedState });
-    };
-    fetchData();
-  }, [articlePage.article, isFetching, currentUid]);
+  useEffect(() => {
+    if (!articleId) return;
+    dispatch(articlePageActions.initiate(articleId));
+  }, [articleId]);
 
-  if (isFetching) return <SkeletonPage />;
-  if (!id) return <Navigate to='/' />;
+  if (isLoading) return <SkeletonPage />;
+
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
           <ArticleHeader />
-          {sentences.map((_, sentenceIndex) => (
-            <SentencePane key={sentenceIndex} sentenceIndex={sentenceIndex} />
-          ))}
+          {/* {sentenceIds.map((sentenceId, index) => (
+            <SentencePane key={index} sentenceIndex={0} />
+          ))} */}
         </div>
       </div>
     </Container>

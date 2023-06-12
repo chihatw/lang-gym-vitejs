@@ -5,3 +5,5 @@ export const initialState: IAuthUser = {
   currentUid: '',
   loginUser: null,
 };
+
+export const CURRENT_UID_LOCAL_STORAGE_KEY = 'currentUid@lang-gym';

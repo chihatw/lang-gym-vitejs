@@ -10,10 +10,17 @@ const serializableCheck = {
     // authUser
     'authUser/setUser',
     'authUser/setLoginUser',
+    // audio
+    'audio/setBlobAndAudioBuffer',
+    'audio/mergeFetchedAudioBuffers',
   ],
   ignoredPaths: [
     // authUser
     'authUser.loginUser',
+    // audio
+    'audio.blob',
+    'audio.userAudioBuffer',
+    'audio.fetchedAudioBuffers',
   ],
 };
 

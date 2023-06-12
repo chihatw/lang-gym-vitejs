@@ -8,7 +8,7 @@ const articlesSlice = createSlice({
   reducers: {
     concatArticles: (
       state,
-      { payload }: { payload: { [id: string]: IArticle } }
+      { payload }: { payload: { [id: string]: IArticle | null } }
     ) => ({ ...state, ...payload }),
   },
 });

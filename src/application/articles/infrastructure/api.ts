@@ -7,10 +7,39 @@ import {
   where,
   limit,
   startAfter,
+  getDoc,
+  doc,
 } from 'firebase/firestore';
 import { db } from 'infrastructure/firebase';
 import { ARTICLE_STORE_COLLECTION } from '../core/1-constants';
 import { IArticle } from '../core/0-interface';
+
+export const fetchArtice = async (
+  uid: string,
+  articleId: string
+): Promise<IArticle | null> => {
+  console.log(`%cfetch ${ARTICLE_STORE_COLLECTION}`, 'color:red');
+
+  const docSnapshot = await getDoc(
+    doc(db, ARTICLE_STORE_COLLECTION, articleId)
+  );
+  if (!docSnapshot.exists()) {
+    console.log(`%cno articles found`, 'color:red');
+    return null;
+  }
+
+  const article = buildArticle(docSnapshot);
+
+  if (article.uid !== uid) {
+    console.log(
+      `%cincorrect uid article.uid: ${article.uid}, user.uid: ${uid}`,
+      'color:red'
+    );
+    return null;
+  }
+
+  return article;
+};
 
 export const fetchArticles = async (
   uid: string,
@@ -40,13 +69,12 @@ export const fetchArticles = async (
 };
 
 const buildArticle = (doc: DocumentData) => {
-  const { uid, title, createdAt, downloadURL, isShowAccents } = doc.data();
+  const { uid, title, createdAt, isShowAccents } = doc.data();
   const article: IArticle = {
     id: doc.id,
     uid: uid || '',
     title: title || '',
     createdAt: createdAt || 0,
-    downloadURL: downloadURL || '',
     isShowAccents: isShowAccents || false,
   };
   return article;
