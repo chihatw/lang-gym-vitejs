@@ -1,31 +1,31 @@
-import React, { useContext } from 'react';
-
+import { useMemo } from 'react';
 import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import MicTogglePane from './MicTogglePane';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
+import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
 
-import { AppContext } from '../../../../..';
-import { useParams } from 'react-router-dom';
+const AssignmentPitches = ({ sentenceId }: { sentenceId: string }) => {
+  const { fetchedAudioBuffers } = useSelector(
+    (state: RootState) => state.audio
+  );
 
-const AssignmentPitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
-  const { articleId } = useParams();
-  if (!articleId) return <></>;
-  const { state } = useContext(AppContext);
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { sentences, assignmentBlobs } = articlePage;
+  const assignmentAudioBuffer = useMemo(() => {
+    const path = ASSIGNMENTS_STORAGE_PATH + sentenceId;
+    return fetchedAudioBuffers[path];
+  }, [sentenceId, fetchedAudioBuffers]);
 
-  const sentence = sentences[sentenceIndex];
-
-  const { storagePath } = sentence;
-
-  const blob = assignmentBlobs[sentence.id];
-  // 新式
-  // storage の blob がある場合は、プレイヤーを表示
-  if (!!storagePath && !!blob) {
-    return <AssignmentAudioPlayer sentenceIndex={sentenceIndex} />;
+  // assignmentAudioBuffer がある場合は、プレイヤーを表示
+  if (!!assignmentAudioBuffer) {
+    return (
+      <AssignmentAudioPlayer
+        sentenceId={sentenceId}
+        assignmentAudioBuffer={assignmentAudioBuffer}
+      />
+    );
   }
-  // storage がない場合は、マイクを表示
-  return <MicTogglePane sentenceIndex={sentenceIndex} />;
+  // assignmentAudioBuffer がない場合は、マイクを表示
+  return <MicTogglePane sentenceId={sentenceId} />;
 };
 
 export default AssignmentPitches;

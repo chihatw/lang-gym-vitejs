@@ -18,6 +18,20 @@ const articlePageSlice = createSlice({
     initiated: (state) => {
       state.isLoading = false;
     },
+    setRecordSentenceId: (state, { payload }: { payload: string }) => {
+      state.recordSentenceId = payload;
+    },
+    startRecording: (state) => {
+      state.isRecording = true;
+    },
+    stopRecording: (state) => {
+      state.isRecording = false;
+      state.isChecking = true;
+    },
+    playedRecordedAudio: (state) => {
+      state.playedRecordedAudio = true;
+    },
+    clearState: () => initialState,
   },
 });
 

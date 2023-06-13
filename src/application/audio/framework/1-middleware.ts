@@ -53,7 +53,21 @@ const audioMiddleWare =
         dispatch(audioActions.mergeFetchedAudioBuffers(audioBuffers));
         dispatch(articlePageActions.initiated());
       }
-
+      case 'audio/saveAudioBuffer': {
+        const path = action.payload.path as string;
+        const { blob } = (getState() as RootState).audio;
+        if (!!blob) {
+          await services.api.audio.uploadStorageByPath(blob, path);
+          dispatch(audioActions.resetBlobAndAudioBuffer());
+          break;
+        }
+        break;
+      }
+      case 'audio/removeFetchedAudioBuffer': {
+        const path = action.payload as string;
+        await services.api.audio.deleteStorageByPath(path);
+        break;
+      }
       default:
     }
   };

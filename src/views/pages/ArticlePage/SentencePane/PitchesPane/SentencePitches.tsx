@@ -1,28 +1,16 @@
 import { useTheme } from '@mui/material';
-
-import React, { useContext } from 'react';
-
-import AudioSlider from '../../../../components/AudioSlider';
-
-import { AppContext } from '../../../..';
-import { useParams } from 'react-router-dom';
 import SentencePitchLine from '../../../../components/SentencePitchLine';
+import { ISentence } from 'application/sentences/core/0-interface';
+import AudioBufferSlider from 'views/components/AudioBufferSlider';
 
-const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
-  const { articleId } = useParams();
-  if (!articleId) return <></>;
-  const { state } = useContext(AppContext);
+const SentencePitches = ({
+  sentence,
+  audioBuffer,
+}: {
+  sentence: ISentence;
+  audioBuffer: AudioBuffer | null;
+}) => {
   const theme = useTheme();
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { sentences, articleBlob } = articlePage;
-
-  const articleSentence = sentences[sentenceIndex];
-  const sentence = articleSentence;
-
-  const blob = articleBlob;
-  const { start, end, pitchStr } = sentence;
-
   return (
     <div
       style={{
@@ -39,9 +27,9 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
           marginBottom: 8,
         }}
       >
-        {`${'音調'}:`}
+        音調:
       </div>
-      {blob && (
+      {audioBuffer && (
         <div
           style={{
             display: 'grid',
@@ -50,10 +38,14 @@ const SentencePitches = ({ sentenceIndex }: { sentenceIndex: number }) => {
             marginTop: -16,
           }}
         >
-          <AudioSlider end={end} start={start} spacer={5} blob={blob} />
+          <AudioBufferSlider
+            end={sentence.end}
+            start={sentence.start}
+            audioBuffer={audioBuffer}
+          />
         </div>
       )}
-      <SentencePitchLine pitchStr={pitchStr} />
+      <SentencePitchLine pitchStr={sentence.pitchStr} />
     </div>
   );
 };

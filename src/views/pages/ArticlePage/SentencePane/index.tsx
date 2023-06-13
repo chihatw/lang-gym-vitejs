@@ -1,27 +1,26 @@
 import { Divider } from '@mui/material';
-import React, { useContext } from 'react';
 import Index from './StyledIndex';
-
-import TextLines from './TextLines';
 import PitchesPane from './PitchesPane';
-import { AppContext } from '../../..';
-import { useParams } from 'react-router-dom';
+import { ISentence } from 'application/sentences/core/0-interface';
+import { IArticle } from 'application/articles/core/0-interface';
+import Japanese from './Japanese';
+import Chinese from './Chinese';
+import Original from './Original';
 
-const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
-  const { articleId } = useParams();
-  if (!articleId) return <></>;
-
-  const { state } = useContext(AppContext);
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { article, sentences } = articlePage;
-  const { isShowAccents } = article;
-  const sentence = sentences[sentenceIndex];
-  const { id: sentenceId } = sentence;
+const SentencePane = ({
+  article,
+  sentence,
+  audioBuffer,
+}: {
+  article: IArticle;
+  sentence: ISentence;
+  audioBuffer: AudioBuffer | null;
+}) => {
+  if (!article || !sentence) return <></>;
 
   return (
     <div
-      id={sentenceId}
+      id={sentence.id}
       style={{
         rowGap: 8,
         display: 'grid',
@@ -30,9 +29,13 @@ const SentencePane = ({ sentenceIndex }: { sentenceIndex: number }) => {
         paddingBottom: 8,
       }}
     >
-      <Index label={sentenceIndex + 1} />
-      <TextLines sentenceIndex={sentenceIndex} state={state} />
-      {isShowAccents && <PitchesPane sentenceIndex={sentenceIndex} />}
+      <Index label={sentence.line + 1} />
+      <Japanese japanese={sentence.japanese} />
+      <Chinese chinese={sentence.chinese} />
+      <Original original={sentence.original} />
+      {article.isShowAccents && (
+        <PitchesPane sentence={sentence} audioBuffer={audioBuffer} />
+      )}
       <Divider />
     </div>
   );

@@ -1,7 +1,9 @@
 import { MutableRefObject } from 'react';
 
-export const createSourceNode = (audioBuffer: AudioBuffer) => {
-  const audioContext = new AudioContext();
+export const createSourceNode = (
+  audioBuffer: AudioBuffer,
+  audioContext: AudioContext
+) => {
   const sourceNode = audioContext.createBufferSource();
   sourceNode.buffer = audioBuffer;
   sourceNode.connect(audioContext.destination);
@@ -23,7 +25,7 @@ export const playAudioBufferAndSetSourceNode = async (
   callback?: () => void
 ) => {
   const audioContext = new AudioContext();
-  const sourceNode = await createSourceNode(audioBuffer);
+  const sourceNode = await createSourceNode(audioBuffer, audioContext);
   sourceNodeRef.current = sourceNode;
   const currentTime = audioContext.currentTime;
   if (callback) {
@@ -87,4 +89,16 @@ export const clearMediaRecorder = (
   // ブラウザのマイク使用中の表示を消すために必要
   audioElem.srcObject = null;
   mediaRecorder = null;
+};
+
+export const updateElapsedTime = (
+  audioContext: AudioContext,
+  elapsedStartedAtRef: React.MutableRefObject<number>,
+  elapsedTimeRef: React.MutableRefObject<number>
+) => {
+  const currentTime = audioContext.currentTime;
+  // 経過時間を累積経過時間に追加
+  elapsedTimeRef.current += currentTime - elapsedStartedAtRef.current;
+  // 経過時間起点を更新
+  elapsedStartedAtRef.current = currentTime;
 };

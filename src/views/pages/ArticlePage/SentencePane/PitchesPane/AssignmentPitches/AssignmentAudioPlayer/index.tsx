@@ -1,27 +1,16 @@
 import { useTheme } from '@mui/material';
-import { useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import { AppContext } from '../../../../../..';
-import BlobSlider from '../../../../../../components/BlobSlider';
 
 import RemoveAudioButton from './RemoveAudioButton';
+import AudioBufferSlider from 'views/components/AudioBufferSlider';
 
 const AssignmentAudioPlayer = ({
-  sentenceIndex,
+  sentenceId,
+  assignmentAudioBuffer,
 }: {
-  sentenceIndex: number;
+  sentenceId: string;
+  assignmentAudioBuffer: AudioBuffer;
 }) => {
-  const { articleId } = useParams();
-  if (!articleId) return <></>;
-  const { state } = useContext(AppContext);
   const theme = useTheme();
-  const { articlePages } = state;
-  const articlePage = articlePages[articleId];
-  const { assignmentBlobs, sentences } = articlePage;
-
-  const sentence = sentences[sentenceIndex];
-  const { storageDuration, id } = sentence;
-  const blob = assignmentBlobs[id];
   return (
     <div
       style={{
@@ -56,12 +45,16 @@ const AssignmentAudioPlayer = ({
             marginTop: -16,
           }}
         >
-          {blob && (
-            <BlobSlider duration={storageDuration} spacer={5} blob={blob} />
+          {assignmentAudioBuffer && (
+            <AudioBufferSlider
+              end={assignmentAudioBuffer.duration}
+              start={0}
+              audioBuffer={assignmentAudioBuffer}
+            />
           )}
         </div>
       </div>
-      <RemoveAudioButton sentenceIndex={sentenceIndex} />
+      <RemoveAudioButton sentenceId={sentenceId} />
     </div>
   );
 };
