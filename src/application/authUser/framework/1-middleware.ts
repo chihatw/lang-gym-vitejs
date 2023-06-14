@@ -3,7 +3,7 @@ import { Services } from 'infrastructure/services';
 
 import { authUserActions } from 'application/authUser/framework/0-reducer';
 import { signInFormActions } from 'application/signinForm/framework/0-reducer';
-import { changeEmailFormActions } from 'application/changeEmailForm/framework/0-reducer';
+import { updateEmailFormActions } from 'application/updateEmailForm/framework/0-reducer';
 import { RootState } from 'main';
 
 const userMiddleware =
@@ -30,18 +30,18 @@ const userMiddleware =
         }
         break;
       }
-      case 'changeEmailForm/updateEmailStart': {
+      case 'updateEmailForm/updateEmailStart': {
         const { email, password, newEmail } = (getState() as RootState)
-          .changeEmailForm;
+          .updateEmailForm;
 
         const { emailErrMsg, passwordErrMsg, newEmailErrMsg } =
           await services.api.authUser.updateEmail(email, password, newEmail);
 
         if (!emailErrMsg && !passwordErrMsg && !newEmailErrMsg) {
-          dispatch(changeEmailFormActions.updateEmailSuccess(newEmail));
+          dispatch(updateEmailFormActions.updateEmailSuccess(newEmail));
         } else {
           dispatch(
-            changeEmailFormActions.updateEmailFail({
+            updateEmailFormActions.updateEmailFail({
               emailErrMsg,
               passwordErrMsg,
               newEmailErrMsg,

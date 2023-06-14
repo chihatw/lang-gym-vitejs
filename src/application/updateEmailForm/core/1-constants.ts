@@ -1,6 +1,6 @@
-import { IChangeEmailForm } from './0-interface';
+import { IUpdateEmailForm } from './0-interface';
 
-export const initialState: IChangeEmailForm = {
+export const initialState: IUpdateEmailForm = {
   isLoading: false,
   message: '',
   emailErrMsg: '',

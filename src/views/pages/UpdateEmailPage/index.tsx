@@ -1,19 +1,20 @@
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
-  CircularProgress,
+  useTheme,
   Container,
   TextField,
-  useTheme,
+  CircularProgress,
 } from '@mui/material';
-import CancelButton from './commons/CancelButton';
-import StyledMessage from './commons/StyledMessage';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'main';
-import { changeEmailFormActions } from 'application/changeEmailForm/framework/0-reducer';
-import { validateEmail } from 'application/signinForm/core/2-service';
 
-const ChangeEmailPage = () => {
+import { RootState } from 'main';
+import { validateEmail } from 'application/signinForm/core/2-service';
+import { updateEmailFormActions } from 'application/updateEmailForm/framework/0-reducer';
+
+const UpdateEmailPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     message,
@@ -24,10 +25,10 @@ const ChangeEmailPage = () => {
     email,
     password,
     newEmail,
-  } = useSelector((state: RootState) => state.changeEmailForm);
+  } = useSelector((state: RootState) => state.updateEmailForm);
 
   const handleChangeEmail = async () => {
-    dispatch(changeEmailFormActions.updateEmailStart());
+    dispatch(updateEmailFormActions.updateEmailStart());
   };
   return (
     <Container maxWidth='xs'>
@@ -44,7 +45,7 @@ const ChangeEmailPage = () => {
           variant='outlined'
           required
           onChange={(e) =>
-            dispatch(changeEmailFormActions.changeEmail(e.target.value))
+            dispatch(updateEmailFormActions.changeEmail(e.target.value))
           }
           fullWidth
           helperText={emailErrMsg}
@@ -59,7 +60,7 @@ const ChangeEmailPage = () => {
           variant='outlined'
           required
           onChange={(e) =>
-            dispatch(changeEmailFormActions.changePassword(e.target.value))
+            dispatch(updateEmailFormActions.changePassword(e.target.value))
           }
           fullWidth
           helperText={passwordErrMsg}
@@ -74,7 +75,7 @@ const ChangeEmailPage = () => {
           variant='outlined'
           required
           onChange={(e) =>
-            dispatch(changeEmailFormActions.changeNewEmail(e.target.value))
+            dispatch(updateEmailFormActions.changeNewEmail(e.target.value))
           }
           fullWidth
           helperText={newEmailErrMsg}
@@ -111,12 +112,33 @@ const ChangeEmailPage = () => {
               </span>
             </Button>
           )}
-          <StyledMessage message={message} />
+          <div
+            style={{
+              color: '#52a2aa',
+              fontSize: 12,
+              marginTop: 16,
+              fontWeight: 400,
+              paddingLeft: 16,
+            }}
+          >
+            {message}
+          </div>
         </div>
-        <CancelButton />
+        <Button
+          variant='contained'
+          fullWidth
+          disableElevation
+          style={{
+            ...(theme.typography as any).mPlusRounded,
+          }}
+          onClick={() => navigate('/account')}
+          sx={{ backgroundColor: '#e0e0e0', ':hover': { background: '#ccc' } }}
+        >
+          戻る
+        </Button>
       </div>
     </Container>
   );
 };
 
-export default ChangeEmailPage;
+export default UpdateEmailPage;

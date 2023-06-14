@@ -1,4 +1,4 @@
-export interface IChangeEmailForm {
+export interface IUpdateEmailForm {
   message: string;
   isLoading: boolean;
   emailErrMsg: string;

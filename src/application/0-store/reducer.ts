@@ -9,7 +9,7 @@ import ariclePage from 'application/articlePage/framework/0-reducer';
 import articleSentenceIds from 'application/articleSentenceIds/framework/0-reducer';
 import sentences from 'application/sentences/framework/0-reducer';
 import audio from 'application/audio/framework/0-reducer';
-import changeEmailForm from 'application/changeEmailForm/framework/0-reducer';
+import updateEmailForm from 'application/updateEmailForm/framework/0-reducer';
 
 export default {
   authUser,
@@ -23,5 +23,5 @@ export default {
   articleSentenceIds,
   sentences,
   audio,
-  changeEmailForm,
+  updateEmailForm,
 };

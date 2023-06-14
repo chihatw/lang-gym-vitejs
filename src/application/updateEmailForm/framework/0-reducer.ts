@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { initialState } from '../core/1-constants';
 
-const changeEmailFormSlice = createSlice({
-  name: 'changeEmailForm',
+const updateEmailFormSlice = createSlice({
+  name: 'updateEmailForm',
   initialState,
   reducers: {
     changeEmail: (state, { payload }: { payload: string }) => ({
@@ -59,6 +59,6 @@ const changeEmailFormSlice = createSlice({
   },
 });
 
-export const changeEmailFormActions = changeEmailFormSlice.actions;
+export const updateEmailFormActions = updateEmailFormSlice.actions;
 
-export default changeEmailFormSlice.reducer;
+export default updateEmailFormSlice.reducer;

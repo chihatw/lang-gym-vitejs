@@ -15,7 +15,7 @@ import QuizPage from 'views/pages/Quiz/QuizPage';
 import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
 import WorkoutPage from 'views/pages/Workout/WorkoutPage';
 import AccountPage from 'views/pages/AccountPage';
-import ChangeEmailPage from 'views/pages/Auth/ChangeEmailPage';
+import UpdateEmailPage from 'views/pages/UpdateEmailPage';
 import ChangePasswordPage from 'views/pages/Auth/ChangePasswordPage';
 import SignInPage from 'views/pages/SingInPage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -128,7 +128,7 @@ const App = () => {
               />
               <Route
                 path={'mail'}
-                element={<PrivateRoute element={<ChangeEmailPage />} />}
+                element={<PrivateRoute element={<UpdateEmailPage />} />}
               />
               <Route
                 path={`password`}
