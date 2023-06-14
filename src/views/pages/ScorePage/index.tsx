@@ -5,11 +5,11 @@ import { useEffect, useMemo } from 'react';
 
 import { RootState } from 'main';
 
-import QuizPageHeader from '../commons/QuizPageHeader';
 import Score from './Score';
 import ScoreFooter from './ScoreFooter';
 import { scorePageActions } from 'application/scorePage/framework/0-reducer';
 import ScorePageQuestionRow from './ScorePageQuestionRow';
+import QuizPageHeader from 'views/components/QuizPageHeader';
 
 const ScorePage = () => {
   const navigate = useNavigate();

@@ -1,8 +1,7 @@
 import { css, keyframes } from '@emotion/css';
 import { useTheme } from '@mui/material';
-import React, { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { State } from '../../../../Model';
+import { useMemo } from 'react';
+
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 

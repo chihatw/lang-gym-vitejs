@@ -1,10 +1,4 @@
-import { Syllable } from '../../../Model';
-
-// type は pitch と rhythm に簡略化？
-export const QuizTypes = {
-  articleAccents: 'articleAccents',
-  articleRhythms: 'articleRhythms',
-};
+import { ISyllable } from 'application/quizQuestions/core/0-interface';
 
 export type QuizFormQuestion = {
   id: string;
@@ -12,7 +6,7 @@ export type QuizFormQuestion = {
   start: number;
   japanese: string;
   disableds: number[]; // pitchQuiz の非題化を wordIndex で指定
-  syllablesArray: Syllable[][];
+  syllablesArray: ISyllable[][];
   inputPitchStr: string;
   correctPitchStr: string;
   inputSpecialMoraArray: string[][];
@@ -20,11 +14,11 @@ export type QuizFormQuestion = {
 };
 
 export type QuizFormState = {
-  title: string;
-  createdAt: number;
   type: string;
-  questions: QuizFormQuestion[];
+  title: string;
   quizBlob: Blob | null;
+  createdAt: number;
+  questions: QuizFormQuestion[];
   questionCount: number;
 };
 

@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 
 import { RootState } from 'main';
 
-import QuestionIndex from '../../commons/QuestionIndex';
 import AccentsQuestionRow from './AccentsQuestionRow';
 import RhythmsQuestionRow from './RhythmsQuestionRow';
+import QuestionIndex from 'views/components/QuestionIndex';
 
 function ScorePageQuestionRow({
   index,

@@ -1,13 +1,13 @@
 import { Divider, useTheme } from '@mui/material';
 
-import { Quiz } from '../../../../../../Model';
 import CorrectAnswer from '../../commons/CorrectAnswer';
-import SentencePitchLine from '../../../../../components/SentencePitchLine';
-import PitchLine from '../../../../../components/PitchLine';
+
 import string2PitchesArray from 'string2pitches-array';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { useMemo } from 'react';
+import SentencePitchLine from 'views/components/SentencePitchLine';
+import PitchLine from 'views/components/PitchLine';
 
 const AccentsAnswer = ({
   index,

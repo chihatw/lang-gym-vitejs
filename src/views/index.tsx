@@ -9,7 +9,7 @@ import ArticleListPage from 'views/pages/ArticleListPage';
 import ArticlePage from 'views/pages/ArticlePage';
 import UnAnsweredQuizListPage from 'views/pages/UnAnsweredQuizListPage';
 import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
-import ScorePage from 'views/pages/Quiz/ScorePage';
+
 import QuizPage from 'views/pages/QuizPage';
 import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
 import WorkoutPage from 'views/pages/Workout/WorkoutPage';
@@ -22,6 +22,7 @@ import { RootState } from 'main';
 import { authUserActions } from 'application/authUser/framework/0-reducer';
 import TopPage from './pages/TopPage';
 import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
+import ScorePage from './pages/ScorePage';
 
 export const AppContext = createContext<{
   state: State;
