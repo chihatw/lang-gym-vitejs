@@ -31,10 +31,6 @@ const signinFormSlice = createSlice({
       state.emailErrMsg = payload.emailErrMsg;
       state.passwordErrMsg = payload.passwordErrMsg;
     },
-    resetError: (state) => {
-      state.emailErrMsg = '';
-      state.passwordErrMsg = '';
-    },
   },
 });
 

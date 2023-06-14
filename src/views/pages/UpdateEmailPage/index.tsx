@@ -17,17 +17,17 @@ const UpdateEmailPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
-    message,
-    isLoading,
-    emailErrMsg,
-    passwordErrMsg,
-    newEmailErrMsg,
     email,
     password,
     newEmail,
+    isLoading,
+    message,
+    emailErrMsg,
+    passwordErrMsg,
+    newEmailErrMsg,
   } = useSelector((state: RootState) => state.updateEmailForm);
 
-  const handleChangeEmail = async () => {
+  const handleUpdateEmail = async () => {
     dispatch(updateEmailFormActions.updateEmailStart());
   };
   return (
@@ -81,49 +81,49 @@ const UpdateEmailPage = () => {
           helperText={newEmailErrMsg}
           autoComplete={'email'}
         />
-        <div>
-          {isLoading ? (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <Button
-              type='submit'
-              color='primary'
-              variant='contained'
-              fullWidth
-              disabled={
-                !email ||
-                !password ||
-                !newEmail ||
-                !validateEmail(email) ||
-                !validateEmail(newEmail) ||
-                password.length < 6
-              }
-              onClick={handleChangeEmail}
-            >
-              <span
-                style={{
-                  ...(theme.typography as any).mPlusRounded,
-                  color: 'white',
-                }}
-              >
-                メールアドレス変更
-              </span>
-            </Button>
-          )}
-          <div
-            style={{
-              color: '#52a2aa',
-              fontSize: 12,
-              marginTop: 16,
-              fontWeight: 400,
-              paddingLeft: 16,
-            }}
-          >
-            {message}
+
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress />
           </div>
+        ) : (
+          <Button
+            type='submit'
+            color='primary'
+            variant='contained'
+            fullWidth
+            disabled={
+              !email ||
+              !password ||
+              !newEmail ||
+              !validateEmail(email) ||
+              !validateEmail(newEmail) ||
+              password.length < 6
+            }
+            onClick={handleUpdateEmail}
+          >
+            <span
+              style={{
+                ...(theme.typography as any).mPlusRounded,
+                color: 'white',
+              }}
+            >
+              メールアドレス変更
+            </span>
+          </Button>
+        )}
+        <div
+          style={{
+            color: '#52a2aa',
+            fontSize: 12,
+            marginTop: 16,
+            fontWeight: 400,
+            paddingLeft: 16,
+          }}
+        >
+          {message}
         </div>
+
         <Button
           variant='contained'
           fullWidth

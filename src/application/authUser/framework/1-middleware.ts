@@ -5,6 +5,7 @@ import { authUserActions } from 'application/authUser/framework/0-reducer';
 import { signInFormActions } from 'application/signinForm/framework/0-reducer';
 import { updateEmailFormActions } from 'application/updateEmailForm/framework/0-reducer';
 import { RootState } from 'main';
+import { updatePasswordFormActions } from 'application/updatePasswordForm/framework/0-reducer';
 
 const userMiddleware =
   (services: Services): Middleware =>
@@ -48,6 +49,29 @@ const userMiddleware =
             })
           );
         }
+        break;
+      }
+      case 'updatePasswordForm/updatePasswordStart': {
+        const { email, password, newPassword } = (getState() as RootState)
+          .updatePasswordForm;
+        const { emailErrMsg, passwordErrMsg, newPasswordErrMsg } =
+          await services.api.authUser.updatePassword(
+            email,
+            password,
+            newPassword
+          );
+        if (!emailErrMsg && !passwordErrMsg && !newPasswordErrMsg) {
+          dispatch(updatePasswordFormActions.updatePasswordSuccess());
+        } else {
+          dispatch(
+            updatePasswordFormActions.updatePasswordFail({
+              emailErrMsg,
+              passwordErrMsg,
+              newPasswordErrMsg,
+            })
+          );
+        }
+
         break;
       }
       case 'authUser/signoutInitiate': {

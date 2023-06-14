@@ -16,7 +16,7 @@ import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
 import WorkoutPage from 'views/pages/Workout/WorkoutPage';
 import AccountPage from 'views/pages/AccountPage';
 import UpdateEmailPage from 'views/pages/UpdateEmailPage';
-import ChangePasswordPage from 'views/pages/Auth/ChangePasswordPage';
+import UpdatePasswordPage from 'views/pages/UpdatePasswordPage';
 import SignInPage from 'views/pages/SingInPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
@@ -132,7 +132,7 @@ const App = () => {
               />
               <Route
                 path={`password`}
-                element={<PrivateRoute element={<ChangePasswordPage />} />}
+                element={<PrivateRoute element={<UpdatePasswordPage />} />}
               />
             </Route>
             <Route

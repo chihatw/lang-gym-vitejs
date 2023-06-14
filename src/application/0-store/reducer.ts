@@ -10,6 +10,7 @@ import articleSentenceIds from 'application/articleSentenceIds/framework/0-reduc
 import sentences from 'application/sentences/framework/0-reducer';
 import audio from 'application/audio/framework/0-reducer';
 import updateEmailForm from 'application/updateEmailForm/framework/0-reducer';
+import updatePasswordForm from 'application/updatePasswordForm/framework/0-reducer';
 
 export default {
   authUser,
@@ -24,4 +25,5 @@ export default {
   sentences,
   audio,
   updateEmailForm,
+  updatePasswordForm,
 };

@@ -1,39 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialState } from '../core/1-constants';
+import { initialState } from '../core/1-constatns';
 
-const updateEmailFormSlice = createSlice({
-  name: 'updateEmailForm',
+const updatePasswordFormSlice = createSlice({
+  name: 'updatePasswordForm',
   initialState,
   reducers: {
     changeEmail: (state, { payload }: { payload: string }) => ({
       ...initialState,
       email: payload,
       password: state.password,
-      newEmail: state.newEmail,
+      newPassword: state.newPassword,
     }),
     changePassword: (state, { payload }: { payload: string }) => ({
       ...initialState,
       email: state.email,
       password: payload,
-      newEmail: state.newEmail,
+      newPassword: state.newPassword,
     }),
-    changeNewEmail: (state, { payload }: { payload: string }) => ({
+    changeNewPassword: (state, { payload }: { payload: string }) => ({
       ...initialState,
       email: state.email,
       password: state.password,
-      newEmail: payload,
+      newPassword: payload,
     }),
-    updateEmailStart: (state) => {
+    updatePasswordStart: (state) => {
       state.isLoading = true;
     },
-    updateEmailSuccess: (state, { payload }: { payload: string }) => {
+    updatePasswordSuccess: (state) => {
       state.isLoading = false;
-      state.email = payload;
+      state.email = '';
       state.password = '';
-      state.newEmail = '';
-      state.message = `メールアドレスを「${payload}」に変更しました`;
+      state.newPassword = '';
+      state.message = `パスワードを変更しました`;
     },
-    updateEmailFail: (
+    updatePasswordFail: (
       state,
       {
         payload,
@@ -41,18 +41,18 @@ const updateEmailFormSlice = createSlice({
         payload: {
           emailErrMsg: string;
           passwordErrMsg: string;
-          newEmailErrMsg: string;
+          newPasswordErrMsg: string;
         };
       }
     ) => {
       state.isLoading = false;
       state.emailErrMsg = payload.emailErrMsg;
       state.passwordErrMsg = payload.passwordErrMsg;
-      state.newEmailErrMsg = payload.newEmailErrMsg;
+      state.newPasswordErrMsg = payload.newPasswordErrMsg;
     },
   },
 });
 
-export const updateEmailFormActions = updateEmailFormSlice.actions;
+export const updatePasswordFormActions = updatePasswordFormSlice.actions;
 
-export default updateEmailFormSlice.reducer;
+export default updatePasswordFormSlice.reducer;

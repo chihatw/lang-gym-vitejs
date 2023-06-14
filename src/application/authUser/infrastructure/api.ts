@@ -84,6 +84,50 @@ export const updateEmail = async (
   }
 };
 
+export const updatePassword = async (
+  email: string,
+  password: string,
+  newPassword: string
+) => {
+  try {
+    const provider = firebaseAuth.EmailAuthProvider;
+    const credential = provider.credential(email, password);
+    await firebaseAuth.reauthenticateWithCredential(
+      auth.currentUser!,
+      credential
+    );
+    await firebaseAuth.updatePassword(auth.currentUser!, newPassword);
+    return {
+      emailErrMsg: '',
+      passwordErrMsg: '',
+      newPasswordErrMsg: '',
+    };
+  } catch (error) {
+    let emailErrMsg = 'パスワードを変更できません。';
+    let passwordErrMsg = 'パスワードを変更できません。';
+    let newPasswordErrMsg = 'パスワードを変更できません。';
+    switch ((error as any).code) {
+      case 'auth/user-mismatch':
+        emailErrMsg = 'メールアドレスが正しくありません。';
+        passwordErrMsg = '';
+        newPasswordErrMsg = '';
+        break;
+      case 'auth/wrong-password':
+        emailErrMsg = '';
+        passwordErrMsg = 'パスワードが正しくありません。';
+        newPasswordErrMsg = '';
+        break;
+      default:
+        console.warn((error as any).code);
+    }
+    return {
+      emailErrMsg,
+      passwordErrMsg,
+      newPasswordErrMsg,
+    };
+  }
+};
+
 export const signOut = async (): Promise<{ errorMsg: string }> => {
   try {
     await firebaseAuth.signOut(auth);
