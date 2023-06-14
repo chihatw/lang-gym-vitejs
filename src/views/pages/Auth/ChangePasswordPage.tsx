@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react';
 
 import { Container, TextField } from '@mui/material';
-import { handleUpdatePassword } from '../../../../application/services/auth';
-import CancelButton from '../commons/CancelButton';
-import StyledMessage from '../commons/StyledMessage';
-import SubmitButton from '../commons/SubmitButton';
+import { handleUpdatePassword } from '../../../application/services/auth';
+import CancelButton from './commons/CancelButton';
+import StyledMessage from './commons/StyledMessage';
+import SubmitButton from './commons/SubmitButton';
 
-const PasswordPage = () => {
+const ChangePasswordPage = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');
@@ -95,4 +95,4 @@ const PasswordPage = () => {
   );
 };
 
-export default PasswordPage;
+export default ChangePasswordPage;

@@ -1,90 +1,6 @@
-export type WorkingMemoryCard = {
-  id: string;
-  end: number;
-  type: string;
-  start: number;
-  label?: string;
-  pitchStr?: string;
-};
-
-export type PitchCard = {
-  id: string;
-  end: number;
-  start: number;
-  pitchStr: string;
-};
-
 export type User = {
   id: string;
   displayname: string;
-};
-
-export type Article = {
-  id: string;
-  uid: string;
-  title: string;
-  createdAt: number;
-  downloadURL: string;
-  isShowAccents: boolean;
-};
-
-const INITIAL_ARTICLE: Article = {
-  id: '',
-  uid: '',
-  title: '',
-  createdAt: 0,
-  downloadURL: '',
-  isShowAccents: false,
-};
-
-export type Sentence = {
-  id: string;
-  end: number;
-  kana: string;
-  line: number;
-  title: string;
-  start: number;
-  article: string;
-  chinese: string;
-  japanese: string;
-  original: string;
-  createdAt: number;
-  pitchStr: string;
-  storagePath: string;
-  storageDuration: number;
-};
-
-export const INITIAL_SENTENCE: Sentence = {
-  id: '',
-  end: 0,
-  kana: '',
-  line: 0,
-  title: '',
-  start: 0,
-  article: '',
-  chinese: '',
-  japanese: '',
-  original: '',
-  createdAt: 0,
-  pitchStr: '',
-  storagePath: '',
-  storageDuration: 0,
-};
-
-export type AssignmentBlobs = { [key: string]: Blob | null };
-
-export type ArticleState = {
-  article: Article;
-  sentences: Sentence[];
-  articleBlob: Blob | null;
-  assignmentBlobs: AssignmentBlobs;
-};
-
-export const INITIAL_ARTICLE_STATE: ArticleState = {
-  article: INITIAL_ARTICLE,
-  sentences: [],
-  articleBlob: null,
-  assignmentBlobs: {},
 };
 
 export type QuizScore = {
@@ -211,68 +127,9 @@ export const INITIAL_RANDOM_WORKOUT_STATE: RandomWorkoutState = {
   workouts: {},
 };
 
-export type WorkingMemoryLog = {
-  id: string;
-  cueIds: string[];
-  offset: number;
-  createdAt: number;
-  removedAt: number;
-  practice: {
-    [index: number]: {
-      createdAt: number;
-      playedAts: number[];
-      selected: string;
-    };
-  };
-  result: {
-    createdAt: number;
-    tappeds: string[];
-  };
-  correctRatio: number;
-};
-
-export const INITIAL_WORKING_MEMORY_LOG: WorkingMemoryLog = {
-  id: '',
-  cueIds: [],
-  offset: 0,
-  createdAt: 0,
-  removedAt: 0,
-  practice: {},
-  result: { createdAt: 0, tappeds: [] },
-  correctRatio: 0,
-};
-
-export type WorkingMemory = {
-  id: string;
-  uid: string;
-  logs: { [id: string]: WorkingMemoryLog };
-  step: number;
-  title: string;
-  cueIds: string[];
-  offset: number;
-  isActive: boolean;
-  createdAt: number;
-  baseCueCount: number;
-};
-
-export const INITIAL_WORKING_MEMORY: WorkingMemory = {
-  id: '',
-  uid: '',
-  cueIds: [],
-  title: '',
-  offset: 0,
-  logs: {},
-  isActive: false,
-  createdAt: 0,
-  step: 0,
-  baseCueCount: 0,
-};
-
 export type State = {
   workout: RandomWorkoutState;
-  workingMemories: { [id: string]: WorkingMemory };
   isFetching: boolean;
-  articlePages: { [articleId: string]: ArticleState };
   quizzes: Quiz[];
   blobs: { [downloadURL: string]: Blob };
   blobURLs: {
@@ -283,8 +140,6 @@ export type State = {
 export const INITIAL_STATE: State = {
   workout: INITIAL_RANDOM_WORKOUT_STATE,
   isFetching: false,
-  articlePages: {},
-  workingMemories: {},
   blobURLs: {},
   quizzes: [],
   blobs: {},

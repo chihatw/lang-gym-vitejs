@@ -14,10 +14,10 @@ import ScorePage from 'views/pages/Quiz/ScorePage';
 import QuizPage from 'views/pages/Quiz/QuizPage';
 import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
 import WorkoutPage from 'views/pages/Workout/WorkoutPage';
-import AccountPage from 'views/pages/Auth/AccountPage';
-import MailPage from 'views/pages/Auth/Setting/MailPage';
-import PasswordPage from 'views/pages/Auth/Setting/PasswordPage';
-import SignInPage from 'views/pages/Auth/SingInPage';
+import AccountPage from 'views/pages/AccountPage';
+import ChangeEmailPage from 'views/pages/Auth/ChangeEmailPage';
+import ChangePasswordPage from 'views/pages/Auth/ChangePasswordPage';
+import SignInPage from 'views/pages/SingInPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { authUserActions } from 'application/authUser/framework/0-reducer';
@@ -128,11 +128,11 @@ const App = () => {
               />
               <Route
                 path={'mail'}
-                element={<PrivateRoute element={<MailPage />} />}
+                element={<PrivateRoute element={<ChangeEmailPage />} />}
               />
               <Route
                 path={`password`}
-                element={<PrivateRoute element={<PasswordPage />} />}
+                element={<PrivateRoute element={<ChangePasswordPage />} />}
               />
             </Route>
             <Route

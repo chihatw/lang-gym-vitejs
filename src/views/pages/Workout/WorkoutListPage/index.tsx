@@ -3,12 +3,11 @@ import { Container } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../..';
 import CustomLabel from '../../../components/CustomLabel';
-import { RandomWorkoutState, State, WorkingMemory } from '../../../../Model';
+import { RandomWorkoutState, State } from '../../../../Model';
 
 import { buildWorkoutState } from '../../../../application/services/workout';
 import { ActionTypes } from '../../../../Update';
 import WorkoutRow from './WorkoutRow';
-import { getWorkingMemories } from '../../../../application/services/workingMemory';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 
@@ -26,16 +25,8 @@ const WorkoutListPage = () => {
         ? state.workout
         : await buildWorkoutState(state, currentUid);
 
-      const workingMemories = !!Object.keys(state.workingMemories).length
-        ? state.workingMemories
-        : await getWorkingMemories(currentUid);
-
       const updatedState = R.compose(
-        R.assocPath<RandomWorkoutState, State>(['workout'], randomWorkoutState),
-        R.assocPath<{ [id: string]: WorkingMemory }, State>(
-          ['workingMemories'],
-          workingMemories
-        )
+        R.assocPath<RandomWorkoutState, State>(['workout'], randomWorkoutState)
       )(state);
       dispatch({ type: ActionTypes.setState, payload: updatedState });
       setInitialize(false);

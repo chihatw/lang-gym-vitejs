@@ -1,9 +1,4 @@
-export const blobToAudioBuffer = async (blob: Blob) => {
-  const audioContext = new AudioContext();
-  const arrayBuffer = await blob.arrayBuffer();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-  return audioBuffer;
-};
+import { blobToAudioBuffer } from 'application/audio/core/2-services';
 
 export const createSourceNode = async (blob: Blob) => {
   const audioContext = new AudioContext();

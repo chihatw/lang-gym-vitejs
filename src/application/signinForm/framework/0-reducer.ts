@@ -5,20 +5,27 @@ const signinFormSlice = createSlice({
   name: 'signinForm',
   initialState,
   reducers: {
-    setHasError: (state) => {
-      state.hasError = true;
-      state.isLoading = false;
-    },
     signinInitiate: (
       state,
       { payload }: { payload: { email: string; password: string } }
     ) => {
       state.isLoading = true;
     },
-    resetHasError: (state) => {
-      state.hasError = false;
+    signInSuccess: (state) => {
+      state.isLoading = false;
     },
-    signInSuccess: () => initialState,
+    signInFail: (
+      state,
+      { payload }: { payload: { emailErrMsg: string; passwordErrMsg: string } }
+    ) => {
+      state.isLoading = false;
+      state.emailErrMsg = payload.emailErrMsg;
+      state.passwordErrMsg = payload.passwordErrMsg;
+    },
+    resetError: (state) => {
+      state.emailErrMsg = '';
+      state.passwordErrMsg = '';
+    },
   },
 });
 

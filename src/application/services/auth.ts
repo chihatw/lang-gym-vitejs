@@ -2,7 +2,6 @@ import {
   updateEmail,
   updatePassword,
   EmailAuthProvider,
-  signInWithEmailAndPassword,
   reauthenticateWithCredential,
 } from 'firebase/auth';
 import {
@@ -18,37 +17,6 @@ import { auth, db } from '../../infrastructure/firebase';
 const COLLECTIONS = { users: 'users' };
 
 const LIMIT = 5;
-
-export const signOut = () => auth.signOut();
-
-export const signIn = async (
-  email: string,
-  password: string
-): Promise<{
-  success?: boolean;
-  error?: any;
-}> => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    return { success: true, error: { emailErrMsg: '', passwordErrMsg: '' } };
-  } catch (error) {
-    let emailErrMsg = 'サインインできませんでした。';
-    let passwordErrMsg = 'サインインできませんでした。';
-    switch ((error as any).code) {
-      case 'auth/user-not-found':
-      case 'auth/invalid-email':
-        emailErrMsg = 'メールアドレスが間違っています。';
-        passwordErrMsg = '';
-        break;
-      case 'auth/wrong-password':
-        emailErrMsg = '';
-        passwordErrMsg = 'パスワードが間違っています。';
-        break;
-      default:
-    }
-    return { error: { emailErrMsg, passwordErrMsg } };
-  }
-};
 
 export const handleUpdateEmail = async (
   email: string,

@@ -1,4 +1,5 @@
 export interface ISigninForm {
-  hasError: boolean;
   isLoading: boolean;
+  emailErrMsg: string;
+  passwordErrMsg: string;
 }
