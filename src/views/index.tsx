@@ -8,8 +8,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
 import ArticleListPage from 'views/pages/ArticleListPage';
 import ArticlePage from 'views/pages/ArticlePage';
-import UnAnsweredPage from 'views/pages/QuizList/UnAnsweredPage';
-import AnsweredPage from 'views/pages/QuizList/AnsweredPage';
+import UnAnsweredQuizListPage from 'views/pages/UnAnsweredQuizListPage';
+import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
 import ScorePage from 'views/pages/Quiz/ScorePage';
 import QuizPage from 'views/pages/Quiz/QuizPage';
 import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
@@ -93,11 +93,13 @@ const App = () => {
               <Route path='list'>
                 <Route
                   path='unanswered'
-                  element={<PrivateRoute element={<UnAnsweredPage />} />}
+                  element={
+                    <PrivateRoute element={<UnAnsweredQuizListPage />} />
+                  }
                 />
                 <Route
                   path='answered'
-                  element={<PrivateRoute element={<AnsweredPage />} />}
+                  element={<PrivateRoute element={<AnsweredQuizListPage />} />}
                 />
               </Route>
               <Route

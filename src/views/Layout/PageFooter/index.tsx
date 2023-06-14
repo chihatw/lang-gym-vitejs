@@ -1,27 +1,21 @@
-import { Badge, BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { css } from '@emotion/css';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppContext } from '..';
-import { ActionTypes } from '../../Update';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import FooterQuizPane from './FooterQuizPane';
 
 const PageFooter = () => {
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
-  const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const unansweredList = state.quizzes.filter(
-    (item) => !Object.keys(item.scores).length
-  );
+  const { loginUser } = useSelector((state: RootState) => state.authUser);
 
   const [value, setValue] = useState(-1);
 
@@ -47,7 +41,6 @@ const PageFooter = () => {
   }, [pathname]);
 
   const handleClick = (event: any, value: number) => {
-    if (!dispatch) return;
     setValue(value);
     let path = '';
     switch (value) {
@@ -56,7 +49,6 @@ const PageFooter = () => {
         break;
       }
       case 1: {
-        dispatch({ type: ActionTypes.startFetching });
         path = '/workout/list';
         break;
       }
@@ -98,23 +90,7 @@ const PageFooter = () => {
     >
       <BottomNavigationAction label='ホーム' icon={<ImportContactsIcon />} />
       <BottomNavigationAction label='練習' icon={<AccessTimeIcon />} />
-      <BottomNavigationAction
-        label='小テスト'
-        icon={
-          // todo コンポーネントを分けて、quizzes の取得
-          <Badge
-            className={css({
-              '.MuiBadge-badge': {
-                color: 'white',
-                background: '#f50057',
-              },
-            })}
-            badgeContent={unansweredList.length}
-          >
-            <AssignmentIcon />
-          </Badge>
-        }
-      />
+      <BottomNavigationAction label='小テスト' icon={<FooterQuizPane />} />
       <BottomNavigationAction label='個人資料' icon={<AccountCircleIcon />} />
     </BottomNavigation>
   );

@@ -1,12 +1,18 @@
 import { Card, CardContent } from '@mui/material';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Quiz } from '../../../../../../../Model';
 import DateDisplay from './DateDisplay';
 import ScoreList from './ScoreList';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
+import { useMemo } from 'react';
 
-const QuizCard = ({ quiz }: { quiz: Quiz }) => {
+const QuizCard = ({ quizId }: { quizId: string }) => {
   const navigate = useNavigate();
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
+
+  if (!quiz) return <></>;
+
   return (
     <Card
       sx={{
@@ -20,7 +26,7 @@ const QuizCard = ({ quiz }: { quiz: Quiz }) => {
       <CardContent>
         <div style={{ display: 'grid', rowGap: 8 }}>
           <DateDisplay title={quiz.title} createdAt={quiz.createdAt} />
-          {!!Object.keys(quiz.scores).length && <ScoreList quiz={quiz} />}
+          <ScoreList scoreIds={quiz.scoreIds} quizId={quizId} />
         </div>
       </CardContent>
     </Card>

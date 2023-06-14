@@ -1,10 +1,16 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
-import { Quiz } from '../../../../../../../../Model';
 import ScoreRow from './ScoreRow';
 
-const ScoreList = ({ quiz }: { quiz: Quiz }) => {
+const ScoreList = ({
+  scoreIds,
+  quizId,
+}: {
+  scoreIds: string[];
+  quizId: string;
+}) => {
   const theme = useTheme();
+
+  if (!scoreIds.length) return <></>;
   return (
     <div>
       <div
@@ -17,11 +23,9 @@ const ScoreList = ({ quiz }: { quiz: Quiz }) => {
       >
         結果
       </div>
-      {Object.values(quiz.scores)
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .map((score, index) => (
-          <ScoreRow key={index} score={score} quizId={quiz.id} />
-        ))}
+      {scoreIds.map((scoreId, index) => (
+        <ScoreRow key={index} scoreId={scoreId} quizId={quizId} />
+      ))}
     </div>
   );
 };

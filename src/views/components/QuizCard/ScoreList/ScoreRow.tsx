@@ -2,21 +2,25 @@ import 'dayjs/locale/ja';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Button, useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ActionTypes } from '../../../../../../../../Update';
-import { AppContext } from '../../../../../../..';
-import { QuizScore } from '../../../../../../../../Model';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
 
-const ScoreRow = ({ score, quizId }: { score: QuizScore; quizId: string }) => {
-  const { state, dispatch } = useContext(AppContext);
-  const quiz = state.quizzes.find((item) => item.id === quizId);
-  if (!quiz) return <></>;
+const ScoreRow = ({ scoreId, quizId }: { scoreId: string; quizId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quizScores = useSelector((state: RootState) => state.quizScores);
+
+  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
+  const score = useMemo(() => quizScores[scoreId], [scoreId, quizScores]);
+
+  if (!quiz || !score) return <></>;
 
   return (
     <Button
@@ -30,9 +34,7 @@ const ScoreRow = ({ score, quizId }: { score: QuizScore; quizId: string }) => {
         gridTemplateColumns: 'auto 1fr auto',
       }}
       onClick={(e) => {
-        if (!dispatch) return;
         e.stopPropagation();
-        dispatch({ type: ActionTypes.startFetching });
         navigate(`/quiz/${quizId}/score/${score.createdAt}`);
       }}
     >
