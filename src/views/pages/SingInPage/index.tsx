@@ -9,31 +9,18 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { signinFormActions } from 'application/signinForm/framework/0-reducer';
+import { signInFormActions } from 'application/signinForm/framework/0-reducer';
 import { validateEmail } from 'application/signinForm/core/2-service';
 
 const SignInPage = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const { isLoading, emailErrMsg, passwordErrMsg } = useSelector(
-    (state: RootState) => state.signInForm
-  );
-  const [state, setState] = useState({ email: '', password: '' });
-
-  useEffect(() => {
-    if (!!emailErrMsg || !passwordErrMsg) {
-      dispatch(signinFormActions.resetError());
-    }
-  }, [state]);
+  const { isLoading, emailErrMsg, passwordErrMsg, email, password } =
+    useSelector((state: RootState) => state.signInForm);
 
   const handleSignIn = () => {
-    dispatch(
-      signinFormActions.signinInitiate({
-        email: state.email,
-        password: state.password,
-      })
-    );
+    dispatch(signInFormActions.signInStart());
   };
 
   return (
@@ -46,15 +33,12 @@ const SignInPage = () => {
           type='email'
           size='small'
           label='email'
-          value={state.email}
+          value={email}
           error={!!emailErrMsg}
           variant='outlined'
           required
           onChange={(e) =>
-            setState((currentState) => ({
-              ...currentState,
-              email: e.target.value,
-            }))
+            dispatch(signInFormActions.changeEmail(e.target.value))
           }
           fullWidth
           helperText={emailErrMsg}
@@ -64,15 +48,12 @@ const SignInPage = () => {
           type='password'
           size='small'
           label='password'
-          value={state.password}
+          value={password}
           error={!!passwordErrMsg}
           variant='outlined'
           required
           onChange={(e) =>
-            setState((currentState) => ({
-              ...currentState,
-              password: e.target.value,
-            }))
+            dispatch(signInFormActions.changePassword(e.target.value))
           }
           fullWidth
           helperText={passwordErrMsg}
@@ -89,10 +70,10 @@ const SignInPage = () => {
             variant='contained'
             fullWidth
             disabled={
-              !state.email ||
-              !state.password ||
-              !validateEmail(state.email) ||
-              state.password.length < 6
+              !email ||
+              !password ||
+              !validateEmail(email) ||
+              password.length < 6
             }
             onClick={handleSignIn}
           >

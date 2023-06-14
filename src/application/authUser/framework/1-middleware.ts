@@ -2,7 +2,7 @@ import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { Services } from 'infrastructure/services';
 
 import { authUserActions } from 'application/authUser/framework/0-reducer';
-import { signinFormActions } from 'application/signinForm/framework/0-reducer';
+import { signInFormActions } from 'application/signinForm/framework/0-reducer';
 import { changeEmailFormActions } from 'application/changeEmailForm/framework/0-reducer';
 import { RootState } from 'main';
 
@@ -13,11 +13,8 @@ const userMiddleware =
   async (action: AnyAction) => {
     next(action);
     switch (action.type) {
-      case 'signinForm/signinInitiate': {
-        const { email, password } = action.payload as {
-          email: string;
-          password: string;
-        };
+      case 'signinForm/signInStart': {
+        const { email, password } = (getState() as RootState).signInForm;
         const { authUser, emailErrMsg, passwordErrMsg } =
           await services.api.authUser.signInWithEmailAndPassword(
             email,
@@ -25,10 +22,10 @@ const userMiddleware =
           );
         if (authUser) {
           dispatch(authUserActions.setLoginUser(authUser));
-          dispatch(signinFormActions.signInSuccess());
+          dispatch(signInFormActions.signInSuccess());
         } else if (!!emailErrMsg || !!passwordErrMsg) {
           dispatch(
-            signinFormActions.signInFail({ emailErrMsg, passwordErrMsg })
+            signInFormActions.signInFail({ emailErrMsg, passwordErrMsg })
           );
         }
         break;

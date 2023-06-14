@@ -27,7 +27,6 @@ const ChangeEmailPage = () => {
   } = useSelector((state: RootState) => state.changeEmailForm);
 
   const handleChangeEmail = async () => {
-    console.log('!!');
     dispatch(changeEmailFormActions.updateEmailStart());
   };
   return (

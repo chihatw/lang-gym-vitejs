@@ -1,74 +1,10 @@
 import {
-  updateEmail,
   updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
-import {
-  collection,
-  DocumentData,
-  getDocs,
-  limit,
-  query,
-} from 'firebase/firestore';
-import { User } from '../../Model';
-import { auth, db } from '../../infrastructure/firebase';
 
-const COLLECTIONS = { users: 'users' };
-
-const LIMIT = 5;
-
-export const handleUpdateEmail = async (
-  email: string,
-  password: string,
-  newEmail: string
-): Promise<{
-  success?: boolean;
-  message: string;
-  emailErrMsg: string;
-  passwordErrMsg: string;
-  newEmailErrMsg: string;
-}> => {
-  try {
-    // https://firebase.google.com/docs/auth/web/manage-users#web-version-9_5
-    const provider = EmailAuthProvider;
-    const credential = provider.credential(email, password);
-    await reauthenticateWithCredential(auth.currentUser!, credential);
-    await updateEmail(auth.currentUser!, newEmail);
-
-    return {
-      success: true,
-      message: `メールアドレスを「${newEmail}」に変更しました。`,
-      emailErrMsg: '',
-      passwordErrMsg: '',
-      newEmailErrMsg: '',
-    };
-  } catch (error) {
-    console.warn(error);
-    let emailErrMsg = 'メールアドレスを変更できません。';
-    let passwordErrMsg = 'メールアドレスを変更できません。';
-    let newEmailErrMsg = 'メールアドレスを変更できません。';
-    switch ((error as any).code) {
-      case 'auth/user-mismatch':
-        emailErrMsg = '現在のメールアドレスが正しくありません。';
-        passwordErrMsg = '';
-        newEmailErrMsg = '';
-        break;
-      case 'auth/wrong-password':
-        emailErrMsg = '';
-        passwordErrMsg = 'パスワードが正しくありません。';
-        newEmailErrMsg = '';
-        break;
-      default:
-    }
-    return {
-      message: '',
-      emailErrMsg,
-      passwordErrMsg,
-      newEmailErrMsg,
-    };
-  }
-};
+import { auth } from '../../infrastructure/firebase';
 
 export const handleUpdatePassword = async (
   email: string,
@@ -123,23 +59,4 @@ export const handleUpdatePassword = async (
       newPasswordErrMsg,
     };
   }
-};
-export const getUsers = async (): Promise<User[]> => {
-  const users: User[] = [];
-  const q = query(collection(db, COLLECTIONS.users), limit(LIMIT));
-  console.log('get users');
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    users.push(buildUser(doc));
-  });
-  return users;
-};
-
-const buildUser = (doc: DocumentData) => {
-  const { displayname } = doc.data();
-  const user: User = {
-    id: doc.id,
-    displayname: displayname || '',
-  };
-  return user;
 };
