@@ -25,6 +25,7 @@ export const deleteStorageByPath = async (path: string) => {
 export const fetchStorageAudioBuffer = async (path: string) => {
   let storagePath = '';
   try {
+    console.log(`%cgetDownloadURL ${path}`, 'color:red');
     storagePath = await getDownloadURL(ref(storage, path));
   } catch (e) {
     console.warn(e);
@@ -35,6 +36,7 @@ export const fetchStorageAudioBuffer = async (path: string) => {
 };
 
 const fetchAudioBuffer = async (path: string) => {
+  console.log(`%cfetch ${path}`, 'color:red');
   const response = await fetch(path);
 
   if (!response) return;

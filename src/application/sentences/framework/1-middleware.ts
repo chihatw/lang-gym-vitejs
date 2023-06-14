@@ -57,7 +57,7 @@ const sentencesMiddleware =
               [articleId]: [],
             })
           );
-          dispatch(articlePageActions.initiated());
+          // dispatch(articlePageActions.initiated());
         }
         break;
       }

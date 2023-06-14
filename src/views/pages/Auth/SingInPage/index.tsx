@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { SignInPageComponent } from './SignInPageComponent';
 import { signIn } from '../../../../application/services/auth';
 
+// debug redux にする
 const SignInPage = () => {
   const [emailErrMsg, setEmailErrMsg] = useState<string>('');
   const [passwordErrMsg, setPasswordErrMsg] = useState<string>('');

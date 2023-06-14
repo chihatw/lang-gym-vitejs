@@ -11,6 +11,7 @@ const SentencePitches = ({
   audioBuffer: AudioBuffer | null;
 }) => {
   const theme = useTheme();
+
   return (
     <div
       style={{

@@ -51,7 +51,7 @@ const audioMiddleWare =
         );
 
         dispatch(audioActions.mergeFetchedAudioBuffers(audioBuffers));
-        dispatch(articlePageActions.initiated());
+        // dispatch(articlePageActions.initiated());
       }
       case 'audio/saveAudioBuffer': {
         const path = action.payload.path as string;

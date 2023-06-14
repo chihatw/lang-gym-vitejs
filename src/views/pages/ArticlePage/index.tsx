@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
@@ -17,12 +17,9 @@ const ArticlePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { articleId } = useParams();
-  const { isLoading, isChecking } = useSelector(
-    (state: RootState) => state.ariclePage
-  );
+  const { isChecking } = useSelector((state: RootState) => state.ariclePage);
 
   const articles = useSelector((state: RootState) => state.articles);
-  const sentences = useSelector((state: RootState) => state.sentences);
   const articleSentenceIds = useSelector(
     (state: RootState) => state.articleSentenceIds
   );
@@ -51,7 +48,7 @@ const ArticlePage = () => {
     return { article, audioBuffer };
   }, [articleId, articles, fetchedAudioBuffers]);
 
-  if (isLoading) return <SkeletonPage />;
+  if (!articleId) return <SkeletonPage />;
   if (!article) return <></>;
   if (isChecking) return <CheckPane audioBuffer={audioBuffer} />;
 
@@ -60,24 +57,10 @@ const ArticlePage = () => {
       <div style={{ height: 48 }} />
       <div style={{ paddingTop: 16 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
-          <ArticleHeader
-            article={article}
-            sentences={sentences}
-            audioBuffer={audioBuffer}
-            sentenceIds={sentenceIds}
-          />
-          {sentenceIds.map((sentenceId, index) => {
-            const sentence = sentences[sentenceId];
-            if (!sentence) return <React.Fragment key={index} />;
-            return (
-              <SentencePane
-                key={index}
-                article={article}
-                sentence={sentence}
-                audioBuffer={audioBuffer}
-              />
-            );
-          })}
+          <ArticleHeader />
+          {sentenceIds.map((sentenceId, index) => (
+            <SentencePane key={index} sentenceId={sentenceId} />
+          ))}
         </div>
       </div>
     </Container>

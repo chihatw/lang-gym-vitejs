@@ -1,5 +1,5 @@
 export interface IArticlePage {
-  isLoading: boolean;
+  articleId: string;
   isRecording: boolean;
   isChecking: boolean;
   recordSentenceId: string;

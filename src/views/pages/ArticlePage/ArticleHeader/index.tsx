@@ -4,20 +4,31 @@ import { Divider } from '@mui/material';
 import Title from './Title';
 import CreatedAt from './CreatedAt';
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
-import { IArticle } from 'application/articles/core/0-interface';
-import { ISentence } from 'application/sentences/core/0-interface';
 
-const ArticleHeader = ({
-  article,
-  sentences,
-  audioBuffer,
-  sentenceIds,
-}: {
-  article: IArticle;
-  sentences: { [id: string]: ISentence };
-  sentenceIds: string[];
-  audioBuffer: AudioBuffer | null;
-}) => {
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
+import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
+
+const ArticleHeader = () => {
+  const { articleId } = useSelector((state: RootState) => state.ariclePage);
+  const articles = useSelector((state: RootState) => state.articles);
+  const articleSentenceIds = useSelector(
+    (state: RootState) => state.articleSentenceIds
+  );
+  const { fetchedAudioBuffers } = useSelector(
+    (state: RootState) => state.audio
+  );
+  const sentences = useSelector((state: RootState) => state.sentences);
+
+  const article = useMemo(() => articles[articleId], [articleId, articles]);
+  const sentenceIds = useMemo(
+    () => articleSentenceIds[articleId],
+    [articleId, articleSentenceIds]
+  );
+  const audioBuffer = useMemo(() => {
+    const path = ARTILCE_STORAGE_PATH + articleId;
+    return fetchedAudioBuffers[path] || null;
+  }, [articleId, fetchedAudioBuffers]);
   const { start, end } = useMemo(() => {
     try {
       return {
@@ -28,6 +39,8 @@ const ArticleHeader = ({
       return { start: 0, end: 0 };
     }
   }, [sentences, sentenceIds]);
+
+  if (!article) return <></>;
 
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>

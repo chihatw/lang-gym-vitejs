@@ -108,6 +108,7 @@ const articlesMiddleware =
 
         // fetch済みのarticleIdの場合、audioBuffer と Sentences を取得
         if (articleIds.includes(articleId)) {
+          dispatch(articlePageActions.setArticleId(articleId));
           dispatch(
             articlePageActions.getArticleAudioBufferStart(
               ARTILCE_STORAGE_PATH + articleId
@@ -119,13 +120,14 @@ const articlesMiddleware =
 
         // article の取得
         const article = await services.api.articles.fetchArtice(uid, articleId);
+        dispatch(articlePageActions.setArticleId(article?.id || ''));
         dispatch(
           articlesActions.concatArticles({ [articleId]: article || null })
         );
 
         // article がない場合、終了
         if (!article) {
-          dispatch(articlePageActions.initiated());
+          // dispatch(articlePageActions.initiated(''));
           break;
         }
 

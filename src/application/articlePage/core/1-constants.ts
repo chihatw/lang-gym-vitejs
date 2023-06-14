@@ -1,9 +1,9 @@
 import { IArticlePage } from './0-interface';
 
 export const initialState: IArticlePage = {
-  isLoading: false,
-  recordSentenceId: '',
-  isRecording: false,
+  articleId: '',
   isChecking: false,
+  isRecording: false,
+  recordSentenceId: '',
   playedRecordedAudio: false,
 };
