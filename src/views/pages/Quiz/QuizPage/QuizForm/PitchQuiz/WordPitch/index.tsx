@@ -17,7 +17,6 @@ const WordPitch = ({
   dispatch: React.Dispatch<QuizFormState>;
 }) => {
   const disabled = question.disableds.includes(wordIndex);
-  // todo check split
   const wordPitchStr = question.inputPitchStr.split(' ')[wordIndex];
   const wordPitches = string2PitchesArray(wordPitchStr)[0];
   return (

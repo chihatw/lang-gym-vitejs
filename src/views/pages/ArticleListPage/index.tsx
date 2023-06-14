@@ -14,7 +14,7 @@ const ArticleListPage = () => {
 
   const theme = useTheme();
 
-  const { articleIds, initializing, hasMore, startAfter } = useSelector(
+  const { articleIds, initializing, hasMore } = useSelector(
     (state: RootState) => state.articleList
   );
 

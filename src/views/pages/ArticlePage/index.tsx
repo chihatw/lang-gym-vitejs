@@ -12,6 +12,7 @@ import { RootState } from 'main';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 import CheckPane from './CheckPane';
+import { getSentenceIds } from 'application/sentences/core/2-services';
 
 const ArticlePage = () => {
   const navigate = useNavigate();
@@ -20,9 +21,7 @@ const ArticlePage = () => {
   const { isChecking } = useSelector((state: RootState) => state.ariclePage);
 
   const articles = useSelector((state: RootState) => state.articles);
-  const articleSentenceIds = useSelector(
-    (state: RootState) => state.articleSentenceIds
-  );
+  const sentences = useSelector((state: RootState) => state.sentences);
   const { fetchedAudioBuffers } = useSelector(
     (state: RootState) => state.audio
   );
@@ -37,8 +36,8 @@ const ArticlePage = () => {
   }, [articleId]);
 
   const sentenceIds = useMemo(
-    () => articleSentenceIds[articleId || ''] || [],
-    [articleId, articleSentenceIds]
+    () => (articleId ? getSentenceIds(articleId, sentences) : []),
+    [articleId, sentences]
   );
 
   const { article, audioBuffer } = useMemo(() => {

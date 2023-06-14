@@ -8,13 +8,11 @@ import AudioBufferSlider from 'views/components/AudioBufferSlider';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
+import { getSentenceIds } from 'application/sentences/core/2-services';
 
 const ArticleHeader = () => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
   const articles = useSelector((state: RootState) => state.articles);
-  const articleSentenceIds = useSelector(
-    (state: RootState) => state.articleSentenceIds
-  );
   const { fetchedAudioBuffers } = useSelector(
     (state: RootState) => state.audio
   );
@@ -22,8 +20,8 @@ const ArticleHeader = () => {
 
   const article = useMemo(() => articles[articleId], [articleId, articles]);
   const sentenceIds = useMemo(
-    () => articleSentenceIds[articleId],
-    [articleId, articleSentenceIds]
+    () => getSentenceIds(articleId, sentences),
+    [articleId, sentences]
   );
   const audioBuffer = useMemo(() => {
     const path = ARTILCE_STORAGE_PATH + articleId;

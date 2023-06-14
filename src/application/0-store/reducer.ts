@@ -6,24 +6,30 @@ import articles from 'application/articles/framework/0-reducer';
 import articleList from 'application/articleList/framework/0-reducer';
 import topPage from 'application/topPage/framework/0-reducer';
 import ariclePage from 'application/articlePage/framework/0-reducer';
-import articleSentenceIds from 'application/articleSentenceIds/framework/0-reducer';
 import sentences from 'application/sentences/framework/0-reducer';
 import audio from 'application/audio/framework/0-reducer';
 import updateEmailForm from 'application/updateEmailForm/framework/0-reducer';
 import updatePasswordForm from 'application/updatePasswordForm/framework/0-reducer';
+import quizList from 'application/quizList/framework/0-reducer';
+import quizScores from 'application/quizScores/framework/0-reducer';
+import quizQuestions from 'application/quizQuestions/framework/0-reducer';
+import quizzes from 'application/quizzes/framework/0-reducer';
 
 export default {
   authUser,
   signInForm,
+  updateEmailForm,
+  updatePasswordForm,
   users,
   userList,
   articles,
   articleList,
   topPage,
   ariclePage,
-  articleSentenceIds,
   sentences,
   audio,
-  updateEmailForm,
-  updatePasswordForm,
+  quizzes,
+  quizList,
+  quizScores,
+  quizQuestions,
 };

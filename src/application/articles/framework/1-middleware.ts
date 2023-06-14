@@ -1,6 +1,7 @@
 import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
+
 import { articlesActions } from './0-reducer';
 import { topPageActions } from 'application/topPage/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';

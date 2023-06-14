@@ -60,7 +60,6 @@ const App = () => {
       const quizzes = !!state.quizzes.length
         ? state.quizzes
         : await getQuizzes(currentUid);
-
       isFetched.current = true;
       dispatch({
         type: ActionTypes.initializeApp,

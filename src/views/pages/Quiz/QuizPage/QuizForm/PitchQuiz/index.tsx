@@ -37,7 +37,6 @@ const PitchQuiz = ({
       </div>
       <SentencePitchLine pitchStr={question.inputPitchStr} />
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {/* todo check split */}
         {question.inputPitchStr.split(' ').map((_, wordIndex) => (
           <WordPitch
             key={wordIndex}

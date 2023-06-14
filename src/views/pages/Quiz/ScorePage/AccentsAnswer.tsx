@@ -21,9 +21,6 @@ const AccentsAnswer = ({
   const score = quiz.scores[Number(scoreId)];
   const answer = score.pitchAnswers[questionIndex];
 
-  // const correctPitchesArray = string2PitchesArray(question.pitchStr);
-  // const answeredPitchesArray = string2PitchesArray(answer);
-
   const isCorrect = question.pitchStr === answer;
   if (isCorrect) {
     return (
@@ -36,9 +33,7 @@ const AccentsAnswer = ({
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        // todo check split
         {answer.split(' ').map((answeredWordPitchStr, wordIndex) => {
-          // todo check split
           const correctWordPitchStr = question.pitchStr.split(' ')[wordIndex];
           const isCorrectWord = answeredWordPitchStr === correctWordPitchStr;
           return (

@@ -46,7 +46,6 @@ export const getBlob = async (downloadURL: string) => {
 };
 
 export const getQuizzes = async (uid: string): Promise<Quiz[]> => {
-  let quizzes: Quiz[] = [];
   let q = query(
     collection(db, COLLECTIONS.quizzes),
     where('uid', '==', uid),
@@ -55,6 +54,8 @@ export const getQuizzes = async (uid: string): Promise<Quiz[]> => {
     limit(10)
   );
   let querySnapshot = await getDocs(q);
+
+  let quizzes: Quiz[] = [];
   querySnapshot.forEach((doc) => {
     quizzes.push(buildQuiz(doc));
   });
@@ -253,7 +254,6 @@ export const buildQuizFormState = (
 };
 
 const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
-  // todo check split
   const inputPitchStr = pitchStr
     .split(' ')
     .map((wordPitchStr, wordIndex) => {
@@ -263,7 +263,6 @@ const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
       } else {
         return wordPitchStr.replace('＼', '');
       }
-      // todo check join
     })
     .join(' ');
   return inputPitchStr;

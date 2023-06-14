@@ -101,6 +101,7 @@ const PageFooter = () => {
       <BottomNavigationAction
         label='小テスト'
         icon={
+          // todo コンポーネントを分けて、quizzes の取得
           <Badge
             className={css({
               '.MuiBadge-badge': {

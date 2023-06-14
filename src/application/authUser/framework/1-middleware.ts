@@ -6,6 +6,8 @@ import { signInFormActions } from 'application/signinForm/framework/0-reducer';
 import { updateEmailFormActions } from 'application/updateEmailForm/framework/0-reducer';
 import { RootState } from 'main';
 import { updatePasswordFormActions } from 'application/updatePasswordForm/framework/0-reducer';
+import { articleListActions } from 'application/articleList/framework/0-reducer';
+import { topPageActions } from 'application/topPage/framework/0-reducer';
 
 const userMiddleware =
   (services: Services): Middleware =>
@@ -84,6 +86,8 @@ const userMiddleware =
       case 'userList/setSelectedUid': {
         const currentUid = action.payload as string;
         dispatch(authUserActions.setCurrentUid(currentUid));
+        dispatch(articleListActions.resetState());
+        dispatch(topPageActions.resetState());
         break;
       }
     }
