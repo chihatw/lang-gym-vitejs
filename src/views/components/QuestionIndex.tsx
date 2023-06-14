@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
 
 const QuestionIndex = ({ index }: { index: number }) => {
   const theme = useTheme();

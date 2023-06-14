@@ -1,4 +1,4 @@
-import { Syllable } from '../../../../Model';
+import { Syllable } from '../../../Model';
 
 // type は pitch と rhythm に簡略化？
 export const QuizTypes = {

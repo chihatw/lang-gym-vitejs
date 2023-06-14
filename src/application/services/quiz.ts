@@ -19,7 +19,7 @@ import { db, storage } from '../../infrastructure/firebase';
 import {
   QuizFormState,
   QuizFormQuestion,
-} from '../../views/pages/Quiz/QuizPage/Model';
+} from '../../views/pages/QuizPage/Model';
 import string2PitchesArray from 'string2pitches-array';
 import { getDownloadURL, ref } from 'firebase/storage';
 import pitchesArray2String from 'pitches-array2string';

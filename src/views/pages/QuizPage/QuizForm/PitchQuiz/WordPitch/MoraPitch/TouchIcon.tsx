@@ -3,7 +3,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
 import React from 'react';
-import { changePitchesArray } from '../../../../../../../../application/services/quiz';
+import { changePitchesArray } from '../../../../../../../application/services/quiz';
 import MoraSeparater from './MoraSeparater';
 import { QuizFormState } from '../../../../Model';
 

@@ -1,9 +1,8 @@
 import { Container } from '@mui/material';
 import React from 'react';
-import QuestionIndex from '../../commons/QuestionIndex';
-import QuizPageHeader from '../../commons/QuizPageHeader';
+import QuestionIndex from '../../../components/QuestionIndex';
+import QuizPageHeader from '../../../components/QuizPageHeader';
 import { QuizFormState } from '../Model';
-// import { QuizFormAction } from '../Update';
 import PitchQuiz from './PitchQuiz';
 import QuizPageFooter from './QuizPageFooter';
 import RhythmQuiz from './RhythmQuiz';

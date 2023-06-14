@@ -10,7 +10,7 @@ import ArticlePage from 'views/pages/ArticlePage';
 import UnAnsweredQuizListPage from 'views/pages/UnAnsweredQuizListPage';
 import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
 import ScorePage from 'views/pages/Quiz/ScorePage';
-import QuizPage from 'views/pages/Quiz/QuizPage';
+import QuizPage from 'views/pages/QuizPage';
 import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
 import WorkoutPage from 'views/pages/Workout/WorkoutPage';
 import AccountPage from 'views/pages/AccountPage';

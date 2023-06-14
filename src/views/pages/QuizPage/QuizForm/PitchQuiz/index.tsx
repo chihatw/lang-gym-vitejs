@@ -1,9 +1,9 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import AudioSlider from '../../../../../components/AudioSlider';
+import AudioSlider from '../../../../components/AudioSlider';
 import { QuizFormQuestion, QuizFormState } from '../../Model';
 import WordPitch from './WordPitch';
-import SentencePitchLine from '../../../../../components/SentencePitchLine';
+import SentencePitchLine from '../../../../components/SentencePitchLine';
 
 const PitchQuiz = ({
   state,

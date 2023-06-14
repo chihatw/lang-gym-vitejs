@@ -1,13 +1,13 @@
 import * as R from 'ramda';
 import { IconButton } from '@mui/material';
 import { useContext } from 'react';
-import { AppContext } from '../../../../../..';
-import { State, Syllable } from '../../../../../../../Model';
+import { AppContext } from '../../../../..';
+import { State, Syllable } from '../../../../../../Model';
 import {
   getKanaSpecialMora,
   SPECIAL_MORAS,
-} from '../../../../../../../application/services/quiz';
-import { ActionTypes } from '../../../../../../../Update';
+} from '../../../../../../application/services/quiz';
+import { ActionTypes } from '../../../../../../Update';
 
 const Selector = ({
   questionIndex,

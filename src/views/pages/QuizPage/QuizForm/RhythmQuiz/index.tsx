@@ -1,7 +1,7 @@
 import React from 'react';
 
 import RhythmMonitor from './RhythmMonitor';
-import SpeakerButton from '../../../../../components/SpeakerButton';
+import SpeakerButton from '../../../../components/SpeakerButton';
 import SpecialMoraSelector from './SpecialMoraSelector';
 import { QuizFormState } from '../../Model';
 

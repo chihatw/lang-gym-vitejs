@@ -2,8 +2,8 @@ import * as R from 'ramda';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useContext, useEffect, useReducer, useState } from 'react';
 
-import { Quiz, QuizScore, QuizScores, State } from '../../../../Model';
-import { ActionTypes } from '../../../../Update';
+import { Quiz, QuizScore, QuizScores, State } from '../../../Model';
+import { ActionTypes } from '../../../Update';
 import {
   buildQuizFormState,
   calcPitchesQuiz,
@@ -11,9 +11,9 @@ import {
   getBlob,
   rhythmAnswerToString,
   setQuiz,
-} from '../../../../application/services/quiz';
-import SkeletonPage from '../../../components/SkeletonPage';
-import { AppContext } from '../../..';
+} from '../../../application/services/quiz';
+import SkeletonPage from '../../components/SkeletonPage';
+import { AppContext } from '../..';
 import QuizForm from './QuizForm';
 import { INITIAL_QUIZ_FORM_STATE, QuizFormState } from './Model';
 
