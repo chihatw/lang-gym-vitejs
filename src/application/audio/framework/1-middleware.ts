@@ -2,7 +2,6 @@ import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { audioActions } from './0-reducer';
 import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
-import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 
 const audioMiddleWare =
   (services: Services): Middleware =>
@@ -11,7 +10,7 @@ const audioMiddleWare =
   async (action: AnyAction) => {
     next(action);
     switch (action.type) {
-      case 'articlePage/getArticleAudioBufferStart': {
+      case 'audio/getAudioBufferStart': {
         const path = action.payload as string;
         const { fetchedAudioBuffers } = (getState() as RootState).audio;
 
@@ -31,7 +30,7 @@ const audioMiddleWare =
 
         break;
       }
-      case 'articlePage/getAssignmentAudioBuffersStart': {
+      case 'audio/getAudioBuffersStart': {
         const paths = action.payload as string[];
         const { fetchedAudioBuffers } = (getState() as RootState).audio;
 
@@ -51,7 +50,6 @@ const audioMiddleWare =
         );
 
         dispatch(audioActions.mergeFetchedAudioBuffers(audioBuffers));
-        // dispatch(articlePageActions.initiated());
       }
       case 'audio/saveAudioBuffer': {
         const path = action.payload.path as string;

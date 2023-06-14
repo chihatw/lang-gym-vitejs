@@ -5,6 +5,8 @@ const audioSlice = createSlice({
   name: 'audio',
   initialState: initialState,
   reducers: {
+    getAudioBufferStart: (state, { payload }: { payload: string }) => state,
+    getAudioBuffersStart: (state, { payload }: { payload: string[] }) => state,
     mergeFetchedAudioBuffers: (
       state,
       { payload }: { payload: { [path: string]: AudioBuffer | null } }

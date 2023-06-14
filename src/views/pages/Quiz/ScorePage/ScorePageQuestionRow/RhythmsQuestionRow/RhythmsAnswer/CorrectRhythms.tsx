@@ -1,18 +1,16 @@
-import React from 'react';
-import { Quiz, Syllable } from '../../../../../Model';
+import { useMemo } from 'react';
 
-const CorrectRhythms = ({
-  quiz,
-  questionIndex,
-}: {
-  quiz: Quiz;
-  questionIndex: number;
-}) => {
-  const question = quiz.questions[questionIndex];
-  const syllablesArray: Syllable[][] = [];
-  for (const syllables of Object.values(question.syllables)) {
-    syllablesArray.push(syllables);
-  }
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
+
+const CorrectRhythms = ({ questionId }: { questionId: string }) => {
+  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
+
+  const question = useMemo(
+    () => quizQuestions[questionId] || null,
+    [questionId, quizQuestions]
+  );
+  const syllablesArray = Object.values(question.syllables);
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>

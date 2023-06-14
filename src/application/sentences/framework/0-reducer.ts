@@ -6,6 +6,7 @@ const sentencesSlice = createSlice({
   name: 'sentences',
   initialState,
   reducers: {
+    getSentencesStart: (state, { payload }: { payload: string }) => state,
     mergeSentences: (
       state,
       { payload }: { payload: { [id: string]: ISentence } }

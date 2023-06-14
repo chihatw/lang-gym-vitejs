@@ -1,9 +1,8 @@
-import React, { createContext, useEffect, useReducer, useRef } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 
-import { Action, ActionTypes, reducer } from '../Update';
+import { Action, reducer } from '../Update';
 import { INITIAL_STATE, State } from '../Model';
 import { auth } from '../infrastructure/firebase';
-import { getQuizzes } from '../application/services/quiz';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
 import ArticleListPage from 'views/pages/ArticleListPage';
@@ -31,12 +30,9 @@ export const AppContext = createContext<{
 
 const App = () => {
   const _dispatch = useDispatch(); // todo rename
-  const { initializing, currentUid } = useSelector(
-    (state: RootState) => state.authUser
-  );
+  const { initializing } = useSelector((state: RootState) => state.authUser);
 
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const isFetched = useRef(false);
 
   // 認証判定
   useEffect(() => {
@@ -52,22 +48,6 @@ const App = () => {
       }
     });
   }, []);
-
-  // 初期値取得（作文、問題、記憶問題）
-  useEffect(() => {
-    if (isFetched.current) return;
-    const fetchData = async () => {
-      const quizzes = !!state.quizzes.length
-        ? state.quizzes
-        : await getQuizzes(currentUid);
-      isFetched.current = true;
-      dispatch({
-        type: ActionTypes.initializeApp,
-        payload: { quizzes },
-      });
-    };
-    fetchData();
-  }, [state.quizzes, currentUid]);
 
   if (initializing) return <></>;
 

@@ -115,7 +115,6 @@ export const calcPitchesQuiz = (questions: QuizFormQuestion[]) => {
   let points = 0;
 
   questions.forEach((question) => {
-    //  todo check split
     question.inputPitchStr.split(' ').forEach((wordPitchStr, wordIndex) => {
       // アクセント固定は採点しない
       if (question.disableds.includes(wordIndex)) return;

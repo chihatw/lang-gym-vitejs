@@ -1,10 +1,10 @@
 import { AnyAction, Middleware } from '@reduxjs/toolkit';
-import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
 import { sentencesActions } from './0-reducer';
 import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
 import { getSentenceIds } from '../core/2-services';
+import { audioActions } from 'application/audio/framework/0-reducer';
 
 const sentencesMiddleware =
   (services: Services): Middleware =>
@@ -13,7 +13,7 @@ const sentencesMiddleware =
   async (action: AnyAction) => {
     next(action);
     switch (action.type) {
-      case 'articlePage/getSentencesStart': {
+      case 'sentences/getSentencesStart': {
         const articleId = action.payload as string;
         const sentences = (getState() as RootState).sentences;
         const sentenceIds = getSentenceIds(articleId, sentences);
@@ -23,7 +23,7 @@ const sentencesMiddleware =
           const paths = sentenceIds.map(
             (sentenceId) => ASSIGNMENTS_STORAGE_PATH + sentenceId
           );
-          dispatch(articlePageActions.getAssignmentAudioBuffersStart(paths));
+          dispatch(audioActions.getAudioBuffersStart(paths));
           return;
         }
 
@@ -40,7 +40,7 @@ const sentencesMiddleware =
           const paths = sentenceIds.map(
             (sentenceId) => ASSIGNMENTS_STORAGE_PATH + sentenceId
           );
-          dispatch(articlePageActions.getAssignmentAudioBuffersStart(paths));
+          dispatch(audioActions.getAudioBuffersStart(paths));
         }
         break;
       }

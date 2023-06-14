@@ -7,6 +7,8 @@ import { topPageActions } from 'application/topPage/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
+import { audioActions } from 'application/audio/framework/0-reducer';
+import { sentencesActions } from 'application/sentences/framework/0-reducer';
 
 const articlesMiddleware =
   (services: Services): Middleware =>
@@ -111,11 +113,9 @@ const articlesMiddleware =
         if (articleIds.includes(articleId)) {
           dispatch(articlePageActions.setArticleId(articleId));
           dispatch(
-            articlePageActions.getArticleAudioBufferStart(
-              ARTILCE_STORAGE_PATH + articleId
-            )
+            audioActions.getAudioBufferStart(ARTILCE_STORAGE_PATH + articleId)
           );
-          dispatch(articlePageActions.getSentencesStart(articleId));
+          dispatch(sentencesActions.getSentencesStart(articleId));
           return;
         }
 
@@ -127,18 +127,13 @@ const articlesMiddleware =
         );
 
         // article がない場合、終了
-        if (!article) {
-          // dispatch(articlePageActions.initiated(''));
-          break;
-        }
+        if (!article) break;
 
         // articleがあれば、articleIdの場合、audioBuffer と Sentences を取得
         dispatch(
-          articlePageActions.getArticleAudioBufferStart(
-            ARTILCE_STORAGE_PATH + article.id
-          )
+          audioActions.getAudioBufferStart(ARTILCE_STORAGE_PATH + article.id)
         );
-        dispatch(articlePageActions.getSentencesStart(article.id));
+        dispatch(sentencesActions.getSentencesStart(article.id));
         break;
       }
       default:

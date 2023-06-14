@@ -32,6 +32,7 @@ const ArticlePage = () => {
 
   useEffect(() => {
     if (!articleId) return;
+    // article, sentences, audioBuffer, assignmentAudioBuffers の取得
     dispatch(articlePageActions.initiate(articleId));
   }, [articleId]);
 
@@ -40,12 +41,15 @@ const ArticlePage = () => {
     [articleId, sentences]
   );
 
-  const { article, audioBuffer } = useMemo(() => {
-    const article = articles[articleId!] || null;
+  const article = useMemo(
+    () => articles[articleId!] || null,
+    [articleId, articles]
+  );
+
+  const audioBuffer = useMemo(() => {
     const path = ARTILCE_STORAGE_PATH + articleId;
-    const audioBuffer = fetchedAudioBuffers[path] || null;
-    return { article, audioBuffer };
-  }, [articleId, articles, fetchedAudioBuffers]);
+    return fetchedAudioBuffers[path] || null;
+  }, [articleId, fetchedAudioBuffers]);
 
   if (!articleId) return <SkeletonPage />;
   if (!article) return <></>;

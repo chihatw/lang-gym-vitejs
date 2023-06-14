@@ -6,6 +6,8 @@ import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
 import { quizzesActions } from './0-reducer';
 import { getAnsweredIds, getUnansweredIds } from '../core/2-services';
+import { scorePageActions } from 'application/scorePage/framework/0-reducer';
+import { audioActions } from 'application/audio/framework/0-reducer';
 
 const quizzesMiddleware =
   (services: Services): Middleware =>
@@ -27,6 +29,47 @@ const quizzesMiddleware =
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
 
+        break;
+      }
+      case 'scorePage/initiate': {
+        const { quizId, scoreCreatedAt } = action.payload as {
+          quizId: string;
+          scoreCreatedAt: string;
+        };
+
+        const quizzes = (getState() as RootState).quizzes;
+        const quizIds = Object.keys(quizzes);
+
+        // fetch済みの quizId の場合
+        if (quizIds.includes(quizId)) {
+          dispatch(
+            scorePageActions.setQuizIdScoreCreatedAt({ quizId, scoreCreatedAt })
+          );
+          const quiz = quizzes[quizId];
+          if (!!quiz && quiz.downloadURL) {
+            dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+          }
+          return;
+        }
+
+        // quiz の取得
+        const { quiz, quizScores, quizQuestions } =
+          await services.api.quizzes.fetchQuiz(quizId);
+
+        dispatch(
+          scorePageActions.setQuizIdScoreCreatedAt({ quizId, scoreCreatedAt })
+        );
+
+        dispatch(quizzesActions.mergeQuizzes({ [quizId]: quiz }));
+
+        if (!quiz) break;
+
+        dispatch(quizScoresActions.mergeQuizScores(quizScores));
+        dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
+
+        if (!!quiz && quiz.downloadURL) {
+          dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+        }
         break;
       }
       default:

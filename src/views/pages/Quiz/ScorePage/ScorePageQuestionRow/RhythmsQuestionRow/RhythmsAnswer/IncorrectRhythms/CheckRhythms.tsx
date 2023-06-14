@@ -1,30 +1,52 @@
+import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
-import React from 'react';
-import { Quiz, QuizScore, Syllable } from '../../../../../../Model';
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'main';
 
 const CheckRhythms = ({
-  score,
-  quiz,
-  questionIndex,
+  index,
+  questionId,
 }: {
-  score: QuizScore;
-  quiz: Quiz;
-  questionIndex: number;
+  index: number;
+  questionId: string;
 }) => {
-  const question = quiz.questions[questionIndex];
-  const syllablesArray: Syllable[][] = [];
-  for (const syllables of Object.values(question.syllables)) {
-    syllablesArray.push(syllables);
-  }
-
-  const { rhythmAnswers } = score;
-
-  const answer = rhythmAnswers[questionIndex];
-  const answeredSpecialMoraArray = answer
-    .split('\n')
-    .map((word) => word.split(','));
-
   const theme = useTheme();
+  const { quizId, scoreCreatedAt } = useSelector(
+    (state: RootState) => state.scorePage
+  );
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quizScores = useSelector((state: RootState) => state.quizScores);
+  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
+
+  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
+  const score = useMemo(
+    () =>
+      quiz
+        ? quiz.scoreIds
+            .map((scoreId) => quizScores[scoreId])
+            .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
+        : null,
+    [scoreCreatedAt, quiz]
+  );
+  const question = useMemo(
+    () => quizQuestions[questionId] || null,
+    [questionId, quizQuestions]
+  );
+
+  const syllablesArray = useMemo(
+    () => Object.values(question.syllables),
+    [question]
+  );
+
+  const answeredSpecialMoraArray = useMemo(
+    () =>
+      score
+        ? score.rhythmAnswers[index].split('\n').map((word) => word.split(','))
+        : [],
+    []
+  );
+
   return (
     <div
       style={{

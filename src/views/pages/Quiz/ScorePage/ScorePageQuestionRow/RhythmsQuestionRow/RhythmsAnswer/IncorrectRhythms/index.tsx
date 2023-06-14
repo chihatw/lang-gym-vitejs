@@ -1,35 +1,56 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
-import { Quiz, QuizScore, Syllable } from '../../../../../../Model';
+import { useMemo } from 'react';
 import CheckRhythms from './CheckRhythms';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 const IncorrectRhythms = ({
-  quiz,
-  score,
-  questionIndex,
+  index,
+  questionId,
 }: {
-  quiz: Quiz;
-  score: QuizScore;
-  questionIndex: number;
+  index: number;
+  questionId: string;
 }) => {
   const theme = useTheme();
+  const { quizId, scoreCreatedAt } = useSelector(
+    (state: RootState) => state.scorePage
+  );
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quizScores = useSelector((state: RootState) => state.quizScores);
+  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
 
-  const question = quiz.questions[questionIndex];
-  const syllablesArray: Syllable[][] = [];
-  for (const syllables of Object.values(question.syllables)) {
-    syllablesArray.push(syllables);
-  }
+  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
+  const score = useMemo(
+    () =>
+      !!quiz
+        ? quiz.scoreIds
+            .map((scoreId) => quizScores[scoreId])
+            .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
+        : null,
+    [scoreCreatedAt, quiz]
+  );
 
-  const { rhythmAnswers } = score;
+  const question = useMemo(
+    () => quizQuestions[questionId] || null,
+    [questionId, quizQuestions]
+  );
 
-  const answer = rhythmAnswers[questionIndex];
-  const answeredSpecialMoraArray = answer
-    .split('\n')
-    .map((word) => word.split(','));
+  const syllablesArray = useMemo(
+    () => Object.values(question.syllables),
+    [question]
+  );
+
+  const answeredSpecialMoraArray = useMemo(
+    () =>
+      !!score
+        ? score.rhythmAnswers[index].split('\n').map((word) => word.split(','))
+        : [],
+    [score, index]
+  );
 
   return (
     <div style={{ display: 'grid', rowGap: 8 }}>
-      <CheckRhythms quiz={quiz} questionIndex={questionIndex} score={score} />
+      <CheckRhythms index={index} questionId={questionId} />
       <div style={{ display: 'grid', rowGap: 8, padding: '0 8px' }}>
         <div
           style={{

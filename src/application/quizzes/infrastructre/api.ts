@@ -1,5 +1,4 @@
 import {
-  deleteDoc,
   doc,
   query,
   where,
@@ -8,7 +7,7 @@ import {
   DocumentData,
   orderBy,
   limit,
-  setDoc,
+  getDoc,
 } from '@firebase/firestore';
 import { db } from 'infrastructure/firebase';
 import { QUIZZES_STORE_COLLECTION } from '../core/1-constants';
@@ -18,7 +17,29 @@ import { addTempIdAndSortByCreatedAt } from 'application/quizScores/core/2-servi
 import { IQuizQuestion } from 'application/quizQuestions/core/0-interface';
 import { addTempIdAndSortByIndex } from 'application/quizQuestions/core/2-services';
 
+export const fetchQuiz = async (
+  quizId: string
+): Promise<{
+  quiz: IQuiz | null;
+  quizScores: { [id: string]: IQuizScore };
+  quizQuestions: { [id: string]: IQuizQuestion };
+}> => {
+  console.log(`%cfetch ${QUIZZES_STORE_COLLECTION}`, 'color:red');
+
+  const docSnapshot = await getDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId));
+
+  if (!docSnapshot.exists()) {
+    console.log(`%cno quizzes found`, 'color:red');
+    return { quiz: null, quizScores: {}, quizQuestions: {} };
+  }
+
+  const { quiz, quizScores, quizQuestions } = buildQuiz(docSnapshot);
+
+  return { quiz, quizScores, quizQuestions };
+};
+
 export const fetchQuizzes = async (uid: string) => {
+  console.log(`%cfetch ${QUIZZES_STORE_COLLECTION}`, 'color:red');
   const q = query(
     collection(db, QUIZZES_STORE_COLLECTION),
     where('uid', '==', uid),

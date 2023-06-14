@@ -1,7 +1,7 @@
 import { GiSpeaker } from 'react-icons/gi';
 import { IconButton } from '@mui/material';
-import React, { useRef, useState } from 'react';
-import { createSourceNode } from '../../../../application/services/utils';
+import { useRef, useState } from 'react';
+import { createSourceNode } from '../../application/services/utils';
 
 const SpeakerButton = ({
   start,
@@ -16,7 +16,6 @@ const SpeakerButton = ({
   const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
 
   const play = async () => {
-    if (!quizBlob) return;
     const sourceNode = await createSourceNode(quizBlob);
     sourceNode.onended = () => {
       setIsPlaying(false);

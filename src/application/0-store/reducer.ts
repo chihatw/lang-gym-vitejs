@@ -14,6 +14,7 @@ import quizList from 'application/quizList/framework/0-reducer';
 import quizScores from 'application/quizScores/framework/0-reducer';
 import quizQuestions from 'application/quizQuestions/framework/0-reducer';
 import quizzes from 'application/quizzes/framework/0-reducer';
+import scorePage from 'application/scorePage/framework/0-reducer';
 
 export default {
   authUser,
@@ -32,4 +33,5 @@ export default {
   quizList,
   quizScores,
   quizQuestions,
+  scorePage,
 };

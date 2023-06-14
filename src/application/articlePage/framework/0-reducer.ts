@@ -6,13 +6,6 @@ const articlePageSlice = createSlice({
   initialState,
   reducers: {
     initiate: (state, { payload }: { payload: string }) => state,
-    getArticleAudioBufferStart: (state, { payload }: { payload: string }) =>
-      state,
-    getSentencesStart: (state, { payload }: { payload: string }) => state,
-    getAssignmentAudioBuffersStart: (
-      state,
-      { payload }: { payload: string[] }
-    ) => state,
     setArticleId: (state, { payload }: { payload: string }) => {
       state.articleId = payload;
     },

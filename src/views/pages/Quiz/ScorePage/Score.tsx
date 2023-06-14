@@ -1,8 +1,10 @@
 import { css, keyframes } from '@emotion/css';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { State } from '../../../../Model';
+import { useSelector } from 'react-redux';
+import { RootState } from 'main';
 
 const barberAnimation = keyframes`
   0% {
@@ -13,16 +15,25 @@ const barberAnimation = keyframes`
   }
 `;
 
-const Score = ({ state }: { state: State }) => {
-  const { scoreId, quizId } = useParams();
-  if (!scoreId || !quizId) return <></>;
-
-  const { quizzes } = state;
-  const quiz = quizzes.find((item) => item.id === quizId);
-  if (!quiz) return <></>;
-  const score = quiz.scores[Number(scoreId)];
-
+const Score = () => {
   const theme = useTheme();
+  const { quizId, scoreCreatedAt } = useSelector(
+    (state: RootState) => state.scorePage
+  );
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quizScores = useSelector((state: RootState) => state.quizScores);
+
+  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
+  const score = useMemo(() => {
+    if (!quiz) return null;
+    return (
+      quiz.scoreIds
+        .map((scoreId) => quizScores[scoreId])
+        .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
+    );
+  }, [scoreCreatedAt, quiz]);
+
+  if (!quiz || !score) return <></>;
 
   const ratio = Math.round((score.score / quiz.questionCount) * 100);
 

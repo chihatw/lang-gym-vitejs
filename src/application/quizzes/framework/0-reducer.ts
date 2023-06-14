@@ -8,7 +8,7 @@ const quizzesSlice = createSlice({
   reducers: {
     mergeQuizzes: (
       state,
-      { payload }: { payload: { [id: string]: IQuiz } }
+      { payload }: { payload: { [id: string]: IQuiz | null } }
     ) => ({ ...state, ...payload }),
   },
 });
