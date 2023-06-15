@@ -1,12 +1,12 @@
 import * as R from 'ramda';
 import { Container } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../../..';
-import CustomLabel from '../../../components/CustomLabel';
-import { RandomWorkoutState, State } from '../../../../Model';
+import { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../..';
+import CustomLabel from '../../components/CustomLabel';
+import { RandomWorkoutState, State } from '../../../Model';
 
-import { buildWorkoutState } from '../../../../application/services/workout';
-import { ActionTypes } from '../../../../Update';
+import { buildWorkoutState } from '../../../application/services/workout';
+import { ActionTypes } from '../../../Update';
 import WorkoutRow from './WorkoutRow';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';

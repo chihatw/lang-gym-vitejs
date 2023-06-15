@@ -11,8 +11,8 @@ import {
   useState,
 } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { AppContext } from '../../..';
-import { shuffle } from '../../../../application/services/utils';
+import { AppContext } from '../..';
+import { shuffle } from '../../../application/services/utils';
 import Header from './Header';
 import {
   State,
@@ -20,24 +20,24 @@ import {
   RandomWorkoutCue,
   RandomWorkoutState,
   INITIAL_RANDOM_WORKOUT,
-} from '../../../../Model';
-import { Action, ActionTypes } from '../../../../Update';
+} from '../../../Model';
+import { Action, ActionTypes } from '../../../Update';
 import {
   calcBpm,
   getRandomWorkout,
   IMAGE_PATHS,
   miliSecondsToSeconds,
   setRandomWorkout,
-} from '../../../../application/services/workout';
+} from '../../../application/services/workout';
 import TimeDisplay from './TimeDisplay';
 import PlayButton from './PlayButton';
 import ResetButton from './ResetButton';
 
 import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../../../../infrastructure/firebase';
+import { storage } from '../../../infrastructure/firebase';
 import CueCard from './CueCard';
 import CheckPane from './CheckPane';
-import { uploadStorage } from '../../../../infrastructure/repositories/storage';
+import { uploadStorage } from '../../../infrastructure/repositories/storage';
 import { INITIAL_WORKOUT_FORM_STATE, WorkoutFormState } from './Model';
 
 const reducer = (state: WorkoutFormState, action: WorkoutFormState) => action;

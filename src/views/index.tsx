@@ -11,8 +11,8 @@ import UnAnsweredQuizListPage from 'views/pages/UnAnsweredQuizListPage';
 import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
 
 import QuizPage from 'views/pages/QuizPage';
-import WorkoutListPage from 'views/pages/Workout/WorkoutListPage';
-import WorkoutPage from 'views/pages/Workout/WorkoutPage';
+import WorkoutListPage from 'views/pages/WorkoutListPage';
+import WorkoutPage from 'views/pages/WorkoutPage';
 import AccountPage from 'views/pages/AccountPage';
 import UpdateEmailPage from 'views/pages/UpdateEmailPage';
 import UpdatePasswordPage from 'views/pages/UpdatePasswordPage';

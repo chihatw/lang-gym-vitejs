@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { AppContext } from '../../..';
+import { AppContext } from '../..';
 
-import { INITIAL_CUE, RandomWorkout } from '../../../../Model';
+import { INITIAL_CUE, RandomWorkout } from '../../../Model';
 
 const CueCard = React.memo(
   ({

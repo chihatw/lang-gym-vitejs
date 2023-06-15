@@ -1,11 +1,11 @@
 import { Button, Container, Divider, Modal, useTheme } from '@mui/material';
 import React from 'react';
 
-import { INITIAL_CUE, RandomWorkout } from '../../../../Model';
+import { INITIAL_CUE, RandomWorkout } from '../../../Model';
 import TimeDisplay from './TimeDisplay';
-import BlobSlider from '../../../components/BlobSlider';
+import BlobSlider from '../../components/BlobSlider';
 import { WorkoutFormState } from './Model';
-import SentencePitchLine from '../../../components/SentencePitchLine';
+import SentencePitchLine from '../../components/SentencePitchLine';
 
 const CheckPane = React.memo(
   ({

@@ -2,13 +2,13 @@ import * as R from 'ramda';
 import { Card, CardContent, IconButton, useTheme } from '@mui/material';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../../..';
-import { RandomWorkout, RandomWorkoutState, State } from '../../../../Model';
-import BlobSlider from '../../../components/BlobSlider';
+import { AppContext } from '../..';
+import { RandomWorkout, RandomWorkoutState, State } from '../../../Model';
+import BlobSlider from '../../components/BlobSlider';
 import Delete from '@mui/icons-material/Delete';
-import { ActionTypes } from '../../../../Update';
-import { deleteStorage } from '../../../../infrastructure/repositories/storage';
-import { setRandomWorkout } from '../../../../application/services/workout';
+import { ActionTypes } from '../../../Update';
+import { deleteStorage } from '../../../infrastructure/repositories/storage';
+import { setRandomWorkout } from '../../../application/services/workout';
 
 const WorkoutRow = ({
   blob,
