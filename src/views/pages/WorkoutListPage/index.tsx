@@ -1,52 +1,34 @@
-import * as R from 'ramda';
 import { Container } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../..';
-import CustomLabel from '../../components/CustomLabel';
-import { RandomWorkoutState, State } from '../../../Model';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { buildWorkoutState } from '../../../application/services/workout';
-import { ActionTypes } from '../../../Update';
-import WorkoutRow from './WorkoutRow';
-import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 
+import WorkoutRow from './WorkoutRow';
+import CustomLabel from '../../components/CustomLabel';
+import { randomWorkoutListActions } from 'application/randomWorkoutList/framework/0-reducer';
+
 const WorkoutListPage = () => {
-  const { state, dispatch } = useContext(AppContext);
-
-  const [initialize, setInitialize] = useState(true);
-
-  const { currentUid } = useSelector((state: RootState) => state.authUser);
+  const dispatch = useDispatch();
+  const { initializing, workoutIds } = useSelector(
+    (state: RootState) => state.randomWorkoutList
+  );
 
   useEffect(() => {
-    if (!initialize) return;
-    const fetchData = async () => {
-      const randomWorkoutState = !!Object.keys(state.workout.workouts).length
-        ? state.workout
-        : await buildWorkoutState(state, currentUid);
+    if (!initializing) return;
+    dispatch(randomWorkoutListActions.initiate());
+  }, [initializing]);
 
-      const updatedState = R.compose(
-        R.assocPath<RandomWorkoutState, State>(['workout'], randomWorkoutState)
-      )(state);
-      dispatch({ type: ActionTypes.setState, payload: updatedState });
-      setInitialize(false);
-    };
-    fetchData();
-  }, [state.workout.blobs, initialize]);
   return (
     <Container maxWidth='sm' sx={{ paddingBottom: 20 }}>
       <div style={{ height: 48 }} />
       <div style={{ height: 16 }} />
       <div style={{ display: 'grid', rowGap: 8 }}>
-        {!!Object.values(state.workout.workouts).length && (
+        {!!workoutIds.length && (
           <>
             <CustomLabel label='反応練習' />
-            {Object.values(state.workout.workouts).map((workout, index) => (
-              <WorkoutRow
-                key={index}
-                blob={state.workout.blobs[workout.id]}
-                workout={workout}
-              />
+            {workoutIds.map((workoutId, index) => (
+              <WorkoutRow key={index} workoutId={workoutId} />
             ))}
           </>
         )}

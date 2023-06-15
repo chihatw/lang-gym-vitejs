@@ -4,5 +4,14 @@ import articles from './articles';
 import sentences from './sentences';
 import audio from './audio';
 import quizzes from './quizzes';
+import randomWorkouts from './randomWorkouts';
 
-export default { authUser, users, articles, sentences, audio, quizzes };
+export default {
+  authUser,
+  users,
+  articles,
+  sentences,
+  audio,
+  quizzes,
+  randomWorkouts,
+};

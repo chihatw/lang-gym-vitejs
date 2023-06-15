@@ -22,21 +22,6 @@ const COLLECTIONS = {
   randomWorkouts: 'randomWorkouts',
 };
 
-export const IMAGE_PATHS = [
-  '/images/red.png',
-  '/images/blue.png',
-  '/images/yellow.png',
-  '/images/green.png',
-  '/images/pink.png',
-  '/images/orange.png',
-  '/images/motsu.png',
-  '/images/yubisasu.png',
-  '/images/hikkurikaesu.png',
-  '/images/ireru.png',
-  '/images/kabuseru.png',
-  '/images/noseru.png',
-];
-
 export const getRandomWorkout = async (id: string) => {
   console.log('get workout');
   const snapshot = await getDoc(doc(db, COLLECTIONS.randomWorkouts, id));
@@ -45,21 +30,6 @@ export const getRandomWorkout = async (id: string) => {
   }
   const workout = buildRandomWorkout(snapshot);
   return workout;
-};
-
-export const getRandomWorkouts = async (uid: string) => {
-  const randomWorkouts: { [key: string]: RandomWorkout } = {};
-  let q = query(
-    collection(db, COLLECTIONS.randomWorkouts),
-    where('uid', '==', uid),
-    orderBy('createdAt')
-  );
-  console.log('get randomWorkouts');
-  let querySnapshot = await getDocs(q);
-  querySnapshot.forEach((doc) => {
-    randomWorkouts[doc.id] = buildRandomWorkout(doc);
-  });
-  return randomWorkouts;
 };
 
 export const setRandomWorkout = async (workout: RandomWorkout) => {
@@ -132,9 +102,8 @@ export const buildWorkoutState = async (
   state: State,
   uid: string
 ): Promise<RandomWorkoutState> => {
-  const _workouts = Object.keys(state.workout.workouts).length
-    ? state.workout.workouts
-    : await getRandomWorkouts(uid);
+  const _workouts = state.workout.workouts;
+
   const storagePathToFetch: { workoutId: string; storagePath: string }[] = [];
   for (const workout of Object.values(_workouts)) {
     const { id: workoutId, storagePath } = workout;

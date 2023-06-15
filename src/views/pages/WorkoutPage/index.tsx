@@ -25,7 +25,6 @@ import { Action, ActionTypes } from '../../../Update';
 import {
   calcBpm,
   getRandomWorkout,
-  IMAGE_PATHS,
   miliSecondsToSeconds,
   setRandomWorkout,
 } from '../../../application/services/workout';
@@ -55,7 +54,6 @@ const WorkoutPage = () => {
   const [blob, setBlob] = useState<Blob | null>(null); // mediaRecorder のコールバックに使うので、独立させる
   const [workout, setWorkout] = useState(INITIAL_RANDOM_WORKOUT);
   const [miliSeconds, setMiliSeconds] = useState(0); // requestAnimationFrame のコールバックに使うので、独立させる
-  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const loopIdRef = useRef(0);
   const startAtRef = useRef(0);
@@ -87,22 +85,6 @@ const WorkoutPage = () => {
     };
     fetchData();
   }, [workoutId, state.workout.workouts]);
-
-  /** imagesloaded の代入*/
-  useEffect(() => {
-    const imagesLoaded = checkImagesLoaded(state.blobURLs);
-    setImagesLoaded(imagesLoaded);
-  }, [state.blobURLs]);
-
-  /** state.blobURLs の更新 */
-  useEffect(() => {
-    const imagesLoaded = checkImagesLoaded(state.blobURLs);
-    if (imagesLoaded) return;
-    const fetchData = async () => {
-      updateState_by_fetch_ImagePaths(IMAGE_PATHS, state, dispatch);
-    };
-    fetchData();
-  }, [state.blobURLs]);
 
   const start = async () => {
     // localhost の場合、 ios chrome では navigator が取得できない
@@ -256,8 +238,6 @@ const WorkoutPage = () => {
     }, 200);
   };
 
-  if (!imagesLoaded) return <></>;
-
   if (!workoutId) return <Navigate to='/login' />;
 
   return (
@@ -307,16 +287,6 @@ const WorkoutPage = () => {
 };
 
 export default WorkoutPage;
-
-const checkImagesLoaded = (blobURLs: { [imagePath: string]: string }) => {
-  let imagesLoaded = true;
-  for (const imagePath of IMAGE_PATHS) {
-    if (!Object.keys(blobURLs).includes(imagePath)) {
-      imagesLoaded = false;
-    }
-  }
-  return imagesLoaded;
-};
 
 const updateState_by_fetch_Workout = async (
   workoutId: string,

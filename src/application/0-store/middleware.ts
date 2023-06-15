@@ -4,6 +4,7 @@ import articles from 'application/articles/framework/1-middleware';
 import audio from 'application/audio/framework/1-middleware';
 import sentences from 'application/sentences/framework/1-middleware';
 import quizzes from 'application/quizzes/framework/1-middleware';
+import randomWorkouts from 'application/randomWorkouts/framework/1-middleware';
 
 export default [
   ...authUser,
@@ -12,4 +13,5 @@ export default [
   ...audio,
   ...sentences,
   ...quizzes,
+  ...randomWorkouts,
 ];

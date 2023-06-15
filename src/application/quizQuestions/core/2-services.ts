@@ -8,7 +8,6 @@ export function addTempIdAndSortByIndex(questions: {
   const questionAddedIds: { [id: string]: IQuizQuestion } = {};
   for (let [index, question] of Object.entries(questions)) {
     const tempId = nanoid(8);
-    console.log({ question });
     questionAddedIds[tempId] = question;
     const _index = Number(index);
     questionIds[_index] = tempId;

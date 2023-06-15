@@ -1,54 +1,47 @@
-import * as R from 'ramda';
-import { Card, CardContent, IconButton, useTheme } from '@mui/material';
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../..';
-import { RandomWorkout, RandomWorkoutState, State } from '../../../Model';
-import BlobSlider from '../../components/BlobSlider';
 import Delete from '@mui/icons-material/Delete';
-import { ActionTypes } from '../../../Update';
-import { deleteStorage } from '../../../infrastructure/repositories/storage';
-import { setRandomWorkout } from '../../../application/services/workout';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, CardContent, IconButton, useTheme } from '@mui/material';
 
-const WorkoutRow = ({
-  blob,
-  workout,
-}: {
-  blob: Blob | null;
-  workout: RandomWorkout;
-}) => {
-  const navigate = useNavigate();
+import { RootState } from 'main';
+
+import AudioBufferSlider from 'views/components/AudioBufferSlider';
+import { randomWorkoutsActions } from 'application/randomWorkouts/framework/0-reducer';
+
+const WorkoutRow = ({ workoutId }: { workoutId: string }) => {
   const theme = useTheme();
-  const { state, dispatch } = useContext(AppContext);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const randomWorkouts = useSelector(
+    (state: RootState) => state.randomWorkouts
+  );
+  const { fetchedAudioBuffers } = useSelector(
+    (state: RootState) => state.audio
+  );
+
+  const randomWorkout = useMemo(
+    () => randomWorkouts[workoutId],
+    [workoutId, randomWorkouts]
+  );
+
+  const audioBuffer = useMemo(
+    () =>
+      randomWorkout.storagePath
+        ? fetchedAudioBuffers[randomWorkout.storagePath]
+        : null,
+    [randomWorkout, fetchedAudioBuffers]
+  );
 
   const openWorkoutPage = () => {
-    navigate(`/workout/${workout.id}`);
+    navigate(`/workout/${workoutId}`);
   };
   const handleDelete = async () => {
-    const updatedWorkout: RandomWorkout = {
-      ...workout,
-      resultBpm: 0,
-      resultSeconds: 0,
-      storagePath: '',
-    };
-    const updatedWorkoutState: RandomWorkoutState = R.compose(
-      R.assocPath<RandomWorkout, RandomWorkoutState>(
-        ['workouts', workout.id],
-        updatedWorkout
-      ),
-      R.assocPath<null, RandomWorkoutState>(['blobs', workout.id], null)
-    )(state.workout);
-
-    const updatedState = R.compose(
-      R.assocPath<boolean, State>(['isFetching'], false),
-      R.assocPath<RandomWorkoutState, State>(['workout'], updatedWorkoutState)
-    )(state);
-
-    dispatch({ type: ActionTypes.setState, payload: updatedState });
-
-    await deleteStorage(workout.storagePath);
-    await setRandomWorkout(updatedWorkout);
+    dispatch(randomWorkoutsActions.clearStoragePath(workoutId));
   };
+
+  if (!randomWorkout) return <></>;
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
       <Card
@@ -70,18 +63,18 @@ const WorkoutRow = ({
               marginBottom: -16,
             }}
           >
-            <div style={{ fontSize: 14 }}>{workout.title}</div>
+            <div style={{ fontSize: 14 }}>{randomWorkout.title}</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
               <div>
                 <span style={{ fontSize: 12 }}>目標BPM:</span>
                 <span style={{ fontSize: 20, paddingLeft: 20 }}>
-                  {workout.targetBpm}
+                  {randomWorkout.targetBpm}
                 </span>
               </div>
               <div>
                 <span style={{ fontSize: 12 }}>到達BPM:</span>
                 <span style={{ fontSize: 20, paddingLeft: 20 }}>
-                  {!!blob ? workout.resultBpm : '--'}
+                  {!!audioBuffer ? randomWorkout.resultBpm : '--'}
                 </span>
               </div>
             </div>
@@ -89,13 +82,13 @@ const WorkoutRow = ({
         </CardContent>
       </Card>
 
-      {!!blob && (
+      {!!audioBuffer && (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ flexGrow: 1 }}>
-            <BlobSlider
-              blob={blob}
-              spacer={5}
-              duration={workout.resultSeconds + 0.3}
+            <AudioBufferSlider
+              audioBuffer={audioBuffer}
+              start={0}
+              end={audioBuffer.duration}
             />
           </div>
           <IconButton size='small' onClick={handleDelete}>

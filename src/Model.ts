@@ -2,14 +2,12 @@ export type RandomWorkoutCue = {
   id: string;
   label: string;
   pitchStr: string;
-  imagePath: string;
 };
 
 export const INITIAL_CUE: RandomWorkoutCue = {
   id: '',
   label: '',
   pitchStr: '',
-  imagePath: '',
 };
 
 export type RandomWorkout = {
