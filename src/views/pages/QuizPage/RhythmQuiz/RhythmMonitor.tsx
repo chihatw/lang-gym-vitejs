@@ -1,18 +1,26 @@
+import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
-import React from 'react';
-import { QuizFormState } from '../../Model';
+import { useSelector } from 'react-redux';
 
-const RhythmMonitor = ({
-  state,
-  questionIndex,
-}: {
-  state: QuizFormState;
-  questionIndex: number;
-}) => {
-  const { questions } = state;
-  const question = questions[questionIndex];
-  const { syllablesArray, monitorSpecialMoraArray } = question;
+import { RootState } from 'main';
+
+const RhythmMonitor = ({ questionId }: { questionId: string }) => {
   const theme = useTheme();
+  const { syllablesArrays, monitorSpecialMoraArrays } = useSelector(
+    (state: RootState) => state.quizPage
+  );
+
+  const syllablesArray = useMemo(
+    () => syllablesArrays[questionId],
+    [questionId, syllablesArrays]
+  );
+  const monitorSpecialMoraArray = useMemo(
+    () => monitorSpecialMoraArrays[questionId],
+    [questionId, monitorSpecialMoraArrays]
+  );
+
+  if (!syllablesArray || !monitorSpecialMoraArray) return <></>;
+
   return (
     <div
       style={{

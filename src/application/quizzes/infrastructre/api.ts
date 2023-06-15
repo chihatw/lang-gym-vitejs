@@ -8,6 +8,7 @@ import {
   orderBy,
   limit,
   getDoc,
+  updateDoc,
 } from '@firebase/firestore';
 import { db } from 'infrastructure/firebase';
 import { QUIZZES_STORE_COLLECTION } from '../core/1-constants';
@@ -66,6 +67,13 @@ export const fetchQuizzes = async (uid: string) => {
   });
 
   return { quizzes, quizScores, quizQuestions };
+};
+
+export const updateQuizScore = async (
+  quizId: string,
+  scores: { [createdAt: number]: IQuizScore }
+) => {
+  await updateDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId), { scores });
 };
 
 const buildQuiz = (

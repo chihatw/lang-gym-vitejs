@@ -1,23 +1,18 @@
-import { Box } from '@mui/material';
-import { RootState } from 'main';
-import { useContext } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from 'views';
+import { useSelector } from 'react-redux';
+import { Box } from '@mui/material';
+
+import { RootState } from 'main';
+
 import LabelButton from './LabelButton';
-import { ActionTypes } from '../../../../Update';
 import SelectUserPane from './SelectUserPane';
 import HeaderQuizPane from './HeaderQuizPane';
 
 function PrivatePane() {
   const { loginUser } = useSelector((state: RootState) => state.authUser);
 
-  const { state, dispatch } = useContext(AppContext);
+  // const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
-
-  const unansweredList = state.quizzes.filter(
-    (item) => !Object.keys(item.scores).length
-  );
 
   if (!loginUser) return <></>;
 
@@ -32,10 +27,7 @@ function PrivatePane() {
         >
           <SelectUserPane />
           <LabelButton
-            handleClick={() => {
-              dispatch({ type: ActionTypes.startFetching });
-              navigate('/workout/list');
-            }}
+            handleClick={() => navigate('/workout/list')}
             label='練習'
           />
           <HeaderQuizPane />

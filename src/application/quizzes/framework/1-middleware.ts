@@ -8,6 +8,18 @@ import { quizzesActions } from './0-reducer';
 import { getAnsweredIds, getUnansweredIds } from '../core/2-services';
 import { scorePageActions } from 'application/scorePage/framework/0-reducer';
 import { audioActions } from 'application/audio/framework/0-reducer';
+import { quizPageActions } from 'application/quizPage/framework/0-reducer';
+import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
+import {
+  buildInputPitchStr,
+  buildQuestionAnswers,
+  buildRemoteScores,
+  buildRhythmQuizProps,
+  calcPoints,
+} from 'application/quizPage/core/2-services';
+import { ISyllable } from 'application/quizQuestions/core/0-interface';
+import { nanoid } from 'nanoid';
+import { IQuizScore } from 'application/quizScores/core/0-interface';
 
 const quizzesMiddleware =
   (services: Services): Middleware =>
@@ -29,7 +41,7 @@ const quizzesMiddleware =
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
 
-        break;
+        return;
       }
       case 'scorePage/initiate': {
         const { quizId, scoreCreatedAt } = action.payload as {
@@ -62,7 +74,7 @@ const quizzesMiddleware =
 
         dispatch(quizzesActions.mergeQuizzes({ [quizId]: quiz }));
 
-        if (!quiz) break;
+        if (!quiz) return;
 
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
         dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
@@ -70,7 +82,162 @@ const quizzesMiddleware =
         if (!!quiz && quiz.downloadURL) {
           dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
         }
-        break;
+        return;
+      }
+      case 'quizPage/initiate': {
+        const quizId = action.payload as string;
+
+        const quizzes = (getState() as RootState).quizzes;
+        const quizIds = Object.keys(quizzes);
+
+        // fetch済みの quizId の場合
+        if (quizIds.includes(quizId)) {
+          dispatch(quizPageActions.setQuizId(quizId));
+          const quiz = quizzes[quizId];
+          if (!!quiz && quiz.downloadURL) {
+            dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+          }
+          return;
+        }
+
+        // quizの取得
+        const { quiz, quizScores, quizQuestions } =
+          await services.api.quizzes.fetchQuiz(quizId);
+
+        dispatch(quizPageActions.setQuizId(quizId));
+
+        dispatch(quizzesActions.mergeQuizzes({ [quizId]: quiz }));
+
+        if (!quiz) return;
+
+        dispatch(quizScoresActions.mergeQuizScores(quizScores));
+        dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
+
+        if (!!quiz && quiz.downloadURL) {
+          dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+        }
+        return;
+      }
+      case 'quizPage/setQuizId': {
+        const quizId = action.payload as string;
+        const quizzes = (getState() as RootState).quizzes;
+        const quiz = quizzes[quizId];
+
+        if (!quiz) {
+          setTimeout(() => {
+            console.log('%credispatch', 'color:red');
+            dispatch(quizPageActions.setQuizId(quizId));
+          }, 100);
+          return;
+        }
+
+        const quizQuestions = (getState() as RootState).quizQuestions;
+        const inputPitchStrs: { [questionId: string]: string } = {};
+        if (quiz.type === QUIZ_TIPE.articleAccents) {
+          for (const questionId of quiz.questionIds) {
+            const question = quizQuestions[questionId];
+            const inputPitchStr = question
+              ? buildInputPitchStr(question.pitchStr, question.disableds)
+              : '';
+            inputPitchStrs[questionId] = inputPitchStr;
+          }
+        }
+
+        const syllablesArrays: { [questionId: string]: ISyllable[][] } = {};
+        const inputSpecialMoraArrays: { [questionId: string]: string[][] } = {};
+        const monitorSpecialMoraArrays: { [questionId: string]: string[][] } =
+          {};
+        if (quiz.type === QUIZ_TIPE.articleRhythms) {
+          for (const questionId of quiz.questionIds) {
+            const question = quizQuestions[questionId];
+            const {
+              syllablesArray,
+              inputSpecialMoraArray,
+              monitorSpecialMoraArray,
+            } = question
+              ? buildRhythmQuizProps(question.syllables, question.disableds)
+              : {
+                  syllablesArray: [],
+                  inputSpecialMoraArray: [],
+                  monitorSpecialMoraArray: [],
+                };
+
+            syllablesArrays[questionId] = syllablesArray;
+            inputSpecialMoraArrays[questionId] = inputSpecialMoraArray;
+            monitorSpecialMoraArrays[questionId] = monitorSpecialMoraArray;
+          }
+        }
+        dispatch(
+          quizPageActions.setQuestionProps({
+            inputPitchStrs,
+            syllablesArrays,
+            inputSpecialMoraArrays,
+            monitorSpecialMoraArrays,
+          })
+        );
+        return;
+      }
+      case 'quizPage/updateQuizScoreStart': {
+        const createdAt = action.payload as number;
+
+        const {
+          quizId,
+          inputPitchStrs,
+          syllablesArrays,
+          inputSpecialMoraArrays,
+        } = (getState() as RootState).quizPage;
+        const quizzes = (getState() as RootState).quizzes;
+        const quizScores = (getState() as RootState).quizScores;
+        const quizQuestions = (getState() as RootState).quizQuestions;
+        let { answeredIds, unansweredIds } = (getState() as RootState).quizList;
+
+        const quiz = quizzes[quizId];
+
+        if (!quiz) return;
+        if (!Object.values(QUIZ_TIPE).includes(quiz.type)) return;
+
+        const points = calcPoints(
+          quiz,
+          quizQuestions,
+          inputPitchStrs,
+          syllablesArrays,
+          inputSpecialMoraArrays
+        );
+
+        const { pitchAnswers, rhythmAnswers } = buildQuestionAnswers(
+          quiz,
+          inputPitchStrs,
+          inputSpecialMoraArrays
+        );
+
+        const score: IQuizScore = {
+          score: points,
+          createdAt,
+          pitchAnswers,
+          rhythmAnswers,
+        };
+
+        const scoreId = nanoid(8);
+        dispatch(quizScoresActions.mergeQuizScores({ [scoreId]: score }));
+        dispatch(quizzesActions.unshiftScoreId({ quizId, scoreId }));
+
+        const scores = quiz.scoreIds.map((scoreId) => quizScores[scoreId]);
+        scores.unshift(score);
+
+        const remoteScores = buildRemoteScores(scores);
+        await services.api.quizzes.updateQuizScore(quizId, remoteScores);
+
+        if (unansweredIds.includes(quizId)) {
+          unansweredIds = unansweredIds.filter((id) => id !== quizId);
+          const answeredQuizzes = answeredIds.map((quizId) => quizzes[quizId]);
+          answeredQuizzes.push(quiz);
+          answeredIds = answeredQuizzes
+            .sort((a, b) => b!.createdAt - a!.createdAt)
+            .map((quiz) => quiz!.id);
+
+          dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
+        }
+        return;
       }
       default:
     }

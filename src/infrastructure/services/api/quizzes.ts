@@ -1,3 +1,7 @@
-import { fetchQuiz, fetchQuizzes } from 'application/quizzes/infrastructre/api';
+import {
+  fetchQuiz,
+  fetchQuizzes,
+  updateQuizScore,
+} from 'application/quizzes/infrastructre/api';
 
-export default { fetchQuiz, fetchQuizzes };
+export default { fetchQuiz, fetchQuizzes, updateQuizScore };

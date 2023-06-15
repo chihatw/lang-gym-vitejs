@@ -20,6 +20,10 @@ const ScorePage = () => {
   const quizzes = useSelector((state: RootState) => state.quizzes);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!quizId || !scoreCreatedAt) {
       navigate('/');
     }

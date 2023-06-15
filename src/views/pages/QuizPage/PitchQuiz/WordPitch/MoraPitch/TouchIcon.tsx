@@ -1,46 +1,33 @@
-import * as R from 'ramda';
 import LabelIcon from '@mui/icons-material/Label';
-import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
-import React from 'react';
-import { changePitchesArray } from '../../../../../../../application/services/quiz';
+import { useDispatch } from 'react-redux';
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
+
 import MoraSeparater from './MoraSeparater';
-import { QuizFormState } from '../../../../Model';
+import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 
 const TouchIcon = ({
-  state,
   isAccent,
   disabled,
   wordIndex,
   moraIndex,
-  questionIndex,
-  inputPitchStr,
-  dispatch,
+  questionId,
 }: {
-  state: QuizFormState;
   isAccent: boolean;
   disabled: boolean;
   wordIndex: number;
   moraIndex: number;
-  questionIndex: number;
-  inputPitchStr: string;
-  dispatch: React.Dispatch<QuizFormState>;
+  questionId: string;
 }) => {
+  const dispatch = useDispatch();
   const handleClick = () => {
-    if (!dispatch) return;
-    const updatedPitchStr: string = changePitchesArray(
-      inputPitchStr,
-      wordIndex,
-      moraIndex
+    dispatch(
+      quizPageActions.setInputPitchStr({
+        questionId,
+        wordIndex,
+        moraIndex,
+      })
     );
-    console.log({ updatedPitchStr });
-    const updatedState = R.compose(
-      R.assocPath<string, QuizFormState>(
-        ['questions', questionIndex, 'inputPitchStr'],
-        updatedPitchStr
-      )
-    )(state);
-    dispatch(updatedState);
   };
 
   return (

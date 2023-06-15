@@ -1,9 +1,28 @@
-import { Button, useTheme } from '@mui/material';
-import React from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button, useTheme } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
-const QuizPageFooter = ({ handleSubmit }: { handleSubmit: () => void }) => {
+import { RootState } from 'main';
+
+import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
+import { quizPageActions } from 'application/quizPage/framework/0-reducer';
+
+const QuizPageFooter = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { quizId } = useSelector((state: RootState) => state.quizPage);
+  const quizzes = useSelector((state: RootState) => state.quizzes);
+
+  const quiz = useMemo(() => quizzes[quizId] || null, [quizId, quizzes]);
+
+  const handleSubmit = () => {
+    if (!quiz) return;
+    if (!Object.values(QUIZ_TIPE).includes(quiz.type)) return;
+    const createdAt = Date.now();
+    dispatch(quizPageActions.updateQuizScoreStart(createdAt));
+    navigate(`/quiz/${quizId}/score/${createdAt}`);
+  };
 
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>

@@ -8,6 +8,7 @@ import { RootState } from 'main';
 import { updatePasswordFormActions } from 'application/updatePasswordForm/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
 import { topPageActions } from 'application/topPage/framework/0-reducer';
+import { quizListActions } from 'application/quizList/framework/0-reducer';
 
 const userMiddleware =
   (services: Services): Middleware =>
@@ -88,6 +89,7 @@ const userMiddleware =
         dispatch(authUserActions.setCurrentUid(currentUid));
         dispatch(articleListActions.resetState());
         dispatch(topPageActions.resetState());
+        dispatch(quizListActions.resetState());
         break;
       }
     }

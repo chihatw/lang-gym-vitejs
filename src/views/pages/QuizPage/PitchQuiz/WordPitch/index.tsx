@@ -1,24 +1,35 @@
-import React from 'react';
-import { QuizFormQuestion, QuizFormState } from '../../../Model';
-import MoraPitch from './MoraPitch';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import string2PitchesArray from 'string2pitches-array';
 
+import { RootState } from 'main';
+
+import MoraPitch from './MoraPitch';
+
 const WordPitch = ({
-  state,
-  question,
+  questionId,
   wordIndex,
-  questionIndex,
-  dispatch,
 }: {
-  state: QuizFormState;
-  question: QuizFormQuestion;
+  questionId: string;
   wordIndex: number;
-  questionIndex: number;
-  dispatch: React.Dispatch<QuizFormState>;
 }) => {
-  const disabled = question.disableds.includes(wordIndex);
-  const wordPitchStr = question.inputPitchStr.split(' ')[wordIndex];
-  const wordPitches = string2PitchesArray(wordPitchStr)[0];
+  const { inputPitchStrs } = useSelector((state: RootState) => state.quizPage);
+  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
+
+  const wordPitches = useMemo(() => {
+    const inputPitchStr = inputPitchStrs[questionId];
+    const wordPitchStr = inputPitchStr
+      ? inputPitchStr.split(' ')[wordIndex]
+      : '';
+    return wordPitchStr ? string2PitchesArray(wordPitchStr)[0] : [];
+  }, [inputPitchStrs, wordIndex, questionId]);
+
+  const disabled = useMemo(() => {
+    const question = quizQuestions[questionId];
+    return question ? question.disableds.includes(wordIndex) : true;
+  }, [quizQuestions, questionId, wordIndex]);
+
+  if (!wordPitches.length) return <></>;
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -36,15 +47,12 @@ const WordPitch = ({
             <MoraPitch
               key={moraIndex}
               mora={mora}
-              state={state}
               isLast={moraIndex === wordPitches.length - 1}
               disabled={disabled}
               isAccent={!!next && next.length === 1 && mora.length === 2}
               wordIndex={wordIndex}
               moraIndex={moraIndex}
-              questionIndex={questionIndex}
-              inputPitchStr={question.inputPitchStr}
-              dispatch={dispatch}
+              questionId={questionId}
             />
           );
         })}

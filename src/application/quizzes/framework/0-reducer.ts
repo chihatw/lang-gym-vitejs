@@ -10,6 +10,19 @@ const quizzesSlice = createSlice({
       state,
       { payload }: { payload: { [id: string]: IQuiz | null } }
     ) => ({ ...state, ...payload }),
+    unshiftScoreId: (
+      state,
+      {
+        payload: { quizId, scoreId },
+      }: { payload: { quizId: string; scoreId: string } }
+    ) => {
+      const targetQuiz = state[quizId];
+      if (!targetQuiz) return state;
+      state[quizId] = {
+        ...targetQuiz,
+        scoreIds: [scoreId, ...targetQuiz.scoreIds],
+      };
+    },
   },
 });
 
