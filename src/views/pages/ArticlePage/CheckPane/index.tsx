@@ -19,7 +19,7 @@ const CheckPane = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { blob, userAudioBuffer } = useSelector(
+  const { recordedAudioBuffer, recordedBlob } = useSelector(
     (state: RootState) => state.audio
   );
   const { playedRecordedAudio, recordSentenceId } = useSelector(
@@ -38,14 +38,14 @@ const CheckPane = ({
   };
 
   const saveRecordedAudio = async () => {
-    if (!blob || !userAudioBuffer) return;
+    if (!recordedBlob || !recordedAudioBuffer) return;
 
     // storage に　blob を upload
     // audioBuffers に audioBuffer をセット
 
     const path = ASSIGNMENTS_STORAGE_PATH + sentence.id;
     dispatch(
-      audioActions.saveAudioBuffer({ path, audioBuffer: userAudioBuffer })
+      audioActions.saveAudioBuffer({ path, audioBuffer: recordedAudioBuffer })
     );
     dispatch(articlePageActions.clearState());
   };
@@ -53,7 +53,7 @@ const CheckPane = ({
   if (!sentence) return <></>;
 
   return (
-    <Modal open={true} onClose={() => {}}>
+    <Modal open={true}>
       <div
         style={{
           width: '100vw',

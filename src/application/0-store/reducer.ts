@@ -18,6 +18,7 @@ import scorePage from 'application/scorePage/framework/0-reducer';
 import quizPage from 'application/quizPage/framework/0-reducer';
 import randomWorkouts from 'application/randomWorkouts/framework/0-reducer';
 import randomWorkoutList from 'application/randomWorkoutList/framework/0-reducer';
+import randomWorkoutPage from 'application/randomWorkoutPage/framework/0-reducer';
 
 export default {
   authUser,
@@ -40,4 +41,5 @@ export default {
   quizPage,
   randomWorkouts,
   randomWorkoutList,
+  randomWorkoutPage,
 };

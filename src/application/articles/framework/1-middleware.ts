@@ -21,7 +21,7 @@ const articlesMiddleware =
         const uid = (getState() as RootState).authUser.currentUid;
         // articles の取得
         const articles = await services.api.articles.fetchArticles(uid, 4);
-        dispatch(articlesActions.concatArticles(articles));
+        dispatch(articlesActions.mergeArticles(articles));
 
         const articleIds = Object.values(articles)
           .sort((a, b) => b.createdAt - a.createdAt)
@@ -39,7 +39,7 @@ const articlesMiddleware =
         const uid = (getState() as RootState).authUser.currentUid;
         // articles の取得
         const articles = await services.api.articles.fetchArticles(uid, 11);
-        dispatch(articlesActions.concatArticles(articles));
+        dispatch(articlesActions.mergeArticles(articles));
 
         const articleIds = Object.values(articles)
           .sort((a, b) => b.createdAt - a.createdAt)
@@ -74,7 +74,7 @@ const articlesMiddleware =
           11,
           startAfter
         );
-        dispatch(articlesActions.concatArticles(articles));
+        dispatch(articlesActions.mergeArticles(articles));
 
         const articleIds = Object.values(articles)
           .sort((a, b) => b.createdAt - a.createdAt)
@@ -111,20 +111,18 @@ const articlesMiddleware =
 
         // fetch済みのarticleIdの場合、audioBuffer と Sentences を取得
         if (articleIds.includes(articleId)) {
-          dispatch(articlePageActions.setArticleId(articleId));
           dispatch(
             audioActions.getAudioBufferStart(ARTILCE_STORAGE_PATH + articleId)
           );
           dispatch(sentencesActions.getSentencesStart(articleId));
+          dispatch(articlePageActions.setArticleId(articleId));
           return;
         }
 
         // article の取得
         const article = await services.api.articles.fetchArtice(uid, articleId);
+        dispatch(articlesActions.mergeArticles({ [articleId]: article }));
         dispatch(articlePageActions.setArticleId(article?.id || ''));
-        dispatch(
-          articlesActions.concatArticles({ [articleId]: article || null })
-        );
 
         // article がない場合、終了
         if (!article) break;

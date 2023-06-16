@@ -9,7 +9,7 @@ import { RootState } from 'main';
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
 import { randomWorkoutsActions } from 'application/randomWorkouts/framework/0-reducer';
 
-const WorkoutRow = ({ workoutId }: { workoutId: string }) => {
+const RandomWorkoutRow = ({ workoutId }: { workoutId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const WorkoutRow = ({ workoutId }: { workoutId: string }) => {
 
   const audioBuffer = useMemo(
     () =>
-      randomWorkout.storagePath
+      randomWorkout && randomWorkout.storagePath
         ? fetchedAudioBuffers[randomWorkout.storagePath]
         : null,
     [randomWorkout, fetchedAudioBuffers]
@@ -100,4 +100,4 @@ const WorkoutRow = ({ workoutId }: { workoutId: string }) => {
   );
 };
 
-export default WorkoutRow;
+export default RandomWorkoutRow;

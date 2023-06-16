@@ -1,0 +1,40 @@
+import { createSlice } from '@reduxjs/toolkit';
+import { initialState } from '../core/1-constants';
+
+const randomWorkoutPageSlice = createSlice({
+  name: 'randomWorkoutPage',
+  initialState,
+  reducers: {
+    initiate: (state, { payload }: { payload: string }) => initialState,
+    setWorkoutId: (state, { payload }: { payload: string }) => {
+      state.workoutId = payload;
+    },
+    startRecording: (state) => {
+      state.isRunning = true;
+    },
+    stopRecording: (state) => {
+      state.isRunning = false;
+      state.isChecking = true;
+    },
+    cancelRecording: (state) => ({
+      ...initialState,
+      workoutId: state.workoutId,
+    }),
+    setMiliSeconds: (state, { payload }: { payload: number }) => {
+      state.miliSeconds = payload;
+    },
+    increseCurrentIndex: (state) => {
+      state.currentIndex++;
+    },
+    abandonRecordedAudioBuffer: (state) => ({
+      ...initialState,
+      workoutId: state.workoutId,
+    }),
+    saveRecordedAudioBuffer: (state, { payload }: { payload: string }) =>
+      initialState,
+  },
+});
+
+export const randomWorkoutPageActions = randomWorkoutPageSlice.actions;
+
+export default randomWorkoutPageSlice.reducer;

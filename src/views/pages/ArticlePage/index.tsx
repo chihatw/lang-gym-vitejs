@@ -36,14 +36,14 @@ const ArticlePage = () => {
     dispatch(articlePageActions.initiate(articleId));
   }, [articleId]);
 
-  const sentenceIds = useMemo(
-    () => (articleId ? getSentenceIds(articleId, sentences) : []),
-    [articleId, sentences]
-  );
-
   const article = useMemo(
     () => articles[articleId!] || null,
     [articleId, articles]
+  );
+
+  const sentenceIds = useMemo(
+    () => (articleId ? getSentenceIds(articleId, sentences) : []),
+    [articleId, sentences]
   );
 
   const audioBuffer = useMemo(() => {

@@ -29,14 +29,16 @@ const audioSlice = createSlice({
     },
     setBlobAndAudioBuffer: (
       state,
-      { payload }: { payload: { blob: Blob; audioBuffer: AudioBuffer } }
+      {
+        payload: { recordedBlob, recordedAudioBuffer },
+      }: { payload: { recordedBlob: Blob; recordedAudioBuffer: AudioBuffer } }
     ) => {
-      state.blob = payload.blob;
-      state.userAudioBuffer = payload.audioBuffer;
+      state.recordedBlob = recordedBlob;
+      state.recordedAudioBuffer = recordedAudioBuffer;
     },
-    resetBlobAndAudioBuffer: (state) => {
-      state.blob = null;
-      state.userAudioBuffer = null;
+    resetRecordedAudio: (state) => {
+      state.recordedBlob = null;
+      state.recordedAudioBuffer = null;
     },
   },
 });

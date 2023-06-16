@@ -6,7 +6,7 @@ const articlesSlice = createSlice({
   name: 'articles',
   initialState,
   reducers: {
-    concatArticles: (
+    mergeArticles: (
       state,
       { payload }: { payload: { [id: string]: IArticle | null } }
     ) => ({ ...state, ...payload }),

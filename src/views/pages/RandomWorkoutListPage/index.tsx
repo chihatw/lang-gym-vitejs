@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'main';
 
-import WorkoutRow from './WorkoutRow';
+import RandomWorkoutRow from './RandomWorkoutRow';
 import CustomLabel from '../../components/CustomLabel';
 import { randomWorkoutListActions } from 'application/randomWorkoutList/framework/0-reducer';
 
-const WorkoutListPage = () => {
+const RandomWorkoutListPage = () => {
   const dispatch = useDispatch();
   const { initializing, workoutIds } = useSelector(
     (state: RootState) => state.randomWorkoutList
@@ -28,7 +28,7 @@ const WorkoutListPage = () => {
           <>
             <CustomLabel label='反応練習' />
             {workoutIds.map((workoutId, index) => (
-              <WorkoutRow key={index} workoutId={workoutId} />
+              <RandomWorkoutRow key={index} workoutId={workoutId} />
             ))}
           </>
         )}
@@ -37,4 +37,4 @@ const WorkoutListPage = () => {
   );
 };
 
-export default WorkoutListPage;
+export default RandomWorkoutListPage;

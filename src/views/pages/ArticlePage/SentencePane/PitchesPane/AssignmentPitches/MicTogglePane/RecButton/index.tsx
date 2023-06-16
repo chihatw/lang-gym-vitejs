@@ -33,7 +33,12 @@ const RecButton = () => {
     await startRecording(
       mediaRecorder,
       (blob: Blob, audioBuffer: AudioBuffer) => {
-        dispatch(audioActions.setBlobAndAudioBuffer({ blob, audioBuffer }));
+        dispatch(
+          audioActions.setBlobAndAudioBuffer({
+            recordedBlob: blob,
+            recordedAudioBuffer: audioBuffer,
+          })
+        );
       }
     );
 

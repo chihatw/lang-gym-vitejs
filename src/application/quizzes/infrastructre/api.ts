@@ -30,7 +30,6 @@ export const fetchQuiz = async (
   const docSnapshot = await getDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId));
 
   if (!docSnapshot.exists()) {
-    console.log(`%cno quizzes found`, 'color:red');
     return { quiz: null, quizScores: {}, quizQuestions: {} };
   }
 

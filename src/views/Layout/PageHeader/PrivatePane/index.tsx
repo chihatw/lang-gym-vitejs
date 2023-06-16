@@ -11,7 +11,6 @@ import HeaderQuizPane from './HeaderQuizPane';
 function PrivatePane() {
   const { loginUser } = useSelector((state: RootState) => state.authUser);
 
-  // const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
   if (!loginUser) return <></>;

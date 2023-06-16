@@ -28,7 +28,7 @@ const audioMiddleWare =
           })
         );
 
-        break;
+        return;
       }
       case 'audio/getAudioBuffersStart': {
         const paths = action.payload as string[];
@@ -50,21 +50,26 @@ const audioMiddleWare =
         );
 
         dispatch(audioActions.mergeFetchedAudioBuffers(audioBuffers));
+        return;
       }
       case 'audio/saveAudioBuffer': {
         const path = action.payload.path as string;
-        const { blob } = (getState() as RootState).audio;
-        if (!!blob) {
-          await services.api.audio.uploadStorageByPath(blob, path);
-          dispatch(audioActions.resetBlobAndAudioBuffer());
-          break;
-        }
-        break;
+        const { recordedBlob } = (getState() as RootState).audio;
+
+        if (!recordedBlob) return;
+
+        await services.api.audio.uploadStorageByPath(recordedBlob, path);
+        dispatch(audioActions.resetRecordedAudio());
+        return;
       }
       case 'audio/removeFetchedAudioBuffer': {
         const path = action.payload as string;
         await services.api.audio.deleteStorageByPath(path);
-        break;
+        return;
+      }
+      case 'ranomWorkoutPage/abandomRecordedAudioBuffer': {
+        dispatch(audioActions.resetRecordedAudio());
+        return;
       }
       default:
     }

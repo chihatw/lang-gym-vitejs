@@ -14,7 +14,9 @@ import { articlePageActions } from 'application/articlePage/framework/0-reducer'
 function PlayRecordedAudioButton() {
   const dispatch = useDispatch();
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null);
-  const { userAudioBuffer } = useSelector((state: RootState) => state.audio);
+  const { recordedAudioBuffer } = useSelector(
+    (state: RootState) => state.audio
+  );
   const { playedRecordedAudio } = useSelector(
     (state: RootState) => state.ariclePage
   );
@@ -31,9 +33,9 @@ function PlayRecordedAudioButton() {
   const play = () => {
     setIsPlaying(true);
     playAudioBufferAndSetSourceNode(
-      userAudioBuffer!,
+      recordedAudioBuffer!,
       0,
-      userAudioBuffer!.duration,
+      recordedAudioBuffer!.duration,
       sourceNodeRef,
       () => setIsPlaying(false)
     );
@@ -58,7 +60,7 @@ function PlayRecordedAudioButton() {
     <IconButton
       sx={{ color: '#52a2aa' }}
       onClick={handleClick}
-      disabled={!userAudioBuffer}
+      disabled={!recordedAudioBuffer}
     >
       {isPlaying ? (
         <StopCircleRoundedIcon sx={{ fontSize: 120 }} />

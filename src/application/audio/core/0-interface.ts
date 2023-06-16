@@ -1,5 +1,5 @@
 export interface IAudio {
-  blob: null | Blob;
-  userAudioBuffer: null | AudioBuffer;
+  recordedBlob: Blob | null;
+  recordedAudioBuffer: AudioBuffer | null;
   fetchedAudioBuffers: { [path: string]: AudioBuffer | null };
 }

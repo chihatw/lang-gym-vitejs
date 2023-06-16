@@ -8,19 +8,60 @@ const randomWorkoutsSlice = createSlice({
   reducers: {
     mergeRandomWorkouts: (
       state,
-      { payload }: { payload: { [id: string]: IRandomWorkout } }
+      { payload }: { payload: { [id: string]: IRandomWorkout | null } }
     ) => ({ ...state, ...payload }),
     clearStoragePath: (state, { payload }: { payload: string }) => {
-      const targetWorkouts = state[payload];
+      const targetWorkout = state[payload]!;
       return {
         ...state,
         [payload]: {
-          ...targetWorkouts,
+          ...targetWorkout,
           storagePath: '',
           resultBpm: 0,
           resultSeconds: 0,
         },
       };
+    },
+    startRecording: (
+      state,
+      {
+        payload: { workoutId, cueIds },
+      }: { payload: { workoutId: string; cueIds: string[] } }
+    ) => {
+      const targetWorout = state[workoutId]!;
+      return {
+        ...state,
+        [workoutId]: {
+          ...targetWorout,
+          cueIds,
+          recordCount: targetWorout.recordCount + 1,
+        },
+      };
+    },
+    stopRecording: (
+      state,
+      {
+        payload: { workoutId, bpm, seconds },
+      }: { payload: { workoutId: string; bpm: number; seconds: number } }
+    ) => {
+      const targetWorkout = state[workoutId]!;
+      return {
+        ...state,
+        [workoutId]: {
+          ...targetWorkout,
+          resultBpm: bpm,
+          resultSeconds: seconds,
+        },
+      };
+    },
+    setStoragePath: (
+      state,
+      {
+        payload: { workoutId, storagePath },
+      }: { payload: { workoutId: string; storagePath: string } }
+    ) => {
+      const targetWorkout = state[workoutId]!;
+      return { ...state, [workoutId]: { ...targetWorkout, storagePath } };
     },
   },
 });

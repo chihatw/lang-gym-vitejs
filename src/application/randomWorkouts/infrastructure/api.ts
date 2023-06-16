@@ -4,9 +4,7 @@ import {
   DocumentData,
   getDoc,
   getDocs,
-  orderBy,
   query,
-  setDoc,
   where,
   updateDoc,
 } from 'firebase/firestore';
@@ -14,6 +12,21 @@ import {
 import { RANDOM_WORKOUT_STORE_COLLECTION } from '../core/1-constants';
 import { db } from 'infrastructure/firebase';
 import { IRandomWorkout } from '../core/0-interface';
+
+export const fetchRandomWorkout = async (workoutId: string) => {
+  console.log(`%cfetch ${RANDOM_WORKOUT_STORE_COLLECTION}`, 'color:red');
+
+  const docSnapshot = await getDoc(
+    doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId)
+  );
+
+  if (!docSnapshot.exists()) {
+    return null;
+  }
+
+  const randomWorkout = buildRandomWorkout(docSnapshot);
+  return randomWorkout;
+};
 
 export const fetchRandomWorkouts = async (uid: string) => {
   console.log(`%cfetch ${RANDOM_WORKOUT_STORE_COLLECTION}`, 'color:red');
@@ -37,6 +50,38 @@ export const clearStoragePath = async (workoutId: string) => {
     storagePath: '',
     resultBpm: 0,
     resultSeconds: 0,
+  });
+};
+
+export const startRecording = async (
+  workoutId: string,
+  cueIds: string[],
+  recordCount: number
+) => {
+  await updateDoc(doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId), {
+    cueIds,
+    recordCount,
+  });
+};
+
+export const saveRecordedAudioBuffer = async ({
+  workoutId,
+  storagePath,
+  recordCount,
+  resultBpm,
+  resultSeconds,
+}: {
+  workoutId: string;
+  storagePath: string;
+  recordCount: number;
+  resultBpm: number;
+  resultSeconds: number;
+}) => {
+  await updateDoc(doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId), {
+    resultBpm,
+    storagePath,
+    recordCount,
+    resultSeconds,
   });
 };
 
