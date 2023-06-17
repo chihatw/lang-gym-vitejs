@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import string2PitchesArray from 'string2pitches-array';
 
 import { RootState } from 'main';
 
 import MoraPitch from './MoraPitch';
+import { buildWordPitches } from 'application/utils/buildWordPitches';
 
 const WordPitch = ({
   questionId,
@@ -21,7 +21,7 @@ const WordPitch = ({
     const wordPitchStr = inputPitchStr
       ? inputPitchStr.split(' ')[wordIndex]
       : '';
-    return wordPitchStr ? string2PitchesArray(wordPitchStr)[0] : [];
+    return wordPitchStr ? buildWordPitches(wordPitchStr) : [];
   }, [inputPitchStrs, wordIndex, questionId]);
 
   const disabled = useMemo(() => {

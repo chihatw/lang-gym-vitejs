@@ -66,7 +66,7 @@ const PageFooter = () => {
     path && navigate(path);
   };
 
-  if (!loginUser) return <></>;
+  if (!loginUser.uid) return <></>;
 
   return (
     <BottomNavigation

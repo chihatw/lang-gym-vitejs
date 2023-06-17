@@ -1,13 +1,14 @@
-import KANA_ROMAJI_MAP from 'kana-romaji-map';
 import {
   IQuizQuestion,
   ISyllable,
 } from 'application/quizQuestions/core/0-interface';
-import string2PitchesArray from 'string2pitches-array';
-import pitchesArray2String from 'pitches-array2string';
+
 import { IQuiz } from 'application/quizzes/core/0-interface';
 import { QUIZ_TIPE } from './1-constants';
 import { IQuizScore } from 'application/quizScores/core/0-interface';
+import { string2PitchesArray } from 'application/utils/string2PitchesArray';
+import { pitchesArray2String } from 'application/utils/pitchesArray2String';
+import { KANA_ROMAJI_MAP } from 'application/utils/kanaRomajiMap/kanaRomajiMap';
 
 export const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
   return pitchStr

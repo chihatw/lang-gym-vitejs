@@ -41,7 +41,8 @@ export const configureStore = import.meta.env.DEV
       rtk.configureStore({
         reducer,
         middleware: (getDefaultMiddleware) =>
-          getDefaultMiddleware({ serializableCheck }),
-        // .concat([...middleware].map(f)=> false(services)),
+          getDefaultMiddleware({ serializableCheck }).concat(
+            [...middleware].map((f) => f(services))
+          ),
         devTools: import.meta.env.DEV,
       });

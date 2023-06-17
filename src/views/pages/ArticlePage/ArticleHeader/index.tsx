@@ -12,31 +12,30 @@ import { getSentenceIds } from 'application/sentences/core/2-services';
 
 const ArticleHeader = () => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
-  const articles = useSelector((state: RootState) => state.articles);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const article = useSelector(
+    (state: RootState) => state.articles[articleId] || null
   );
-  const sentences = useSelector((state: RootState) => state.sentences);
 
-  const article = useMemo(() => articles[articleId], [articleId, articles]);
-  const sentenceIds = useMemo(
-    () => getSentenceIds(articleId, sentences),
-    [articleId, sentences]
+  const sentenceIds = useSelector((state: RootState) =>
+    getSentenceIds(articleId, state.sentences)
   );
-  const audioBuffer = useMemo(() => {
-    const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path] || null;
-  }, [articleId, fetchedAudioBuffers]);
-  const { start, end } = useMemo(() => {
+
+  const { start, end } = useSelector((state: RootState) => {
     try {
       return {
-        start: sentences[sentenceIds[0]].start,
-        end: sentences[sentenceIds.slice(-1)[0]].end,
+        start: state.sentences[sentenceIds[0]].start,
+        end: state.sentences[sentenceIds.slice(-1)[0]].end,
       };
     } catch (e) {
       return { start: 0, end: 0 };
     }
-  }, [sentences, sentenceIds]);
+  });
+
+  const audioBuffer = useSelector((state: RootState) => {
+    const { fetchedAudioBuffers } = state.audio;
+    const path = ARTILCE_STORAGE_PATH + articleId;
+    return fetchedAudioBuffers[path] || null;
+  });
 
   if (!article) return <></>;
 

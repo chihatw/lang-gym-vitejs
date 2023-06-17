@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 const Copyright = () => {
   const { loginUser } = useSelector((state: RootState) => state.authUser);
 
-  if (!loginUser) return <></>;
+  if (!loginUser.uid) return <></>;
   return (
     <div>
       <div

@@ -2,7 +2,6 @@ import { Divider, useTheme } from '@mui/material';
 
 import CorrectAnswer from '../../commons/CorrectAnswer';
 
-import string2PitchesArray from 'string2pitches-array';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { useMemo } from 'react';
@@ -67,9 +66,7 @@ const AccentsAnswer = ({
                 backgroundColor: !isCorrectWord ? '#fee0eb' : '',
               }}
             >
-              <PitchLine
-                pitches={string2PitchesArray(answeredWordPitchStr)[0]}
-              />
+              <PitchLine wordPitchStr={answeredWordPitchStr} />
             </div>
           );
         })}
@@ -95,9 +92,7 @@ const AccentsAnswer = ({
                 <div key={wordIndex}>
                   {!isCorrectWord && (
                     <div>
-                      <PitchLine
-                        pitches={string2PitchesArray(correctWordPitchStr)[0]}
-                      />
+                      <PitchLine wordPitchStr={correctWordPitchStr} />
                       <Divider />
                     </div>
                   )}

@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
@@ -20,11 +20,18 @@ const ArticlePage = () => {
   const { articleId } = useParams();
   const { isChecking } = useSelector((state: RootState) => state.ariclePage);
 
-  const articles = useSelector((state: RootState) => state.articles);
-  const sentences = useSelector((state: RootState) => state.sentences);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const article = useSelector(
+    (state: RootState) => state.articles[articleId!] || null
   );
+  const sentenceIds = useSelector((state: RootState) => {
+    const sentences = state.sentences;
+    return articleId ? getSentenceIds(articleId, sentences) : [];
+  });
+  const audioBuffer = useSelector((state: RootState) => {
+    const { fetchedAudioBuffers } = state.audio;
+    const path = ARTILCE_STORAGE_PATH + articleId;
+    return fetchedAudioBuffers[path] || null;
+  });
 
   useEffect(() => {
     !articleId && navigate('/');
@@ -36,24 +43,13 @@ const ArticlePage = () => {
     dispatch(articlePageActions.initiate(articleId));
   }, [articleId]);
 
-  const article = useMemo(
-    () => articles[articleId!] || null,
-    [articleId, articles]
-  );
-
-  const sentenceIds = useMemo(
-    () => (articleId ? getSentenceIds(articleId, sentences) : []),
-    [articleId, sentences]
-  );
-
-  const audioBuffer = useMemo(() => {
-    const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path] || null;
-  }, [articleId, fetchedAudioBuffers]);
-
   if (!articleId) return <SkeletonPage />;
   if (!article) return <></>;
   if (isChecking) return <CheckPane audioBuffer={audioBuffer} />;
+
+  const renderedSentences = sentenceIds.map((sentenceId, index) => (
+    <SentencePane key={index} sentenceId={sentenceId} />
+  ));
 
   return (
     <Container maxWidth='sm'>
@@ -61,9 +57,7 @@ const ArticlePage = () => {
       <div style={{ paddingTop: 16 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
           <ArticleHeader />
-          {sentenceIds.map((sentenceId, index) => (
-            <SentencePane key={index} sentenceId={sentenceId} />
-          ))}
+          {renderedSentences}
         </div>
       </div>
     </Container>

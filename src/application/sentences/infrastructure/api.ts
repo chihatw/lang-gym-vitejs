@@ -8,8 +8,9 @@ import {
 import { ISentence } from '../core/0-interface';
 import { SENTENCE_STORE_COLLECTION } from '../core/1-constants';
 import { db } from 'infrastructure/firebase';
-import accentsForPitchesArray from 'accents-for-pitches-array';
-import pitchesArray2String from 'pitches-array2string';
+
+import { pitchesArray2String } from 'application/utils/pitchesArray2String';
+import { accentsForPitchesArray } from 'application/utils/accentsForPitchesArray';
 
 export const fetchSentences = async (
   articleId: string

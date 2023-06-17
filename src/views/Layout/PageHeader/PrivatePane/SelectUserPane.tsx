@@ -17,7 +17,7 @@ function SelectUserPane() {
 
   // userIds の取得
   useEffect(() => {
-    if (!loginUser) return;
+    if (!loginUser.uid) return;
     if (!initializing) return;
 
     // currentUid は localStorage から受け取る
@@ -27,8 +27,7 @@ function SelectUserPane() {
     dispatch(userListActions.initiate(currentUid));
   }, [initializing, loginUser]);
 
-  if (!loginUser || loginUser.uid !== import.meta.env.VITE_ADMIN_UID)
-    return <></>;
+  if (loginUser.uid !== import.meta.env.VITE_ADMIN_UID) return <></>;
 
   return (
     <Select

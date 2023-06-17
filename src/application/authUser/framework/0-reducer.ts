@@ -20,7 +20,7 @@ const authUserSlice = createSlice({
     removeUser: (state) => {
       state.initializing = false;
       state.currentUid = '';
-      state.loginUser = null;
+      state.loginUser.uid = '';
     },
     setLoginUser: (state, { payload }: { payload: User }) => {
       state.currentUid = payload.uid;
@@ -28,7 +28,7 @@ const authUserSlice = createSlice({
     },
     signoutSuccess: (state) => {
       state.currentUid = '';
-      state.loginUser = null;
+      state.loginUser.uid = '';
     },
     signoutInitiate: (state) => state,
   },

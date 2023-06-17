@@ -117,7 +117,7 @@ export default App;
 function PrivateRoute({ element }: { element: React.ReactElement }) {
   const { loginUser } = useSelector((state: RootState) => state.authUser);
 
-  if (!loginUser) {
+  if (!loginUser.uid) {
     return <Navigate to='/login' />;
   }
   return element;
@@ -125,7 +125,7 @@ function PrivateRoute({ element }: { element: React.ReactElement }) {
 
 function OnlyUnAuthorizedRoute({ element }: { element: React.ReactElement }) {
   const { loginUser } = useSelector((state: RootState) => state.authUser);
-  if (loginUser) {
+  if (loginUser.uid) {
     return <Navigate to='/' />;
   }
   return element;

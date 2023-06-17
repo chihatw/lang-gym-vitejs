@@ -13,7 +13,7 @@ function PrivatePane() {
 
   const navigate = useNavigate();
 
-  if (!loginUser) return <></>;
+  if (!loginUser.uid) return <></>;
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>

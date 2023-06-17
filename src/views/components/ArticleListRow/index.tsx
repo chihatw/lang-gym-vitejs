@@ -1,31 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Card, CardContent, useTheme } from '@mui/material';
 
 import { RootState } from 'main';
 
-function ArticleListRow({ articleId }: { articleId: string }) {
+const ArticleListRow = ({ articleId }: { articleId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const articles = useSelector((state: RootState) => state.articles);
-
-  const { year, month, day, article } = useMemo(() => {
-    const article = articles[articleId];
-
+  const { title, year, day, month } = useSelector((state: RootState) => {
+    const article = state.articles[articleId];
     if (!article) {
-      return { article: null, year: 0, month: 0, day: 0 };
+      return { title: '', year: 0, month: 0, day: 0 };
     }
-
     const date = new Date(article.createdAt);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
-    return { article, year, month, day };
-  }, [articles, articleId]);
+    return { title: article.title, year, month, day };
+  });
 
-  if (!article) return <></>;
+  if (!title) return <></>;
 
   return (
     <Card
@@ -47,11 +42,11 @@ function ArticleListRow({ articleId }: { articleId: string }) {
           <div
             style={{ color: '#777', fontSize: 10 }}
           >{`${year}年${month}月${day}日`}</div>
-          <div style={{ fontSize: 14 }}>{article.title}</div>
+          <div style={{ fontSize: 14 }}>{title}</div>
         </div>
       </CardContent>
     </Card>
   );
-}
+};
 
 export default ArticleListRow;
