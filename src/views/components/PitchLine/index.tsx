@@ -38,7 +38,7 @@ const PitchLine = memo(({ wordPitchStr }: { wordPitchStr: string }) => {
     moras.pop();
   }
 
-  const renderedMoras = moras.map((mora, index) => {
+  const Moras = moras.map((mora, index) => {
     const isLast = index === moras.length - 1;
     const currentPitchLevel = wordPitchLevels[index];
     const nextPitchLevel = !isLast ? wordPitchLevels[index + 1] : undefined;
@@ -58,7 +58,7 @@ const PitchLine = memo(({ wordPitchStr }: { wordPitchStr: string }) => {
   return (
     <div style={{ position: 'relative' }}>
       <Line showOdakaLine={showOdakaLine} wordPitchLevels={wordPitchLevels} />
-      <div style={{ display: 'flex' }}>{renderedMoras}</div>
+      <div style={{ display: 'flex' }}>{Moras}</div>
     </div>
   );
 });

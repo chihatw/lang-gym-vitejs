@@ -24,7 +24,7 @@ function TopPage() {
     dispatch(topPageActions.initiate());
   }, [initializing]);
 
-  const renderedArticleList = articleIds.map((articleId, index) => (
+  const articles = articleIds.map((articleId, index) => (
     <ArticleListRow key={index} articleId={articleId} />
   ));
 
@@ -33,7 +33,7 @@ function TopPage() {
       <div style={{ height: 48 }} className='dummyHeader' />
       <div style={{ display: 'grid', rowGap: 8 }}>
         <CustomLabel label='最近の作文' />
-        {renderedArticleList}
+        {articles}
         {hasMore && (
           <div style={{ textAlign: 'right' }}>
             <Button

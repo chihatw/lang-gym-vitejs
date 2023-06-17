@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { initialState } from '../core/1-constants';
 import { IQuiz } from '../core/0-interface';
+import { RootState } from 'main';
 
 const quizzesSlice = createSlice({
   name: 'quizzes',

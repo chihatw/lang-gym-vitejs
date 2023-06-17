@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,22 +6,24 @@ import { RootState } from 'main';
 
 import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
+import { selectQuizByQuizPageQuizId } from 'application/quizPage/framework/2-selector';
+import { memo, useCallback } from 'react';
 
-const QuizPageFooter = () => {
+const QuizPageFooter = memo(() => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { quizId } = useSelector((state: RootState) => state.quizPage);
-  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quiz = useSelector((state: RootState) =>
+    selectQuizByQuizPageQuizId(state)
+  );
 
-  const quiz = useMemo(() => quizzes[quizId] || null, [quizId, quizzes]);
-
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!quiz) return;
     if (!Object.values(QUIZ_TIPE).includes(quiz.type)) return;
     const createdAt = Date.now();
     dispatch(quizPageActions.updateQuizScoreStart(createdAt));
     navigate(`/quiz/${quizId}/score/${createdAt}`);
-  };
+  }, [quiz]);
 
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
@@ -44,21 +45,23 @@ const QuizPageFooter = () => {
       </Button>
     </div>
   );
-};
+});
 
 export default QuizPageFooter;
 
-const ButtonLabel = ({ label, color }: { label: string; color: string }) => {
-  const theme = useTheme();
-  return (
-    <span
-      style={{
-        ...(theme.typography as any).mPlusRounded500,
-        color,
-        fontSize: 14,
-      }}
-    >
-      {label}
-    </span>
-  );
-};
+const ButtonLabel = memo(
+  ({ label, color }: { label: string; color: string }) => {
+    const theme = useTheme();
+    return (
+      <span
+        style={{
+          ...(theme.typography as any).mPlusRounded500,
+          color,
+          fontSize: 14,
+        }}
+      >
+        {label}
+      </span>
+    );
+  }
+);

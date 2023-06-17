@@ -1,6 +1,6 @@
-import React from 'react';
+import { memo } from 'react';
 
-const MoraSeparater = ({ isAccent }: { isAccent?: boolean }) => {
+const MoraSeparater = memo(({ isAccent }: { isAccent?: boolean }) => {
   return (
     <div
       style={{
@@ -12,6 +12,6 @@ const MoraSeparater = ({ isAccent }: { isAccent?: boolean }) => {
       }}
     />
   );
-};
+});
 
 export default MoraSeparater;

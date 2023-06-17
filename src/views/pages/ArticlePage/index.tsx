@@ -21,11 +21,11 @@ const ArticlePage = () => {
   const { isChecking } = useSelector((state: RootState) => state.ariclePage);
 
   const article = useSelector(
-    (state: RootState) => state.articles[articleId!] || null
+    (state: RootState) => state.articles[String(articleId)] || null
   );
   const sentenceIds = useSelector((state: RootState) => {
     const sentences = state.sentences;
-    return articleId ? getSentenceIds(articleId, sentences) : [];
+    return getSentenceIds(String(articleId), sentences);
   });
   const audioBuffer = useSelector((state: RootState) => {
     const { fetchedAudioBuffers } = state.audio;
@@ -47,7 +47,7 @@ const ArticlePage = () => {
   if (!article) return <></>;
   if (isChecking) return <CheckPane audioBuffer={audioBuffer} />;
 
-  const renderedSentences = sentenceIds.map((sentenceId, index) => (
+  const sentences = sentenceIds.map((sentenceId, index) => (
     <SentencePane key={index} sentenceId={sentenceId} />
   ));
 
@@ -57,7 +57,7 @@ const ArticlePage = () => {
       <div style={{ paddingTop: 16 }}>
         <div style={{ display: 'grid', rowGap: 8 }}>
           <ArticleHeader />
-          {renderedSentences}
+          {sentences}
         </div>
       </div>
     </Container>

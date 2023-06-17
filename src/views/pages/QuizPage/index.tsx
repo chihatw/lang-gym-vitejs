@@ -12,6 +12,7 @@ import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import PitchQuiz from './PitchQuiz';
 import RhythmQuiz from './RhythmQuiz';
 import QuizPageFooter from './QuizPageFooter';
+import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
 
 const QuizPage = () => {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ const QuizPage = () => {
 
   const { quizId } = useParams();
 
-  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quiz = useSelector((state: RootState) =>
+    selectQuizByQuizId(state, quizId)
+  );
 
   useEffect(() => {
     !quizId && navigate('/');
@@ -29,8 +32,6 @@ const QuizPage = () => {
     if (!quizId) return;
     dispatch(quizPageActions.initiate(quizId));
   }, [quizId]);
-
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
 
   if (!quiz) return <></>;
 

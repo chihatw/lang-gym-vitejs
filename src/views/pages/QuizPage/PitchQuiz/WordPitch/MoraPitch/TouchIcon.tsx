@@ -5,55 +5,58 @@ import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 
 import MoraSeparater from './MoraSeparater';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
+import { memo, useCallback } from 'react';
 
-const TouchIcon = ({
-  isAccent,
-  disabled,
-  wordIndex,
-  moraIndex,
-  questionId,
-}: {
-  isAccent: boolean;
-  disabled: boolean;
-  wordIndex: number;
-  moraIndex: number;
-  questionId: string;
-}) => {
-  const dispatch = useDispatch();
-  const handleClick = () => {
-    dispatch(
-      quizPageActions.setInputPitchStr({
-        questionId,
-        wordIndex,
-        moraIndex,
-      })
+const TouchIcon = memo(
+  ({
+    isAccent,
+    disabled,
+    wordIndex,
+    moraIndex,
+    questionId,
+  }: {
+    isAccent: boolean;
+    disabled: boolean;
+    wordIndex: number;
+    moraIndex: number;
+    questionId: string;
+  }) => {
+    const dispatch = useDispatch();
+    const handleClick = useCallback(() => {
+      dispatch(
+        quizPageActions.setInputPitchStr({
+          questionId,
+          wordIndex,
+          moraIndex,
+        })
+      );
+    }, []);
+
+    return (
+      <div style={{ left: 16, position: 'relative' }}>
+        <IconButton size='small' disabled={disabled} onClick={handleClick}>
+          {isAccent ? (
+            <LabelIcon
+              style={{
+                color: '#f50057',
+                position: 'relative',
+                transform: 'rotate(270deg)',
+              }}
+            />
+          ) : (
+            <LabelOutlinedIcon
+              style={{
+                color: '#86bec4',
+                position: 'relative',
+                transform: 'rotate(270deg)',
+              }}
+            />
+          )}
+        </IconButton>
+        <MoraSeparater isAccent={isAccent} />
+      </div>
     );
-  };
-
-  return (
-    <div style={{ left: 16, position: 'relative' }}>
-      <IconButton size='small' disabled={disabled} onClick={handleClick}>
-        {isAccent ? (
-          <LabelIcon
-            style={{
-              color: '#f50057',
-              position: 'relative',
-              transform: 'rotate(270deg)',
-            }}
-          />
-        ) : (
-          <LabelOutlinedIcon
-            style={{
-              color: '#86bec4',
-              position: 'relative',
-              transform: 'rotate(270deg)',
-            }}
-          />
-        )}
-      </IconButton>
-      <MoraSeparater isAccent={isAccent} />
-    </div>
-  );
-};
+  }
+);
 
 export default TouchIcon;

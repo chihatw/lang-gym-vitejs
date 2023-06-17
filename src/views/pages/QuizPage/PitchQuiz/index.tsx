@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material';
-import { useMemo } from 'react';
 
 import { RootState } from 'main';
 
@@ -8,35 +7,36 @@ import WordPitch from './WordPitch';
 
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
 import SentencePitchLine from 'views/components/SentencePitchLine';
+import {
+  selectInputPitchStr,
+  selectQuizAudioBuffer,
+} from 'application/quizPage/framework/2-selector';
 
 const PitchQuiz = ({ questionId }: { questionId: string }) => {
   const theme = useTheme();
 
-  const { quizId, inputPitchStrs } = useSelector(
-    (state: RootState) => state.quizPage
-  );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const { inputPitchStr, wordPitchStrs } = useSelector((state: RootState) =>
+    selectInputPitchStr(state, questionId)
   );
 
-  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
-  );
-  const audioBuffer = useMemo(() => {
-    if (!quiz) return null;
-    return fetchedAudioBuffers[quiz.downloadURL] || null;
-  }, [quiz, fetchedAudioBuffers]);
-
-  const inputPitchStr = useMemo(
-    () => inputPitchStrs[questionId],
-    [questionId, inputPitchStrs]
+  const question = useSelector(
+    (state: RootState) => state.quizQuestions[questionId] || null
   );
 
-  if (!question || !inputPitchStr) return <></>;
+  const audioBuffer = useSelector((state: RootState) =>
+    selectQuizAudioBuffer(state)
+  );
+
+  if (!question || !wordPitchStrs.length) return <></>;
+
+  const wordPitches = wordPitchStrs.map((wordPitchStr, wordIndex) => (
+    <WordPitch
+      key={wordIndex}
+      wordIndex={wordIndex}
+      questionId={questionId}
+      wordPitchStr={wordPitchStr}
+    />
+  ));
 
   return (
     <div style={{ display: 'grid', rowGap: 16 }}>
@@ -56,15 +56,7 @@ const PitchQuiz = ({ questionId }: { questionId: string }) => {
         {question.japanese}
       </div>
       <SentencePitchLine pitchStr={inputPitchStr} />
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {inputPitchStr.split(' ').map((_, wordIndex) => (
-          <WordPitch
-            key={wordIndex}
-            wordIndex={wordIndex}
-            questionId={questionId}
-          />
-        ))}
-      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>{wordPitches}</div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material';
+import { memo } from 'react';
 
-const QuestionIndex = ({ index }: { index: number }) => {
+const QuestionIndex = memo(({ index }: { index: number }) => {
   const theme = useTheme();
   return (
     <div
@@ -12,6 +13,6 @@ const QuestionIndex = ({ index }: { index: number }) => {
       }}
     >{`（${index}）`}</div>
   );
-};
+});
 
 export default QuestionIndex;

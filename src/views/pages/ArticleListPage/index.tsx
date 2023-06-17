@@ -27,7 +27,7 @@ const ArticleListPage = () => {
     dispatch(articleListActions.getMoreArticles());
   };
 
-  const renderedArticleList = articleIds.map((articleId, index) => (
+  const Articles = articleIds.map((articleId, index) => (
     <ArticleListRow key={index} articleId={articleId} />
   ));
 
@@ -36,7 +36,7 @@ const ArticleListPage = () => {
       <div style={{ height: 48 }} className='dummyHeader' />
       <div style={{ display: 'grid', rowGap: 8 }}>
         <CustomLabel label='作文一覧' />
-        {renderedArticleList}
+        {Articles}
         {!!hasMore && (
           <div style={{ textAlign: 'right' }}>
             <Button

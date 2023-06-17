@@ -5,16 +5,11 @@ import { buildWordPitchStrs } from 'application/utils/utils';
 
 const SentencePitchLine = memo(({ pitchStr }: { pitchStr: string }) => {
   const wordPitchStrs = useMemo(() => buildWordPitchStrs(pitchStr), [pitchStr]);
-  console.log({ wordPitchStrs });
-  const renderedWordPitchLines = wordPitchStrs.map((wordPitchStr, index) => (
+  const pitchLines = wordPitchStrs.map((wordPitchStr, index) => (
     <PitchLine key={index} wordPitchStr={wordPitchStr} />
   ));
 
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {renderedWordPitchLines}
-    </div>
-  );
+  return <div style={{ display: 'flex', flexWrap: 'wrap' }}>{pitchLines}</div>;
 });
 
 export default SentencePitchLine;
