@@ -1,19 +1,22 @@
-import { MenuItem, Select } from '@mui/material';
-import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
-import { userListActions } from 'application/userList/framework/0-reducer';
-import { RootState } from 'main';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { MenuItem, Select } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { RootState } from 'main';
+
+import { userListActions } from 'application/userList/framework/0-reducer';
+import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
+import { selectAllUsers } from 'application/users/framework/0-reducer';
 
 function SelectUserPane() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loginUser } = useSelector((state: RootState) => state.authUser);
-  const { initializing, uids, selectedUid } = useSelector(
+  const { initializing, selectedUid } = useSelector(
     (state: RootState) => state.userList
   );
-  const users = useSelector((state: RootState) => state.users);
+  const users = useSelector((state: RootState) => selectAllUsers(state));
 
   // userIds の取得
   useEffect(() => {
@@ -28,7 +31,6 @@ function SelectUserPane() {
   }, [initializing, loginUser]);
 
   if (loginUser.uid !== import.meta.env.VITE_ADMIN_UID) return <></>;
-
   return (
     <Select
       sx={{ color: 'white' }}
@@ -41,11 +43,13 @@ function SelectUserPane() {
       }}
       disableUnderline
     >
-      {uids.map((uid, index) => (
-        <MenuItem value={uid} key={index}>
-          <div>{users[uid]}</div>
-        </MenuItem>
-      ))}
+      {users.map((user, index) => {
+        return (
+          <MenuItem value={user.uid} key={index}>
+            <div>{user.displayName}</div>
+          </MenuItem>
+        );
+      })}
     </Select>
   );
 }

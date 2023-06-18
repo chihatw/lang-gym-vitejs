@@ -1,19 +1,24 @@
 import { collection, getDocs, query } from 'firebase/firestore';
 
-import { USER_STORE_COLLECTION } from '../core/1-constants';
 import { db } from 'infrastructure/firebase';
+import { IUser } from '../core/0-interface';
+
+const COLLECTION = 'users';
 
 export const fetchUsers = async () => {
-  console.log(`%cfetch ${USER_STORE_COLLECTION}`, 'color:red');
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
-  let q = query(collection(db, USER_STORE_COLLECTION));
+  let q = query(collection(db, COLLECTION));
 
   const querySnapshot = await getDocs(q);
-  const users: { [id: string]: string } = {};
+  const users: IUser[] = [];
 
   querySnapshot.forEach((doc) => {
     const { displayname } = doc.data();
-    users[doc.id] = displayname;
+    users.push({
+      uid: doc.id,
+      displayName: displayname,
+    });
   });
 
   return users;
