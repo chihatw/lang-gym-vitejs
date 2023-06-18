@@ -33,7 +33,7 @@ export const selectCreateAt = createSelector(
 
 export const selectRecordedSentence = createSelector(
   [
-    (state: RootState) => state.sentences,
+    (state: RootState) => state.sentences.entities,
     (state: RootState) => state.ariclePage.recordSentenceId,
   ],
   (sentences, recordSentenceId) => sentences[recordSentenceId]

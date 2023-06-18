@@ -7,8 +7,7 @@ export const selectQuizByQuizPageQuizId = createSelector(
     (state: RootState) => state.quizPage.quizId,
   ],
   (quizzes, quizId) =>
-    Object.values(quizzes).find((quiz) => quiz && quiz.id === String(quizId)) ||
-    null
+    Object.values(quizzes).find((quiz) => quiz && quiz.id === String(quizId))
 );
 
 export const selectInputPitchStr = createSelector(
@@ -28,13 +27,12 @@ export const selectQuizAudioBuffer = createSelector(
     (state: RootState) => state.audio.fetchedAudioBuffers,
   ],
   (quizzes, quizId, fetchedAudioBuffers) => {
-    const quiz =
-      Object.values(quizzes).find(
-        (quiz) => quiz && quiz.id === String(quizId)
-      ) || null;
+    const quiz = Object.values(quizzes).find(
+      (quiz) => quiz && quiz.id === String(quizId)
+    );
 
-    if (!quiz) return null;
-    return fetchedAudioBuffers[quiz.downloadURL] || null;
+    if (!quiz) return;
+    return fetchedAudioBuffers[quiz.downloadURL];
   }
 );
 
@@ -80,7 +78,7 @@ export const selectSyllable = createSelector(
 
   (quizQuestions, { questionId, wordIndex, syllableIndex }) => {
     const question = quizQuestions[questionId];
-    if (!question) return null;
+    if (!question) return;
     return Object.values(question.syllables)[wordIndex][syllableIndex];
   }
 );

@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { MutableRefObject, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { RootState } from 'main';
 
@@ -24,7 +24,7 @@ const RecPane = () => {
 
   // streamと連携してマイクを切るため
   const audioElemRef = useRef(new Audio());
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | undefined>(undefined);
 
   const rafIdRef = useRef(0);
   const startedAtRef = useRef(0);
@@ -122,20 +122,3 @@ const RecPane = () => {
 };
 
 export default RecPane;
-
-const stopRecording = (
-  micAudioElemRef: MutableRefObject<HTMLAudioElement>,
-  mediaRecorderRef: MutableRefObject<MediaRecorder | null>
-) => {
-  let mediaRecorder = mediaRecorderRef.current;
-  let audioElem = micAudioElemRef.current;
-  if (!mediaRecorder) return;
-  mediaRecorder.stop();
-  const stream = audioElem.srcObject as MediaStream;
-  stream.getTracks().forEach((track) => {
-    track.stop();
-  });
-  // ブラウザのマイク使用中の表示を消すために必要
-  audioElem.srcObject = null;
-  mediaRecorder = null;
-};

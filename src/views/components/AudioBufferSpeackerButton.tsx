@@ -4,7 +4,7 @@ import {
   createSourceNode,
   pauseSourceNode,
 } from 'application/audio/core/2-services';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 function AudioBufferSpeackerButton({
   start,
@@ -16,7 +16,7 @@ function AudioBufferSpeackerButton({
   audioBuffer: AudioBuffer;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const sourseNodeRef = useRef<AudioBufferSourceNode | undefined>(undefined);
 
   const play = async () => {
     const audioContext = new AudioContext();

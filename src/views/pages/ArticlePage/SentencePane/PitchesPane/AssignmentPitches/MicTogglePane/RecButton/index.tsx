@@ -20,7 +20,7 @@ const RecButton = () => {
 
   // streamと連携してマイクを切るため
   const audioElemRef = useRef(new Audio());
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | undefined>(undefined);
 
   const start = async () => {
     if (!navigator.mediaDevices) return;

@@ -27,14 +27,13 @@ const ArticlePage = () => {
   );
 
   const article = useSelector((state: RootState) => selectArticle(state));
-  const sentenceIds = useSelector((state: RootState) => {
-    const sentences = state.sentences;
-    return getSentenceIds(String(articleId), sentences);
-  });
+  const sentenceIds = useSelector((state: RootState) =>
+    getSentenceIds(String(articleId), Object.values(state.sentences.entities))
+  );
   const audioBuffer = useSelector((state: RootState) => {
     const { fetchedAudioBuffers } = state.audio;
     const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path] || null;
+    return fetchedAudioBuffers[path];
   });
 
   useEffect(() => {

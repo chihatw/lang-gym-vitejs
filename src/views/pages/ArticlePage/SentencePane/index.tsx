@@ -7,14 +7,15 @@ import Original from './Original';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
+import { selectSentenceById } from 'application/sentences/framework/0-reducer';
 
 const SentencePane = ({ sentenceId }: { sentenceId: string }) => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
   const article = useSelector(
     (state: RootState) => state.articles.entities[articleId]
   );
-  const sentence = useSelector(
-    (state: RootState) => state.sentences[sentenceId]
+  const sentence = useSelector((state: RootState) =>
+    selectSentenceById(state, sentenceId)
   );
   const audioBuffer = useSelector((state: RootState) => {
     const { fetchedAudioBuffers } = state.audio;

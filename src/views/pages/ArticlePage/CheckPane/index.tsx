@@ -15,7 +15,7 @@ import { selectRecordedSentence } from 'application/articlePage/framework/2-sele
 const CheckPane = ({
   audioBuffer,
 }: {
-  audioBuffer: AudioBuffer | null; // article audioBuffer
+  audioBuffer: AudioBuffer | undefined; // article audioBuffer
 }) => {
   const dispatch = useDispatch();
 
@@ -29,6 +29,8 @@ const CheckPane = ({
   const recordedSentence = useSelector((state: RootState) =>
     selectRecordedSentence(state)
   );
+
+  if (!recordedSentence) return <></>;
 
   const abandonRecordedAudio = () => {
     dispatch(articlePageActions.resetRecordedAudio());
@@ -46,8 +48,6 @@ const CheckPane = ({
     );
     dispatch(articlePageActions.resetRecordedAudio());
   };
-
-  if (!recordedSentence) return <></>;
 
   return (
     <Modal open={true}>

@@ -5,7 +5,7 @@ export const signInWithEmailAndPassword = async (
   email: string,
   password: string
 ): Promise<{
-  authUser: firebaseAuth.User | null;
+  authUser: firebaseAuth.User | undefined;
   emailErrMsg: string;
   passwordErrMsg: string;
 }> => {
@@ -32,7 +32,7 @@ export const signInWithEmailAndPassword = async (
       default:
     }
     return {
-      authUser: null,
+      authUser: undefined,
       emailErrMsg,
       passwordErrMsg,
     };

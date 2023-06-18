@@ -14,7 +14,7 @@ export const selectAudioBuffer = createSelector(
   ],
   (randomWorkouts, fetchedAudioBuffers, workoutId) => {
     const randomWorkout = randomWorkouts[workoutId];
-    if (!randomWorkout || !randomWorkout.storagePath) return null;
+    if (!randomWorkout || !randomWorkout.storagePath) return;
     return fetchedAudioBuffers[randomWorkout.storagePath];
   }
 );

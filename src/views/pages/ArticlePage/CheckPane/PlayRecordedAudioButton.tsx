@@ -13,7 +13,7 @@ import { articlePageActions } from 'application/articlePage/framework/0-reducer'
 
 function PlayRecordedAudioButton() {
   const dispatch = useDispatch();
-  const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const sourceNodeRef = useRef<AudioBufferSourceNode | undefined>(undefined);
   const { recordedAudioBuffer } = useSelector(
     (state: RootState) => state.audio
   );

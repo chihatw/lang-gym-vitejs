@@ -8,7 +8,7 @@ const randomWorkoutsSlice = createSlice({
   reducers: {
     mergeRandomWorkouts: (
       state,
-      { payload }: { payload: { [id: string]: IRandomWorkout | null } }
+      { payload }: { payload: { [id: string]: IRandomWorkout | undefined } }
     ) => ({ ...state, ...payload }),
     clearStoragePath: (state, { payload }: { payload: string }) => {
       const targetWorkout = state[payload]!;

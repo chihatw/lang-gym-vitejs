@@ -19,13 +19,13 @@ const COLLECTION = 'articles';
 export const fetchArtice = async (
   uid: string,
   articleId: string
-): Promise<IArticle | null> => {
+): Promise<IArticle | undefined> => {
   console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
   const docSnapshot = await getDoc(doc(db, COLLECTION, articleId));
   if (!docSnapshot.exists()) {
     console.log(`%cno articles found`, 'color:red');
-    return null;
+    return;
   }
 
   const article = buildArticle(docSnapshot);
@@ -35,7 +35,7 @@ export const fetchArtice = async (
       `%cincorrect uid article.uid: ${article.uid}, user.uid: ${uid}`,
       'color:red'
     );
-    return null;
+    return;
   }
 
   return article;

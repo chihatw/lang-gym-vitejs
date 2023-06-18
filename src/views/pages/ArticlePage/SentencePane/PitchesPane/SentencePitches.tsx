@@ -8,7 +8,7 @@ const SentencePitches = ({
   audioBuffer,
 }: {
   sentence: ISentence;
-  audioBuffer: AudioBuffer | null;
+  audioBuffer: AudioBuffer | undefined;
 }) => {
   const theme = useTheme();
 

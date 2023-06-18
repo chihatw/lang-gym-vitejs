@@ -26,8 +26,8 @@ const AudioBufferSlider = memo(
     const [isPlaying, setIsPlaying] = useState(false);
 
     const rafIdRef = useRef(0);
-    const sourseNodeRef = useRef<AudioBufferSourceNode | null>(null);
-    const audioContextRef = useRef<AudioContext | null>(null);
+    const sourseNodeRef = useRef<AudioBufferSourceNode | undefined>(undefined);
+    const audioContextRef = useRef<AudioContext | undefined>(undefined);
 
     const frameCountRef = useRef(0); // 間引きのためのカウンター
     const elapsedTimeRef = useRef(0); // 累積経過時間

@@ -1,8 +1,8 @@
 import { IAudio } from './0-interface';
 
 export const initialState: IAudio = {
-  recordedBlob: null,
-  recordedAudioBuffer: null,
+  recordedBlob: undefined,
+  recordedAudioBuffer: undefined,
   fetchedAudioBuffers: {},
 };
 

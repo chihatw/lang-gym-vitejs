@@ -21,7 +21,7 @@ export const playAudioBufferAndSetSourceNode = async (
   audioBuffer: AudioBuffer,
   start: number,
   stop: number,
-  sourceNodeRef: React.MutableRefObject<AudioBufferSourceNode | null>,
+  sourceNodeRef: React.MutableRefObject<AudioBufferSourceNode | undefined>,
   callback?: () => void
 ) => {
   const audioContext = new AudioContext();
@@ -36,16 +36,16 @@ export const playAudioBufferAndSetSourceNode = async (
 };
 
 export const pauseSourceNode = (
-  sourceNodeRef: React.MutableRefObject<AudioBufferSourceNode | null>
+  sourceNodeRef: React.MutableRefObject<AudioBufferSourceNode | undefined>
 ) => {
   const sourceNode = sourceNodeRef.current;
   sourceNode && sourceNode.stop(0);
-  sourceNodeRef.current = null;
+  sourceNodeRef.current = undefined;
 };
 
 export const createMediaRecorder = async (
   audioElemRef: MutableRefObject<HTMLAudioElement>,
-  mediaRecorderRef: MutableRefObject<MediaRecorder | null>
+  mediaRecorderRef: MutableRefObject<MediaRecorder | undefined>
 ) => {
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: true,
@@ -76,7 +76,7 @@ export const startRecording = async (
 
 export const clearMediaRecorder = (
   audioElemRef: MutableRefObject<HTMLAudioElement>,
-  mediaRecorderRef: MutableRefObject<MediaRecorder | null>
+  mediaRecorderRef: MutableRefObject<MediaRecorder | undefined>
 ) => {
   let mediaRecorder = mediaRecorderRef.current;
   let audioElem = audioElemRef.current;
@@ -88,7 +88,7 @@ export const clearMediaRecorder = (
   });
   // ブラウザのマイク使用中の表示を消すために必要
   audioElem.srcObject = null;
-  mediaRecorder = null;
+  mediaRecorder = undefined;
 };
 
 export const updateElapsedTime = (

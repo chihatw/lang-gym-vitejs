@@ -15,8 +15,8 @@ const sentencesMiddleware =
     switch (action.type) {
       case 'sentences/getSentencesStart': {
         const articleId = action.payload as string;
-        const sentences = (getState() as RootState).sentences;
-        const sentenceIds = getSentenceIds(articleId, sentences);
+        const sentences = (getState() as RootState).sentences.entities;
+        const sentenceIds = getSentenceIds(articleId, Object.values(sentences));
 
         // sentencesがfetch済みの場合、assignmentAudioBuffers を取得
         if (!!sentenceIds.length) {
@@ -33,9 +33,9 @@ const sentencesMiddleware =
         );
 
         // sentences がある場合
-        if (Object.keys(gotSentences).length) {
+        if (gotSentences.length) {
           const sentenceIds = getSentenceIds(articleId, gotSentences);
-          dispatch(sentencesActions.mergeSentences(gotSentences));
+          dispatch(sentencesActions.upsertSentences(gotSentences));
 
           const paths = sentenceIds.map(
             (sentenceId) => ASSIGNMENTS_STORAGE_PATH + sentenceId

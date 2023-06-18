@@ -22,7 +22,7 @@ const COLLECTION = 'quizzes';
 export const fetchQuiz = async (
   quizId: string
 ): Promise<{
-  quiz: IQuiz | null;
+  quiz: IQuiz | undefined;
   quizScores: IQuizScore[];
   quizQuestions: IQuizQuestion[];
 }> => {
@@ -31,7 +31,7 @@ export const fetchQuiz = async (
   const docSnapshot = await getDoc(doc(db, COLLECTION, quizId));
 
   if (!docSnapshot.exists()) {
-    return { quiz: null, quizScores: [], quizQuestions: [] };
+    return { quiz: undefined, quizScores: [], quizQuestions: [] };
   }
 
   const { quiz, quizScores, quizQuestions } = buildQuiz(docSnapshot);

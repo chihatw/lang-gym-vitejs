@@ -21,7 +21,7 @@ export const fetchRandomWorkout = async (workoutId: string) => {
   );
 
   if (!docSnapshot.exists()) {
-    return null;
+    return;
   }
 
   const randomWorkout = buildRandomWorkout(docSnapshot);

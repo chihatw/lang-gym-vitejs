@@ -6,27 +6,29 @@ import {
   where,
 } from 'firebase/firestore';
 import { ISentence } from '../core/0-interface';
-import { SENTENCE_STORE_COLLECTION } from '../core/1-constants';
+
 import { db } from 'infrastructure/firebase';
 
 import { pitchesArray2String } from 'application/utils/pitchesArray2String';
 import { accentsForPitchesArray } from 'application/utils/accentsForPitchesArray';
 
+const COLLECTION = 'sentences';
+
 export const fetchSentences = async (
   articleId: string
-): Promise<{ [id: string]: ISentence }> => {
-  console.log(`%cfetch ${SENTENCE_STORE_COLLECTION}`, 'color:red');
+): Promise<ISentence[]> => {
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
   const q = query(
-    collection(db, SENTENCE_STORE_COLLECTION),
+    collection(db, COLLECTION),
     where('article', '==', articleId)
   );
 
   const querySnapshot = await getDocs(q);
-  const sentences: { [id: string]: ISentence } = {};
+  const sentences: ISentence[] = [];
   querySnapshot.forEach((doc) => {
     const sentence = buildSentence(doc);
-    sentences[sentence.id] = sentence;
+    sentences.push(sentence);
   });
 
   return sentences;

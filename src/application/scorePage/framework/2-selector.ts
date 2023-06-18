@@ -18,7 +18,7 @@ export const selectScore = createSelector(
   ],
   (quizzes, quizScores, quizId, scoreCreatedAt) => {
     const quiz = quizzes[quizId];
-    if (!quiz) return null;
+    if (!quiz) return;
     return quiz.scoreIds
       .map((scoreId) => quizScores[scoreId])
       .find((score) => score && score.createdAt === Number(scoreCreatedAt));

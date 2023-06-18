@@ -24,7 +24,7 @@ const audioMiddleWare =
         );
         dispatch(
           audioActions.mergeFetchedAudioBuffers({
-            [path]: gotAudioBuffer || null,
+            [path]: gotAudioBuffer || undefined,
           })
         );
 
@@ -37,14 +37,14 @@ const audioMiddleWare =
         const fetchedPaths = Object.keys(fetchedAudioBuffers);
 
         // audioBuffers の取得
-        const audioBuffers: { [path: string]: AudioBuffer | null } = {};
+        const audioBuffers: { [path: string]: AudioBuffer | undefined } = {};
         await Promise.all(
           paths.map(async (path) => {
             // path がすでに存在すれば、スキップ
             if (!fetchedPaths.includes(path)) {
               const gotAudioBuffer =
                 await services.api.audio.fetchStorageAudioBuffer(path);
-              audioBuffers[path] = gotAudioBuffer || null;
+              audioBuffers[path] = gotAudioBuffer;
             }
           })
         );

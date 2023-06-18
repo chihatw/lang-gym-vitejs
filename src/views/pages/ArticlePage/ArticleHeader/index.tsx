@@ -12,18 +12,18 @@ import { getSentenceIds } from 'application/sentences/core/2-services';
 const ArticleHeader = () => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
   const article = useSelector(
-    (state: RootState) => state.articles.entities[articleId] || null
+    (state: RootState) => state.articles.entities[articleId]
   );
 
   const sentenceIds = useSelector((state: RootState) =>
-    getSentenceIds(articleId, state.sentences)
+    getSentenceIds(articleId, Object.values(state.sentences.entities))
   );
 
   const { start, end } = useSelector((state: RootState) => {
     try {
       return {
-        start: state.sentences[sentenceIds[0]].start,
-        end: state.sentences[sentenceIds.slice(-1)[0]].end,
+        start: state.sentences.entities[sentenceIds[0]]!.start,
+        end: state.sentences.entities[sentenceIds.slice(-1)[0]]!.end,
       };
     } catch (e) {
       return { start: 0, end: 0 };
@@ -33,7 +33,7 @@ const ArticleHeader = () => {
   const audioBuffer = useSelector((state: RootState) => {
     const { fetchedAudioBuffers } = state.audio;
     const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path] || null;
+    return fetchedAudioBuffers[path];
   });
 
   if (!article) return <></>;
