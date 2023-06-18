@@ -38,7 +38,7 @@ const quizzesMiddleware =
 
         dispatch(quizzesActions.mergeQuizzes(quizzes));
         dispatch(quizQuestionsActions.setQuizQuestions(quizQuestions));
-        dispatch(quizScoresActions.mergeQuizScores(quizScores));
+        dispatch(quizScoresActions.setQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
 
         return;
@@ -76,7 +76,7 @@ const quizzesMiddleware =
 
         if (!quiz) return;
 
-        dispatch(quizScoresActions.mergeQuizScores(quizScores));
+        dispatch(quizScoresActions.addQuizScores(quizScores));
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
@@ -110,7 +110,7 @@ const quizzesMiddleware =
 
         if (!quiz) return;
 
-        dispatch(quizScoresActions.mergeQuizScores(quizScores));
+        dispatch(quizScoresActions.addQuizScores(quizScores));
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
@@ -187,7 +187,7 @@ const quizzesMiddleware =
           inputSpecialMoraArrays,
         } = (getState() as RootState).quizPage;
         const quizzes = (getState() as RootState).quizzes;
-        const quizScores = (getState() as RootState).quizScores;
+        const quizScores = (getState() as RootState).quizScores.entities;
         const quizQuestions = (getState() as RootState).quizQuestions;
         let { answeredIds, unansweredIds } = (getState() as RootState).quizList;
 
@@ -210,15 +210,16 @@ const quizzesMiddleware =
           inputSpecialMoraArrays
         );
 
+        const scoreId = nanoid(8);
         const score: IQuizScore = {
+          scoreId,
           score: points,
           createdAt,
           pitchAnswers,
           rhythmAnswers,
         };
 
-        const scoreId = nanoid(8);
-        dispatch(quizScoresActions.mergeQuizScores({ [scoreId]: score }));
+        dispatch(quizScoresActions.addQuizScore(score));
         dispatch(quizzesActions.unshiftScoreId({ quizId, scoreId }));
 
         const scores = quiz.scoreIds.map((scoreId) => quizScores[scoreId]);

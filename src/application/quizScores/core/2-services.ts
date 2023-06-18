@@ -2,17 +2,19 @@ import { nanoid } from 'nanoid';
 import { IQuizScore } from './0-interface';
 
 export function addTempIdAndSortByCreatedAt(scores: {
-  [createdAt: number]: IQuizScore;
+  [createdAt: number]: Omit<IQuizScore, 'scoreId'>;
 }) {
-  const scoreAddedIds: { [id: string]: IQuizScore } = {};
+  const scoreAddedIds: IQuizScore[] = [];
   for (let item of Object.values(scores)) {
     const tempId = nanoid(8);
-    scoreAddedIds[tempId] = item;
+    scoreAddedIds.push({ ...item, scoreId: tempId });
   }
 
-  const scoreIds: string[] = Object.entries(scoreAddedIds)
-    .sort((a, b) => b[1].createdAt - a[1].createdAt)
-    .map(([key, value]) => key);
+  const scoreIds: string[] = scoreAddedIds
+    .sort((a, b) =>
+      b.createdAt.toString().localeCompare(a.createdAt.toString())
+    )
+    .map((score) => score.scoreId);
 
   return { scoreAddedIds, scoreIds };
 }

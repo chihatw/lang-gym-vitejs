@@ -90,7 +90,7 @@ export const selectAnsweredSpecialMoraArray = createSelector(
     (state: RootState) => state.quizzes,
     (state: RootState) => state.scorePage.quizId,
     (state: RootState) => state.scorePage.scoreCreatedAt,
-    (state: RootState) => state.quizScores,
+    (state: RootState) => state.quizScores.entities,
     (state, index) => index,
   ],
   (quizzes, quizId, scoreCreatedAt, quizScores, index) => {
@@ -99,7 +99,7 @@ export const selectAnsweredSpecialMoraArray = createSelector(
 
     const score = quiz.scoreIds
       .map((scoreId) => quizScores[scoreId])
-      .find((score) => score.createdAt === Number(scoreCreatedAt));
+      .find((score) => score && score.createdAt === Number(scoreCreatedAt));
     if (!score) return [];
 
     return score.rhythmAnswers[index]

@@ -283,10 +283,11 @@ const rhythmAnswerToString = (rhythmAnswer: string[][]): string => {
   return wordSpecialMorasArray.join('\n');
 };
 
-export const buildRemoteScores = (scores: IQuizScore[]) => {
+export const buildRemoteScores = (scores: (IQuizScore | undefined)[]) => {
   const remoteScores: { [createdAt: number]: IQuizScore } = {};
 
   for (const score of scores) {
+    if (!score) continue;
     remoteScores[score.createdAt] = score;
   }
 

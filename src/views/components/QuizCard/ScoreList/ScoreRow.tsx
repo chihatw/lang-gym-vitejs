@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
-import { selectScoreByScoreId } from 'application/quizScores/framework/2-selector';
+import { selectScoreById } from 'application/quizScores/framework/0-reducer';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
@@ -19,7 +19,7 @@ const ScoreRow = ({ scoreId, quizId }: { scoreId: string; quizId: string }) => {
     selectQuizByQuizId(state, quizId)
   );
   const score = useSelector((state: RootState) =>
-    selectScoreByScoreId(state, scoreId)
+    selectScoreById(state, scoreId)
   );
 
   if (!quiz || !score) return <></>;
