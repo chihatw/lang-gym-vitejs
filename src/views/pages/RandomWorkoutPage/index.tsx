@@ -15,9 +15,19 @@ const RandomWorkoutPage = () => {
 
   const { workoutId } = useParams();
 
-  const { isChecking } = useSelector(
-    (state: RootState) => state.randomWorkoutPage
+  const isChecking = useSelector(
+    (state: RootState) => state.randomWorkoutPage.isChecking
   );
+
+  const initializing = useSelector(
+    (state: RootState) => state.randomWorkoutPage.initializing
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch(randomWorkoutPageActions.clearState());
+    };
+  }, []);
 
   useEffect(() => {
     !workoutId && navigate('/');
@@ -25,8 +35,9 @@ const RandomWorkoutPage = () => {
 
   useEffect(() => {
     if (!workoutId) return;
+    if (!initializing) return;
     dispatch(randomWorkoutPageActions.initiate(workoutId));
-  }, [workoutId]);
+  }, [workoutId, initializing]);
 
   if (!!isChecking) {
     return <CheckPane />;

@@ -4,4 +4,5 @@ export interface IRandomWorkoutPage {
   miliSeconds: number;
   isRunning: boolean;
   isChecking: boolean;
+  initializing: boolean;
 }

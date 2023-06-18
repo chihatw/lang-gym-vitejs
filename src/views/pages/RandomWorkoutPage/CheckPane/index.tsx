@@ -1,7 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Container, Modal, useTheme } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Modal,
+  useTheme,
+} from '@mui/material';
 
 import { RootState } from 'main';
 
@@ -45,14 +51,32 @@ const CheckPane = React.memo(() => {
     navigate('/workout/list');
   };
 
-  if (!workout || !recordedAudioBuffer) return <></>;
+  if (!workout) return <></>;
+
+  if (!recordedAudioBuffer)
+    return (
+      <Modal open={true}>
+        <div
+          style={{
+            width: '100vw',
+            minHeight: '100vh',
+            background: '#grey',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <CircularProgress size={120} />
+        </div>
+      </Modal>
+    );
 
   return (
     <Modal open={true}>
       <div
         style={{
-          width: '100vw',
-          minHeight: '100vh',
+          width: '100dvw',
+          minHeight: '100dvh',
           background: '#fafafa',
           display: 'flex',
           justifyContent: 'center',

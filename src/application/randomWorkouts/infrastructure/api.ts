@@ -9,16 +9,15 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 
-import { RANDOM_WORKOUT_STORE_COLLECTION } from '../core/1-constants';
 import { db } from 'infrastructure/firebase';
 import { IRandomWorkout } from '../core/0-interface';
 
-export const fetchRandomWorkout = async (workoutId: string) => {
-  console.log(`%cfetch ${RANDOM_WORKOUT_STORE_COLLECTION}`, 'color:red');
+export const COLLECTION = 'randomWorkouts';
 
-  const docSnapshot = await getDoc(
-    doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId)
-  );
+export const fetchRandomWorkout = async (workoutId: string) => {
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
+
+  const docSnapshot = await getDoc(doc(db, COLLECTION, workoutId));
 
   if (!docSnapshot.exists()) {
     return;
@@ -29,24 +28,21 @@ export const fetchRandomWorkout = async (workoutId: string) => {
 };
 
 export const fetchRandomWorkouts = async (uid: string) => {
-  console.log(`%cfetch ${RANDOM_WORKOUT_STORE_COLLECTION}`, 'color:red');
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
-  const q = query(
-    collection(db, RANDOM_WORKOUT_STORE_COLLECTION),
-    where('uid', '==', uid)
-  );
+  const q = query(collection(db, COLLECTION), where('uid', '==', uid));
 
   const querySnapshot = await getDocs(q);
-  const randomWorkouts: { [key: string]: IRandomWorkout } = {};
+  const randomWorkouts: IRandomWorkout[] = [];
   querySnapshot.forEach((doc) => {
-    randomWorkouts[doc.id] = buildRandomWorkout(doc);
+    randomWorkouts.push(buildRandomWorkout(doc));
   });
 
   return randomWorkouts;
 };
 
 export const clearStoragePath = async (workoutId: string) => {
-  await updateDoc(doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId), {
+  await updateDoc(doc(db, COLLECTION, workoutId), {
     storagePath: '',
     resultBpm: 0,
     resultSeconds: 0,
@@ -58,7 +54,7 @@ export const startRecording = async (
   cueIds: string[],
   recordCount: number
 ) => {
-  await updateDoc(doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId), {
+  await updateDoc(doc(db, COLLECTION, workoutId), {
     cueIds,
     recordCount,
   });
@@ -77,7 +73,7 @@ export const saveRecordedAudioBuffer = async ({
   resultBpm: number;
   resultSeconds: number;
 }) => {
-  await updateDoc(doc(db, RANDOM_WORKOUT_STORE_COLLECTION, workoutId), {
+  await updateDoc(doc(db, COLLECTION, workoutId), {
     resultBpm,
     storagePath,
     recordCount,

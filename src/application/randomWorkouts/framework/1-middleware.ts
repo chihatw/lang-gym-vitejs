@@ -25,7 +25,7 @@ const randomWorkoutsMiddleware =
           .sort((a, b) => b.createdAt - a.createdAt)
           .map((randomWorkout) => randomWorkout.id);
 
-        dispatch(randomWorkoutsActions.mergeRandomWorkouts(randomWorkouts));
+        dispatch(randomWorkoutsActions.upsertWorkouts(randomWorkouts));
         dispatch(randomWorkoutListActions.setWorkoutIds(workoutIds));
 
         const paths = Object.values(randomWorkouts)
@@ -45,12 +45,11 @@ const randomWorkoutsMiddleware =
       case 'randomWorkoutPage/initiate': {
         const workoutId = action.payload as string;
 
-        const randomWorkouts = (getState() as RootState).randomWorkouts;
-
-        const randomWorkoutIds = Object.keys(randomWorkouts);
+        const randomWorkouts = (getState() as RootState).randomWorkouts
+          .entities;
 
         // fetch 済みの場合、
-        if (randomWorkoutIds.includes(workoutId)) {
+        if (randomWorkouts[workoutId]) {
           dispatch(randomWorkoutPageActions.setWorkoutId(workoutId));
           return;
         }
@@ -59,19 +58,16 @@ const randomWorkoutsMiddleware =
         const randomWorkout =
           await services.api.randomWorkouts.fetchRandomWorkout(workoutId);
 
-        dispatch(
-          randomWorkoutsActions.mergeRandomWorkouts({
-            [workoutId]: randomWorkout,
-          })
-        );
-        dispatch(
-          randomWorkoutPageActions.setWorkoutId(randomWorkout?.id || '')
-        );
+        if (!randomWorkout) return;
+
+        dispatch(randomWorkoutsActions.addWorkout(randomWorkout));
+        dispatch(randomWorkoutPageActions.setWorkoutId(randomWorkout.id));
         break;
       }
       case 'randomWorkoutPage/startRecording': {
         const { workoutId } = (getState() as RootState).randomWorkoutPage;
-        const randomWorkouts = (getState() as RootState).randomWorkouts;
+        const randomWorkouts = (getState() as RootState).randomWorkouts
+          .entities;
 
         const workout = randomWorkouts[workoutId];
         if (!workout) return;
@@ -95,7 +91,8 @@ const randomWorkoutsMiddleware =
       case 'randomWorkoutPage/stopRecording': {
         const { workoutId, miliSeconds } = (getState() as RootState)
           .randomWorkoutPage;
-        const randomWorkouts = (getState() as RootState).randomWorkouts;
+        const randomWorkouts = (getState() as RootState).randomWorkouts
+          .entities;
 
         const workout = randomWorkouts[workoutId];
         if (!workout) return;
@@ -116,7 +113,8 @@ const randomWorkoutsMiddleware =
       }
       case 'randomWorkoutPage/saveRecordedAudioBuffer': {
         const workoutId = action.payload as string;
-        const randomWorkouts = (getState() as RootState).randomWorkouts;
+        const randomWorkouts = (getState() as RootState).randomWorkouts
+          .entities;
 
         const workout = randomWorkouts[workoutId];
 

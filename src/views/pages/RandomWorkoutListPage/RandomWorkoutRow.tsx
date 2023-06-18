@@ -6,11 +6,11 @@ import { Card, CardContent, IconButton, useTheme } from '@mui/material';
 import { RootState } from 'main';
 
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
-import { randomWorkoutsActions } from 'application/randomWorkouts/framework/0-reducer';
 import {
-  selectAudioBuffer,
-  selectRandomWorkout,
-} from 'application/randomWorkoutList/framework/2-selector';
+  randomWorkoutsActions,
+  selectRandomWorkoutById,
+} from 'application/randomWorkouts/framework/0-reducer';
+import { selectAudioBuffer } from 'application/randomWorkoutList/framework/2-selector';
 
 const RandomWorkoutRow = ({ workoutId }: { workoutId: string }) => {
   const theme = useTheme();
@@ -18,7 +18,7 @@ const RandomWorkoutRow = ({ workoutId }: { workoutId: string }) => {
   const dispatch = useDispatch();
 
   const randomWorkout = useSelector((state: RootState) =>
-    selectRandomWorkout(state, workoutId)
+    selectRandomWorkoutById(state, workoutId)
   );
 
   const audioBuffer = useSelector((state: RootState) =>

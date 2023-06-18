@@ -5,7 +5,9 @@ const randomWorkoutPageSlice = createSlice({
   name: 'randomWorkoutPage',
   initialState,
   reducers: {
-    initiate: (state, { payload }: { payload: string }) => initialState,
+    initiate: (state, { payload }: { payload: string }) => {
+      state.initializing = false;
+    },
     setWorkoutId: (state, { payload }: { payload: string }) => {
       state.workoutId = payload;
     },
@@ -32,6 +34,7 @@ const randomWorkoutPageSlice = createSlice({
     }),
     saveRecordedAudioBuffer: (state, { payload }: { payload: string }) =>
       initialState,
+    clearState: () => initialState,
   },
 });
 

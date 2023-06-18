@@ -6,4 +6,5 @@ export const initialState: IRandomWorkoutPage = {
   miliSeconds: 0,
   isRunning: false,
   isChecking: false,
+  initializing: true,
 };

@@ -3,7 +3,7 @@ import { RootState } from 'main';
 
 export const selectWorkout = createSelector(
   [
-    (state: RootState) => state.randomWorkouts,
+    (state: RootState) => state.randomWorkouts.entities,
     (state: RootState) => state.randomWorkoutPage.workoutId,
   ],
   (randomWorkouts, workoutId) => randomWorkouts[workoutId]
@@ -11,7 +11,7 @@ export const selectWorkout = createSelector(
 
 export const selectPitchStr = createSelector(
   [
-    (state: RootState) => state.randomWorkouts,
+    (state: RootState) => state.randomWorkouts.entities,
     (state: RootState) => state.randomWorkoutPage.workoutId,
     (state, cueId) => cueId,
   ],
