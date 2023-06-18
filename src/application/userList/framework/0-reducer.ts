@@ -9,13 +9,6 @@ const userListSlice = createSlice({
     initiate: (state, { payload }: { payload: string }) => {
       state.initializing = false;
     },
-    setUserIds: (
-      state,
-      { payload }: { payload: { uids: string[]; selectedUid: string } }
-    ) => {
-      state.uids = payload.uids;
-      state.selectedUid = payload.selectedUid;
-    },
     setSelectedUid: (state, { payload }: { payload: string }) => {
       state.selectedUid = payload;
     },
