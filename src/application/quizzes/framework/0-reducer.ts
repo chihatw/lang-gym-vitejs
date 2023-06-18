@@ -1,24 +1,30 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { initialState } from '../core/1-constants';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { IQuiz } from '../core/0-interface';
+import { RootState } from 'main';
+
+const quizAdapter = createEntityAdapter<IQuiz>({
+  selectId: (quiz) => quiz.id,
+});
 
 const quizzesSlice = createSlice({
   name: 'quizzes',
-  initialState,
+  initialState: quizAdapter.getInitialState(),
   reducers: {
-    mergeQuizzes: (
-      state,
-      { payload }: { payload: { [id: string]: IQuiz | null } }
-    ) => ({ ...state, ...payload }),
+    setQuizzes: (state, { payload }: { payload: IQuiz[] }) => {
+      quizAdapter.setAll(state, payload);
+    },
+    addQuiz: (state, { payload }: { payload: IQuiz }) => {
+      quizAdapter.addOne(state, payload);
+    },
     unshiftScoreId: (
       state,
       {
         payload: { quizId, scoreId },
       }: { payload: { quizId: string; scoreId: string } }
     ) => {
-      const targetQuiz = state[quizId];
+      const targetQuiz = state.entities[quizId];
       if (!targetQuiz) return state;
-      state[quizId] = {
+      state.entities[quizId] = {
         ...targetQuiz,
         scoreIds: [scoreId, ...targetQuiz.scoreIds],
       };
@@ -29,3 +35,7 @@ const quizzesSlice = createSlice({
 export const quizzesActions = quizzesSlice.actions;
 
 export default quizzesSlice.reducer;
+
+export const { selectById: selectQuizById } = quizAdapter.getSelectors(
+  (state: RootState) => state.quizzes
+);

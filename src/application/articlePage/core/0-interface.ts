@@ -1,7 +1,8 @@
 export interface IArticlePage {
   articleId: string;
-  isRecording: boolean;
   isChecking: boolean;
+  isRecording: boolean;
+  initializing: boolean;
   recordSentenceId: string;
   playedRecordedAudio: boolean;
 }

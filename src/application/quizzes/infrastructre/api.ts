@@ -11,12 +11,13 @@ import {
   updateDoc,
 } from '@firebase/firestore';
 import { db } from 'infrastructure/firebase';
-import { QUIZZES_STORE_COLLECTION } from '../core/1-constants';
 import { IQuiz } from '../core/0-interface';
 import { IQuizScore } from 'application/quizScores/core/0-interface';
 import { addTempIdAndSortByCreatedAt } from 'application/quizScores/core/2-services';
 import { IQuizQuestion } from 'application/quizQuestions/core/0-interface';
 import { addTempIdAndSortByIndex } from 'application/quizQuestions/core/2-services';
+
+const COLLECTION = 'quizzes';
 
 export const fetchQuiz = async (
   quizId: string
@@ -25,9 +26,9 @@ export const fetchQuiz = async (
   quizScores: IQuizScore[];
   quizQuestions: IQuizQuestion[];
 }> => {
-  console.log(`%cfetch ${QUIZZES_STORE_COLLECTION}`, 'color:red');
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
-  const docSnapshot = await getDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId));
+  const docSnapshot = await getDoc(doc(db, COLLECTION, quizId));
 
   if (!docSnapshot.exists()) {
     return { quiz: null, quizScores: [], quizQuestions: [] };
@@ -39,9 +40,9 @@ export const fetchQuiz = async (
 };
 
 export const fetchQuizzes = async (uid: string) => {
-  console.log(`%cfetch ${QUIZZES_STORE_COLLECTION}`, 'color:red');
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
   const q = query(
-    collection(db, QUIZZES_STORE_COLLECTION),
+    collection(db, COLLECTION),
     where('uid', '==', uid),
     // 新しいものが前
     orderBy('createdAt', 'desc'),
@@ -50,7 +51,7 @@ export const fetchQuizzes = async (uid: string) => {
 
   const querySnapshot = await getDocs(q);
 
-  const quizzes: { [id: string]: IQuiz } = {};
+  const quizzes: IQuiz[] = [];
   let quizScores: IQuizScore[] = [];
   let quizQuestions: IQuizQuestion[] = [];
 
@@ -60,7 +61,7 @@ export const fetchQuizzes = async (uid: string) => {
       quizScores: _quizScores,
       quizQuestions: _quizQuestions,
     } = buildQuiz(doc);
-    quizzes[doc.id] = quiz;
+    quizzes.push(quiz);
     quizScores = [...quizScores, ..._quizScores];
     quizQuestions = [...quizQuestions, ..._quizQuestions];
   });
@@ -72,7 +73,7 @@ export const updateQuizScore = async (
   quizId: string,
   scores: { [createdAt: number]: IQuizScore }
 ) => {
-  await updateDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId), { scores });
+  await updateDoc(doc(db, COLLECTION, quizId), { scores });
 };
 
 const buildQuiz = (

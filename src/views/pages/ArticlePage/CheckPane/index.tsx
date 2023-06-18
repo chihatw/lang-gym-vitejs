@@ -31,7 +31,7 @@ const CheckPane = ({
   );
 
   const abandonRecordedAudio = () => {
-    dispatch(articlePageActions.clearState());
+    dispatch(articlePageActions.resetRecordedAudio());
   };
 
   const saveRecordedAudio = async () => {
@@ -44,7 +44,7 @@ const CheckPane = ({
     dispatch(
       audioActions.saveAudioBuffer({ path, audioBuffer: recordedAudioBuffer })
     );
-    dispatch(articlePageActions.clearState());
+    dispatch(articlePageActions.resetRecordedAudio());
   };
 
   if (!recordedSentence) return <></>;

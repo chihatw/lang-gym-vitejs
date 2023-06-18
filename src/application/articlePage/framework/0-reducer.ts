@@ -5,7 +5,9 @@ const articlePageSlice = createSlice({
   name: 'articlePage',
   initialState,
   reducers: {
-    initiate: (state, { payload }: { payload: string }) => state,
+    initiate: (state, { payload }: { payload: string }) => {
+      state.initializing = false;
+    },
     setArticleId: (state, { payload }: { payload: string }) => {
       state.articleId = payload;
     },
@@ -22,7 +24,11 @@ const articlePageSlice = createSlice({
     playedRecordedAudio: (state) => {
       state.playedRecordedAudio = true;
     },
-    clearState: (state) => ({ ...initialState, articleId: state.articleId }),
+    resetRecordedAudio: (state) => ({
+      ...initialState,
+      articleId: state.articleId,
+    }),
+    clearState: () => initialState,
   },
 });
 

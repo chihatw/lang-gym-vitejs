@@ -1,11 +1,11 @@
-import { useMemo, memo } from 'react';
+import React, { useMemo } from 'react';
 
 import Line from './Line';
 import Mora from './Mora';
 
 import { buildWordPitches } from 'application/utils/buildWordPitches';
 
-const PitchLine = memo(({ wordPitchStr }: { wordPitchStr: string }) => {
+const PitchLine = ({ wordPitchStr }: { wordPitchStr: string }) => {
   const wordPitches = useMemo(
     () => buildWordPitches(wordPitchStr),
     [wordPitchStr]
@@ -61,6 +61,6 @@ const PitchLine = memo(({ wordPitchStr }: { wordPitchStr: string }) => {
       <div style={{ display: 'flex' }}>{Moras}</div>
     </div>
   );
-});
+};
 
-export default PitchLine;
+export default React.memo(PitchLine);

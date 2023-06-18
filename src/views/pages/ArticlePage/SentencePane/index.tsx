@@ -10,12 +10,12 @@ import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 
 const SentencePane = ({ sentenceId }: { sentenceId: string }) => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
-  const article = useSelector((state: RootState) => state.articles[articleId]);
-
+  const article = useSelector(
+    (state: RootState) => state.articles.entities[articleId]
+  );
   const sentence = useSelector(
     (state: RootState) => state.sentences[sentenceId]
   );
-
   const audioBuffer = useSelector((state: RootState) => {
     const { fetchedAudioBuffers } = state.audio;
     const path = ARTILCE_STORAGE_PATH + articleId;

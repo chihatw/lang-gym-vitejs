@@ -51,4 +51,4 @@ const Line = ({
   );
 };
 
-export default React.memo(Line);
+export default Line;

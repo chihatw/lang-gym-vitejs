@@ -5,8 +5,8 @@ import { Button, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
 import { selectScoreById } from 'application/quizScores/framework/0-reducer';
+import { selectQuizById } from 'application/quizzes/framework/0-reducer';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
@@ -15,9 +15,7 @@ const ScoreRow = ({ scoreId, quizId }: { scoreId: string; quizId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const quiz = useSelector((state: RootState) =>
-    selectQuizByQuizId(state, quizId)
-  );
+  const quiz = useSelector((state: RootState) => selectQuizById(state, quizId));
   const score = useSelector((state: RootState) =>
     selectScoreById(state, scoreId)
   );

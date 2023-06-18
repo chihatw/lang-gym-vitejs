@@ -4,8 +4,6 @@ import { RootState } from 'main';
 
 const quizScoreAdapter = createEntityAdapter<IQuizScore>({
   selectId: (quizQuestion) => quizQuestion.scoreId,
-  sortComparer: (a, b) =>
-    b.createdAt.toString().localeCompare(a.createdAt.toString()),
 });
 
 const quizScoresSlice = createSlice({

@@ -4,7 +4,7 @@ import { RootState } from 'main';
 
 export const selectArticle = createSelector(
   [
-    (state: RootState) => state.articles,
+    (state: RootState) => state.articles.entities,
     (state: RootState) => state.ariclePage.articleId,
   ],
   (articles, articleId) => articles[articleId]
@@ -12,7 +12,7 @@ export const selectArticle = createSelector(
 
 export const selectCreateAt = createSelector(
   [
-    (state: RootState) => state.articles,
+    (state: RootState) => state.articles.entities,
     (state: RootState) => state.ariclePage.articleId,
   ],
   (articles, articleId) => {

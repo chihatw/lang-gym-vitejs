@@ -21,7 +21,7 @@ const articlesMiddleware =
         const uid = (getState() as RootState).authUser.currentUid;
         // articles の取得
         const articles = await services.api.articles.fetchArticles(uid, 4);
-        dispatch(articlesActions.mergeArticles(articles));
+        dispatch(articlesActions.upsertArticles(articles));
 
         const articleIds = Object.values(articles)
           .sort((a, b) => b.createdAt - a.createdAt)
@@ -39,9 +39,9 @@ const articlesMiddleware =
         const uid = (getState() as RootState).authUser.currentUid;
         // articles の取得
         const articles = await services.api.articles.fetchArticles(uid, 11);
-        dispatch(articlesActions.mergeArticles(articles));
+        dispatch(articlesActions.upsertArticles(articles));
 
-        const articleIds = Object.values(articles)
+        const articleIds = articles
           .sort((a, b) => b.createdAt - a.createdAt)
           .map((article) => article.id);
 
@@ -52,7 +52,9 @@ const articlesMiddleware =
         if (hasMore) {
           articleIds.pop();
           const lastArticleId = [...articleIds].slice(-1)[0];
-          const lastArticle = articles[lastArticleId];
+          const lastArticle = articles.find(
+            (article) => article.id === lastArticleId
+          )!;
           startAfter = lastArticle.createdAt;
         }
 
@@ -74,9 +76,9 @@ const articlesMiddleware =
           11,
           startAfter
         );
-        dispatch(articlesActions.mergeArticles(articles));
+        dispatch(articlesActions.upsertArticles(articles));
 
-        const articleIds = Object.values(articles)
+        const articleIds = articles
           .sort((a, b) => b.createdAt - a.createdAt)
           .map((article) => article.id);
 
@@ -87,7 +89,9 @@ const articlesMiddleware =
         if (hasMore) {
           articleIds.pop();
           const lastArticleId = [...articleIds].slice(-1)[0];
-          const lastArticle = articles[lastArticleId];
+          const lastArticle = articles.find(
+            (article) => article.id === lastArticleId
+          )!;
           startAfter = lastArticle.createdAt;
         }
 
@@ -121,11 +125,12 @@ const articlesMiddleware =
 
         // article の取得
         const article = await services.api.articles.fetchArtice(uid, articleId);
-        dispatch(articlesActions.mergeArticles({ [articleId]: article }));
-        dispatch(articlePageActions.setArticleId(article?.id || ''));
 
         // article がない場合、終了
         if (!article) break;
+
+        dispatch(articlesActions.addArticle(article));
+        dispatch(articlePageActions.setArticleId(article.id));
 
         // articleがあれば、articleIdの場合、audioBuffer と Sentences を取得
         dispatch(

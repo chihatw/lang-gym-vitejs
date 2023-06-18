@@ -12,7 +12,7 @@ import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import PitchQuiz from './PitchQuiz';
 import RhythmQuiz from './RhythmQuiz';
 import QuizPageFooter from './QuizPageFooter';
-import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
+import { selectQuizById } from 'application/quizzes/framework/0-reducer';
 
 const QuizPage = () => {
   const navigate = useNavigate();
@@ -20,20 +20,42 @@ const QuizPage = () => {
 
   const { quizId } = useParams();
 
-  const quiz = useSelector((state: RootState) =>
-    selectQuizByQuizId(state, quizId)
+  const initializing = useSelector(
+    (state: RootState) => state.quizPage.initializing
   );
+
+  const quiz = useSelector((state: RootState) =>
+    selectQuizById(state, String(quizId))
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch(quizPageActions.clearState());
+    };
+  }, []);
 
   useEffect(() => {
     !quizId && navigate('/');
   }, [quizId]);
 
   useEffect(() => {
+    if (!initializing) return;
     if (!quizId) return;
     dispatch(quizPageActions.initiate(quizId));
-  }, [quizId]);
+  }, [quizId, initializing]);
 
   if (!quiz) return <></>;
+
+  const content = (() => {
+    switch (quiz.type) {
+      case QUIZ_TIPE.articleAccents:
+        return (questionId: string) => <PitchQuiz questionId={questionId} />;
+      case QUIZ_TIPE.articleRhythms:
+        return (questionId: string) => <RhythmQuiz questionId={questionId} />;
+      default:
+        return (questionId: string) => <></>;
+    }
+  })();
 
   return (
     <Container maxWidth='sm'>
@@ -44,12 +66,7 @@ const QuizPage = () => {
           {quiz.questionIds.map((questionId, index) => (
             <div key={index} style={{ display: 'grid', rowGap: 8 }}>
               <QuestionIndex index={index + 1} />
-              {quiz.type === QUIZ_TIPE.articleAccents && (
-                <PitchQuiz questionId={questionId} />
-              )}
-              {quiz.type === QUIZ_TIPE.articleRhythms && (
-                <RhythmQuiz questionId={questionId} />
-              )}
+              {content(questionId)}
             </div>
           ))}
         </div>

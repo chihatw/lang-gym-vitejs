@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 
 export const selectQuizByQuizPageQuizId = createSelector(
   [
-    (state: RootState) => state.quizzes,
+    (state: RootState) => state.quizzes.entities,
     (state: RootState) => state.quizPage.quizId,
   ],
   (quizzes, quizId) =>
@@ -23,7 +23,7 @@ export const selectInputPitchStr = createSelector(
 
 export const selectQuizAudioBuffer = createSelector(
   [
-    (state: RootState) => state.quizzes,
+    (state: RootState) => state.quizzes.entities,
     (state: RootState) => state.quizPage.quizId,
     (state: RootState) => state.audio.fetchedAudioBuffers,
   ],
@@ -87,7 +87,7 @@ export const selectSyllable = createSelector(
 
 export const selectAnsweredSpecialMoraArray = createSelector(
   [
-    (state: RootState) => state.quizzes,
+    (state: RootState) => state.quizzes.entities,
     (state: RootState) => state.scorePage.quizId,
     (state: RootState) => state.scorePage.scoreCreatedAt,
     (state: RootState) => state.quizScores.entities,

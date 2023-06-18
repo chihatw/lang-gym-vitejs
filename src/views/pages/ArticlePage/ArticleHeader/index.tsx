@@ -12,7 +12,7 @@ import { getSentenceIds } from 'application/sentences/core/2-services';
 const ArticleHeader = () => {
   const { articleId } = useSelector((state: RootState) => state.ariclePage);
   const article = useSelector(
-    (state: RootState) => state.articles[articleId] || null
+    (state: RootState) => state.articles.entities[articleId] || null
   );
 
   const sentenceIds = useSelector((state: RootState) =>

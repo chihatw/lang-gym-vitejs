@@ -11,18 +11,18 @@ import {
   doc,
 } from 'firebase/firestore';
 import { db } from 'infrastructure/firebase';
-import { ARTICLE_STORE_COLLECTION } from '../core/1-constants';
+
 import { IArticle } from '../core/0-interface';
+
+const COLLECTION = 'articles';
 
 export const fetchArtice = async (
   uid: string,
   articleId: string
 ): Promise<IArticle | null> => {
-  console.log(`%cfetch ${ARTICLE_STORE_COLLECTION}`, 'color:red');
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
 
-  const docSnapshot = await getDoc(
-    doc(db, ARTICLE_STORE_COLLECTION, articleId)
-  );
+  const docSnapshot = await getDoc(doc(db, COLLECTION, articleId));
   if (!docSnapshot.exists()) {
     console.log(`%cno articles found`, 'color:red');
     return null;
@@ -45,10 +45,10 @@ export const fetchArticles = async (
   uid: string,
   rows: number,
   _startAfter?: number
-): Promise<{ [id: string]: IArticle }> => {
-  console.log(`%cfetch ${ARTICLE_STORE_COLLECTION}`, 'color:red');
+): Promise<IArticle[]> => {
+  console.log(`%cfetch ${COLLECTION}`, 'color:red');
   let q = query(
-    collection(db, ARTICLE_STORE_COLLECTION),
+    collection(db, COLLECTION),
     where('uid', '==', uid),
     orderBy('createdAt', 'desc'),
     limit(rows)
@@ -59,10 +59,10 @@ export const fetchArticles = async (
   }
   const querySnapshot = await getDocs(q);
 
-  const articles: { [id: string]: IArticle } = {};
+  const articles: IArticle[] = [];
   querySnapshot.forEach((doc) => {
     const article = buildArticle(doc);
-    articles[doc.id] = article;
+    articles.push(article);
   });
 
   return articles;

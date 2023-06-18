@@ -13,16 +13,20 @@ import { articlePageActions } from 'application/articlePage/framework/0-reducer'
 import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 import CheckPane from './CheckPane';
 import { getSentenceIds } from 'application/sentences/core/2-services';
+import { selectArticle } from 'application/articlePage/framework/2-selector';
 
 const ArticlePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { articleId } = useParams();
-  const { isChecking } = useSelector((state: RootState) => state.ariclePage);
-
-  const article = useSelector(
-    (state: RootState) => state.articles[String(articleId)] || null
+  const initializing = useSelector(
+    (state: RootState) => state.ariclePage.initializing
   );
+  const isChecking = useSelector(
+    (state: RootState) => state.ariclePage.isChecking
+  );
+
+  const article = useSelector((state: RootState) => selectArticle(state));
   const sentenceIds = useSelector((state: RootState) => {
     const sentences = state.sentences;
     return getSentenceIds(String(articleId), sentences);
@@ -34,16 +38,22 @@ const ArticlePage = () => {
   });
 
   useEffect(() => {
+    return () => {
+      dispatch(articlePageActions.clearState());
+    };
+  }, []);
+
+  useEffect(() => {
     !articleId && navigate('/');
   }, [articleId]);
 
   useEffect(() => {
+    if (!initializing) return;
     if (!articleId) return;
     // article, sentences, audioBuffer, assignmentAudioBuffers の取得
     dispatch(articlePageActions.initiate(articleId));
-  }, [articleId]);
+  }, [articleId, initializing]);
 
-  if (!articleId) return <SkeletonPage />;
   if (!article) return <></>;
   if (isChecking) return <CheckPane audioBuffer={audioBuffer} />;
 

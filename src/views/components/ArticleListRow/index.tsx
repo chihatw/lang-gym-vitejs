@@ -8,7 +8,7 @@ const ArticleListRow = ({ articleId }: { articleId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { title, year, day, month } = useSelector((state: RootState) => {
-    const article = state.articles[articleId];
+    const article = state.articles.entities[articleId];
     if (!article) {
       return { title: '', year: 0, month: 0, day: 0 };
     }

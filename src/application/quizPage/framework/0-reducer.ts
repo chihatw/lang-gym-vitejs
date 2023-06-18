@@ -7,7 +7,9 @@ const quizPageSlice = createSlice({
   name: 'quizPage',
   initialState: initialState,
   reducers: {
-    initiate: (state, { payload }: { payload: string }) => state,
+    initiate: (state, { payload }: { payload: string }) => {
+      state.initializing = false;
+    },
     setQuizId: (state, { payload }: { payload: string }) => {
       state.quizId = payload;
     },
@@ -127,6 +129,7 @@ const quizPageSlice = createSlice({
       };
     },
     updateQuizScoreStart: (state, { payload }: { payload: number }) => state,
+    clearState: () => initialState,
   },
 });
 

@@ -11,9 +11,7 @@ export function addTempIdAndSortByCreatedAt(scores: {
   }
 
   const scoreIds: string[] = scoreAddedIds
-    .sort((a, b) =>
-      b.createdAt.toString().localeCompare(a.createdAt.toString())
-    )
+    .sort((a, b) => b.createdAt - a.createdAt)
     .map((score) => score.scoreId);
 
   return { scoreAddedIds, scoreIds };

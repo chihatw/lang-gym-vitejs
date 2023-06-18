@@ -36,7 +36,7 @@ const quizzesMiddleware =
         const answeredIds = getAnsweredIds(quizzes);
         const unansweredIds = getUnansweredIds(quizzes);
 
-        dispatch(quizzesActions.mergeQuizzes(quizzes));
+        dispatch(quizzesActions.setQuizzes(quizzes));
         dispatch(quizQuestionsActions.setQuizQuestions(quizQuestions));
         dispatch(quizScoresActions.setQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
@@ -49,7 +49,7 @@ const quizzesMiddleware =
           scoreCreatedAt: string;
         };
 
-        const quizzes = (getState() as RootState).quizzes;
+        const quizzes = (getState() as RootState).quizzes.entities;
         const quizIds = Object.keys(quizzes);
 
         // fetch済みの quizId の場合
@@ -72,10 +72,9 @@ const quizzesMiddleware =
           scorePageActions.setQuizIdScoreCreatedAt({ quizId, scoreCreatedAt })
         );
 
-        dispatch(quizzesActions.mergeQuizzes({ [quizId]: quiz }));
-
         if (!quiz) return;
 
+        dispatch(quizzesActions.addQuiz(quiz));
         dispatch(quizScoresActions.addQuizScores(quizScores));
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
@@ -87,7 +86,7 @@ const quizzesMiddleware =
       case 'quizPage/initiate': {
         const quizId = action.payload as string;
 
-        const quizzes = (getState() as RootState).quizzes;
+        const quizzes = (getState() as RootState).quizzes.entities;
         const quizIds = Object.keys(quizzes);
 
         // fetch済みの quizId の場合
@@ -106,10 +105,9 @@ const quizzesMiddleware =
 
         dispatch(quizPageActions.setQuizId(quizId));
 
-        dispatch(quizzesActions.mergeQuizzes({ [quizId]: quiz }));
-
         if (!quiz) return;
 
+        dispatch(quizzesActions.addQuiz(quiz));
         dispatch(quizScoresActions.addQuizScores(quizScores));
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
@@ -120,7 +118,7 @@ const quizzesMiddleware =
       }
       case 'quizPage/setQuizId': {
         const quizId = action.payload as string;
-        const quizzes = (getState() as RootState).quizzes;
+        const quizzes = (getState() as RootState).quizzes.entities;
         const quiz = quizzes[quizId];
 
         if (!quiz) {
@@ -186,7 +184,7 @@ const quizzesMiddleware =
           // syllablesArrays,
           inputSpecialMoraArrays,
         } = (getState() as RootState).quizPage;
-        const quizzes = (getState() as RootState).quizzes;
+        const quizzes = (getState() as RootState).quizzes.entities;
         const quizScores = (getState() as RootState).quizScores.entities;
         const quizQuestions = (getState() as RootState).quizQuestions;
         let { answeredIds, unansweredIds } = (getState() as RootState).quizList;

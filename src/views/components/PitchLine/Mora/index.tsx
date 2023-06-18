@@ -57,4 +57,4 @@ const Mora = ({
   );
 };
 
-export default React.memo(Mora);
+export default Mora;

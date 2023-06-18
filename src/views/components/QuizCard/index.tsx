@@ -6,13 +6,11 @@ import { RootState } from 'main';
 
 import ScoreList from './ScoreList';
 import DateDisplay from './DateDisplay';
-import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
+import { selectQuizById } from 'application/quizzes/framework/0-reducer';
 
 const QuizCard = ({ quizId }: { quizId: string }) => {
   const navigate = useNavigate();
-  const quiz = useSelector((state: RootState) =>
-    selectQuizByQuizId(state, quizId)
-  );
+  const quiz = useSelector((state: RootState) => selectQuizById(state, quizId));
 
   if (!quiz) return <></>;
 
