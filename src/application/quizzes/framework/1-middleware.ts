@@ -37,10 +37,7 @@ const quizzesMiddleware =
         const unansweredIds = getUnansweredIds(quizzes);
 
         dispatch(quizzesActions.mergeQuizzes(quizzes));
-        // dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions)); // todo will delete
-        dispatch(
-          quizQuestionsActions.setQuizQuestions(Object.values(quizQuestions))
-        );
+        dispatch(quizQuestionsActions.setQuizQuestions(quizQuestions));
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
 
@@ -80,7 +77,7 @@ const quizzesMiddleware =
         if (!quiz) return;
 
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
-        dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
+        dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
           dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
@@ -114,7 +111,7 @@ const quizzesMiddleware =
         if (!quiz) return;
 
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
-        dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
+        dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
           dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));

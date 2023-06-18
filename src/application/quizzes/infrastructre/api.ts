@@ -23,14 +23,14 @@ export const fetchQuiz = async (
 ): Promise<{
   quiz: IQuiz | null;
   quizScores: { [id: string]: IQuizScore };
-  quizQuestions: { [id: string]: IQuizQuestion };
+  quizQuestions: IQuizQuestion[];
 }> => {
   console.log(`%cfetch ${QUIZZES_STORE_COLLECTION}`, 'color:red');
 
   const docSnapshot = await getDoc(doc(db, QUIZZES_STORE_COLLECTION, quizId));
 
   if (!docSnapshot.exists()) {
-    return { quiz: null, quizScores: {}, quizQuestions: {} };
+    return { quiz: null, quizScores: {}, quizQuestions: [] };
   }
 
   const { quiz, quizScores, quizQuestions } = buildQuiz(docSnapshot);
@@ -52,7 +52,7 @@ export const fetchQuizzes = async (uid: string) => {
 
   const quizzes: { [id: string]: IQuiz } = {};
   let quizScores: { [id: string]: IQuizScore } = {};
-  let quizQuestions: { [id: string]: IQuizQuestion } = {}; // todo Array にする？
+  let quizQuestions: IQuizQuestion[] = [];
 
   querySnapshot.forEach((doc) => {
     const {
@@ -62,7 +62,7 @@ export const fetchQuizzes = async (uid: string) => {
     } = buildQuiz(doc);
     quizzes[doc.id] = quiz;
     quizScores = { ...quizScores, ..._quizScores };
-    quizQuestions = { ...quizQuestions, ..._quizQuestions };
+    quizQuestions = [...quizQuestions, ..._quizQuestions];
   });
 
   return { quizzes, quizScores, quizQuestions };
@@ -80,7 +80,7 @@ const buildQuiz = (
 ): {
   quiz: IQuiz;
   quizScores: { [id: string]: IQuizScore };
-  quizQuestions: { [id: string]: IQuizQuestion };
+  quizQuestions: IQuizQuestion[];
 } => {
   const {
     type,
@@ -106,5 +106,9 @@ const buildQuiz = (
     scoreIds,
     questionIds,
   };
-  return { quiz, quizScores: scoreAddedIds, quizQuestions: questionAddedIds };
+  return {
+    quiz,
+    quizScores: scoreAddedIds,
+    quizQuestions: questionAddedIds,
+  };
 };

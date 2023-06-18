@@ -13,10 +13,9 @@ const quizQuestionsSlice = createSlice({
     setQuizQuestions: (state, { payload }: { payload: IQuizQuestion[] }) => {
       quizQuestionAdapter.setAll(state, payload);
     },
-    mergeQuizQuestions: (
-      state,
-      { payload }: { payload: { [id: string]: IQuizQuestion } }
-    ) => ({ ...state, ...payload }),
+    addQuizQuestions: (state, { payload }: { payload: IQuizQuestion[] }) => {
+      quizQuestionAdapter.addMany(state, payload);
+    },
   },
 });
 
