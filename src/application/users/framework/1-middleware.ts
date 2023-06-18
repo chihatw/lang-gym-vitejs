@@ -14,14 +14,7 @@ const usersMiddleWare =
         const currentUid = action.payload as string;
         const users = await services.api.users.fetchUsers();
         dispatch(usersAcions.setUsers(users));
-        const uids = users.map((user) => user.uid);
-
-        dispatch(
-          userListActions.setUserIds({
-            uids,
-            selectedUid: currentUid,
-          })
-        );
+        dispatch(userListActions.setSelectedUid(currentUid));
         break;
       }
       default:
