@@ -10,10 +10,8 @@ import ToggleSelectorIcon from './ToggleSelectorIcon';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 
 import { selectInputSpecialMoraArray } from 'application/quizPage/framework/2-selector';
-import {
-  selectQuizQuestion,
-  selectSyllablesArray,
-} from 'application/quizQuestions/framework/2-selector';
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
+import { selectQuestionById } from 'application/quizQuestions/framework/0-reducer';
 
 const SpecialMoraSelector = ({
   wordIndex,
@@ -28,7 +26,7 @@ const SpecialMoraSelector = ({
   const dispatch = useDispatch();
 
   const question = useSelector((state: RootState) =>
-    selectQuizQuestion(state, questionId)
+    selectQuestionById(state, questionId)
   );
   const syllablesArray = useSelector((state: RootState) =>
     selectSyllablesArray(state, questionId)

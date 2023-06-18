@@ -6,17 +6,15 @@ import RhythmMonitor from './RhythmMonitor';
 import SpecialMoraSelector from './SpecialMoraSelector';
 import AudioBufferSpeackerButton from 'views/components/AudioBufferSpeackerButton';
 import { selectQuizAudioBuffer } from 'application/quizPage/framework/2-selector';
-import {
-  selectQuizQuestion,
-  selectSyllablesArray,
-} from 'application/quizQuestions/framework/2-selector';
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
+import { selectQuestionById } from 'application/quizQuestions/framework/0-reducer';
 
 const RhythmQuiz = ({ questionId }: { questionId: string }) => {
   const audioBuffer = useSelector((state: RootState) =>
     selectQuizAudioBuffer(state)
   );
   const question = useSelector((state: RootState) =>
-    selectQuizQuestion(state, questionId)
+    selectQuestionById(state, questionId)
   );
   const syllablesArray = useSelector((state: RootState) =>
     selectSyllablesArray(state, questionId)

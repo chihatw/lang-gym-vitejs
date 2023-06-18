@@ -7,7 +7,7 @@ import CorrectAnswer from '../../commons/CorrectAnswer';
 import PitchLine from 'views/components/PitchLine';
 import { selectScore } from 'application/scorePage/framework/2-selector';
 import SentencePitchLine from 'views/components/SentencePitchLine';
-import { selectQuizQuestion } from 'application/quizQuestions/framework/2-selector';
+import { selectQuestionById } from 'application/quizQuestions/framework/0-reducer';
 
 const AccentsAnswer = ({
   index,
@@ -20,7 +20,7 @@ const AccentsAnswer = ({
 
   const score = useSelector((state: RootState) => selectScore(state));
   const question = useSelector((state: RootState) =>
-    selectQuizQuestion(state, questionId)
+    selectQuestionById(state, questionId)
   );
 
   if (!score || !question) return <></>;
