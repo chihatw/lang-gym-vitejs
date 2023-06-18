@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { RootState } from 'main';
 
@@ -14,10 +13,7 @@ const TimeDisplay = () => {
     (state: RootState) => state.randomWorkoutPage
   );
 
-  const { seconds, underDecimalPoint } = useMemo(
-    () => buildTimeNumber(miliSeconds),
-    [miliSeconds]
-  );
+  const { seconds, underDecimalPoint } = (() => buildTimeNumber(miliSeconds))();
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>

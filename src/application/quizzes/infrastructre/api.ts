@@ -52,7 +52,7 @@ export const fetchQuizzes = async (uid: string) => {
 
   const quizzes: { [id: string]: IQuiz } = {};
   let quizScores: { [id: string]: IQuizScore } = {};
-  let quizQuestions: { [id: string]: IQuizQuestion } = {};
+  let quizQuestions: { [id: string]: IQuizQuestion } = {}; // todo Array にする？
 
   querySnapshot.forEach((doc) => {
     const {

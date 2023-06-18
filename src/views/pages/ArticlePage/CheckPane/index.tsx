@@ -1,5 +1,4 @@
 import { Button, Collapse, Container, Modal } from '@mui/material';
-import { useMemo } from 'react';
 
 import Japanese from '../SentencePane/Japanese';
 import SentencePitches from '../SentencePane/PitchesPane/SentencePitches';
@@ -11,6 +10,7 @@ import PlayRecordedAudioButton from './PlayRecordedAudioButton';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
 import { audioActions } from 'application/audio/framework/0-reducer';
+import { selectRecordedSentence } from 'application/articlePage/framework/2-selector';
 
 const CheckPane = ({
   audioBuffer,
@@ -22,15 +22,12 @@ const CheckPane = ({
   const { recordedAudioBuffer, recordedBlob } = useSelector(
     (state: RootState) => state.audio
   );
-  const { playedRecordedAudio, recordSentenceId } = useSelector(
-    (state: RootState) => state.ariclePage
+  const playedRecordedAudio = useSelector(
+    (state: RootState) => state.ariclePage.playedRecordedAudio
   );
 
-  const sentences = useSelector((state: RootState) => state.sentences);
-
-  const sentence = useMemo(
-    () => sentences[recordSentenceId] || null,
-    [sentences, recordSentenceId]
+  const recordedSentence = useSelector((state: RootState) =>
+    selectRecordedSentence(state)
   );
 
   const abandonRecordedAudio = () => {
@@ -43,14 +40,14 @@ const CheckPane = ({
     // storage に　blob を upload
     // audioBuffers に audioBuffer をセット
 
-    const path = ASSIGNMENTS_STORAGE_PATH + sentence.id;
+    const path = ASSIGNMENTS_STORAGE_PATH + recordedSentence.id;
     dispatch(
       audioActions.saveAudioBuffer({ path, audioBuffer: recordedAudioBuffer })
     );
     dispatch(articlePageActions.clearState());
   };
 
-  if (!sentence) return <></>;
+  if (!recordedSentence) return <></>;
 
   return (
     <Modal open={true}>
@@ -76,9 +73,12 @@ const CheckPane = ({
             >
               録音をチェックしてください
             </div>
-            <Japanese japanese={sentence.japanese} />
+            <Japanese japanese={recordedSentence.japanese} />
             {audioBuffer && (
-              <SentencePitches sentence={sentence} audioBuffer={audioBuffer} />
+              <SentencePitches
+                sentence={recordedSentence}
+                audioBuffer={audioBuffer}
+              />
             )}
 
             <div style={{ textAlign: 'center' }}>

@@ -1,7 +1,7 @@
+import React from 'react';
 import { useTheme } from '@mui/material';
-import { memo } from 'react';
 
-const QuestionIndex = memo(({ index }: { index: number }) => {
+const QuestionIndex = ({ index }: { index: number }) => {
   const theme = useTheme();
   return (
     <div
@@ -13,6 +13,6 @@ const QuestionIndex = memo(({ index }: { index: number }) => {
       }}
     >{`（${index}）`}</div>
   );
-});
+};
 
-export default QuestionIndex;
+export default React.memo(QuestionIndex);

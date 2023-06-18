@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useMemo } from 'react';
 import { IconButton } from '@mui/material';
 
 import { RootState } from 'main';
 
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 import { SPECIAL_MORAS } from 'application/quizPage/core/1-constants';
+import { selectSyllable } from 'application/quizPage/framework/2-selector';
 
 const Selector = ({
   questionId,
@@ -17,19 +17,13 @@ const Selector = ({
   syllableIndex: number;
 }) => {
   const dispatch = useDispatch();
-  const { syllablesArrays } = useSelector((state: RootState) => state.quizPage);
 
-  const syllablesArray = useMemo(
-    () => syllablesArrays[questionId],
-    [questionId, syllablesArrays]
-  );
-
-  const syllable = useMemo(
-    () => syllablesArray[wordIndex][syllableIndex],
-    [syllablesArray, wordIndex, syllableIndex]
+  const syllable = useSelector((state: RootState) =>
+    selectSyllable(state, { questionId, wordIndex, syllableIndex })
   );
 
   const handleClick = (specialMora: string) => {
+    if (!syllable) return;
     dispatch(
       quizPageActions.setSyllableSpecialMora({
         questionId,
@@ -41,7 +35,7 @@ const Selector = ({
     );
   };
 
-  if (!syllablesArray || !syllable) return <></>;
+  if (!syllable) return <></>;
   return (
     <div style={{ marginTop: -4 }}>
       {SPECIAL_MORAS.map((specialMora, itemIndex) => (

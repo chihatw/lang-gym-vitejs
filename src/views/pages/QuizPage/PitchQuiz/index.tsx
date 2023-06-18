@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material';
 
@@ -11,16 +12,22 @@ import {
   selectInputPitchStr,
   selectQuizAudioBuffer,
 } from 'application/quizPage/framework/2-selector';
+import { buildWordPitchStrs } from 'application/utils/utils';
 
 const PitchQuiz = ({ questionId }: { questionId: string }) => {
   const theme = useTheme();
 
-  const { inputPitchStr, wordPitchStrs } = useSelector((state: RootState) =>
+  const inputPitchStr = useSelector((state: RootState) =>
     selectInputPitchStr(state, questionId)
   );
 
+  const wordPitchStrs = useMemo(
+    () => buildWordPitchStrs(inputPitchStr),
+    [inputPitchStr]
+  );
+
   const question = useSelector(
-    (state: RootState) => state.quizQuestions[questionId] || null
+    (state: RootState) => state.quizQuestions.entities[questionId]
   );
 
   const audioBuffer = useSelector((state: RootState) =>
@@ -61,4 +68,4 @@ const PitchQuiz = ({ questionId }: { questionId: string }) => {
   );
 };
 
-export default PitchQuiz;
+export default React.memo(PitchQuiz);

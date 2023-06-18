@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { MutableRefObject, useEffect, useMemo, useRef } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 
 import { RootState } from 'main';
 
@@ -12,20 +12,15 @@ import {
   clearMediaRecorder,
   createMediaRecorder,
 } from 'application/audio/core/2-services';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const RecPane = () => {
   const dispatch = useDispatch();
-  const { currentIndex, isRunning, workoutId } = useSelector(
+  const { currentIndex, isRunning } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
 
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
 
   // streamと連携してマイクを切るため
   const audioElemRef = useRef(new Audio());

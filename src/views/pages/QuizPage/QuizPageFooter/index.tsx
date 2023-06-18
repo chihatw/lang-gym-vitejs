@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, useTheme } from '@mui/material';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'main';
@@ -7,12 +8,10 @@ import { RootState } from 'main';
 import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 import { selectQuizByQuizPageQuizId } from 'application/quizPage/framework/2-selector';
-import { memo, useCallback } from 'react';
 
-const QuizPageFooter = memo(() => {
+const QuizPageFooter = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { quizId } = useSelector((state: RootState) => state.quizPage);
   const quiz = useSelector((state: RootState) =>
     selectQuizByQuizPageQuizId(state)
   );
@@ -22,7 +21,7 @@ const QuizPageFooter = memo(() => {
     if (!Object.values(QUIZ_TIPE).includes(quiz.type)) return;
     const createdAt = Date.now();
     dispatch(quizPageActions.updateQuizScoreStart(createdAt));
-    navigate(`/quiz/${quizId}/score/${createdAt}`);
+    navigate(`/quiz/${quiz.id}/score/${createdAt}`);
   }, [quiz]);
 
   return (
@@ -45,11 +44,11 @@ const QuizPageFooter = memo(() => {
       </Button>
     </div>
   );
-});
+};
 
-export default QuizPageFooter;
+export default React.memo(QuizPageFooter);
 
-const ButtonLabel = memo(
+const ButtonLabel = React.memo(
   ({ label, color }: { label: string; color: string }) => {
     const theme = useTheme();
     return (

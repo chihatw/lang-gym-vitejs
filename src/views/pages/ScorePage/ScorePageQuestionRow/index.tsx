@@ -1,11 +1,11 @@
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react';
 
 import { RootState } from 'main';
 
 import AccentsQuestionRow from './AccentsQuestionRow';
 import RhythmsQuestionRow from './RhythmsQuestionRow';
 import QuestionIndex from 'views/components/QuestionIndex';
+import { selectQuiz } from 'application/scorePage/framework/2-selector';
 
 function ScorePageQuestionRow({
   index,
@@ -14,9 +14,7 @@ function ScorePageQuestionRow({
   index: number;
   questionId: string;
 }) {
-  const { quizId } = useSelector((state: RootState) => state.scorePage);
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
+  const quiz = useSelector((state: RootState) => selectQuiz(state));
 
   if (!quiz) return <></>;
   return (

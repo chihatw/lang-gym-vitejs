@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Container } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { RootState } from 'main';
 
@@ -10,14 +10,15 @@ import ScoreFooter from './ScoreFooter';
 import { scorePageActions } from 'application/scorePage/framework/0-reducer';
 import ScorePageQuestionRow from './ScorePageQuestionRow';
 import QuizPageHeader from 'views/components/QuizPageHeader';
+import { selectQuiz } from 'application/scorePage/framework/2-selector';
 
 const ScorePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { quizId, scoreId: scoreCreatedAt } = useParams(); // scoreId は実は scoreCreatedAt
+  const { quizId, scoreId: scoreCreatedAt } = useParams(); // params の scoreId は実は scoreCreatedAt
 
-  const quizzes = useSelector((state: RootState) => state.quizzes);
+  const quiz = useSelector((state: RootState) => selectQuiz(state));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,8 +34,6 @@ const ScorePage = () => {
     if (!quizId || !scoreCreatedAt) return;
     dispatch(scorePageActions.initiate({ quizId, scoreCreatedAt }));
   }, [quizId, scoreCreatedAt]);
-
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
 
   if (!quiz || !scoreCreatedAt) return <></>;
 

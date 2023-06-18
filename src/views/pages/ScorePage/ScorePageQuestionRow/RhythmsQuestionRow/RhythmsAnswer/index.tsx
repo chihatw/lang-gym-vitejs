@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
 import CorrectAnswer from '../../../commons/CorrectAnswer';
 import CorrectRhythms from './CorrectRhythms';
 import IncorrectRhythms from './IncorrectRhythms';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
+import { selectAnsweredSpecialMoraArray } from 'application/scorePage/framework/2-selector';
 
 const RhythmsAnswer = ({
   index,
@@ -12,34 +13,12 @@ const RhythmsAnswer = ({
   index: number;
   questionId: string;
 }) => {
-  const { quizId, scoreCreatedAt } = useSelector(
-    (state: RootState) => state.scorePage
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizScores = useSelector((state: RootState) => state.quizScores);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
-  const score = useMemo(() => {
-    if (!quiz) return null;
-    return (
-      quiz.scoreIds
-        .map((scoreId) => quizScores[scoreId])
-        .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
-    );
-  }, [scoreCreatedAt, quiz]);
-
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
+  const answeredSpecialMoraArray = useSelector((state: RootState) =>
+    selectAnsweredSpecialMoraArray(state, index)
   );
-  const syllablesArray = Object.values(question.syllables);
-
-  const answeredSpecialMoraArray = score
-    ? score.rhythmAnswers[index]
-        .split('\n')
-        .map((word) => word.split(',').map((specialMora) => specialMora))
-    : [];
 
   if (
     JSON.stringify(answeredSpecialMoraArray) ===

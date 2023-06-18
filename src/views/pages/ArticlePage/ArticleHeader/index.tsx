@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Divider } from '@mui/material';
 
 import Title from './Title';

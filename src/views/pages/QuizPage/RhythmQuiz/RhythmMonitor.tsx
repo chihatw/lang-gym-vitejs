@@ -1,25 +1,38 @@
-import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'main';
+import { selectMonitorSpecialMoraArray } from 'application/quizPage/framework/2-selector';
+import { ISyllable } from 'application/quizQuestions/core/0-interface';
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
 
 const RhythmMonitor = ({ questionId }: { questionId: string }) => {
   const theme = useTheme();
-  const { syllablesArrays, monitorSpecialMoraArrays } = useSelector(
-    (state: RootState) => state.quizPage
-  );
 
-  const syllablesArray = useMemo(
-    () => syllablesArrays[questionId],
-    [questionId, syllablesArrays]
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
-  const monitorSpecialMoraArray = useMemo(
-    () => monitorSpecialMoraArrays[questionId],
-    [questionId, monitorSpecialMoraArrays]
+  const monitorSpecialMoraArray = useSelector((state: RootState) =>
+    selectMonitorSpecialMoraArray(state, questionId)
   );
 
   if (!syllablesArray || !monitorSpecialMoraArray) return <></>;
+
+  const syllables = (
+    syllable: ISyllable,
+    wordIndex: number,
+    syllableIndex: number
+  ) => {
+    const monitor = monitorSpecialMoraArray[wordIndex][syllableIndex];
+    return (
+      <div key={syllableIndex}>
+        <span style={{ whiteSpace: 'nowrap' }}>{syllable.kana}</span>
+        <span style={{ color: '#f50057', whiteSpace: 'nowrap' }}>
+          {monitor}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -30,19 +43,11 @@ const RhythmMonitor = ({ questionId }: { questionId: string }) => {
         flexWrap: 'wrap',
       }}
     >
-      {syllablesArray.map((_, wordIndex) => (
+      {syllablesArray.map((wordSyllable, wordIndex) => (
         <div style={{ display: 'flex' }} key={wordIndex}>
-          {syllablesArray[wordIndex].map((syllable, syllableIndex) => {
-            const monitor = monitorSpecialMoraArray[wordIndex][syllableIndex];
-            return (
-              <div key={syllableIndex}>
-                <span style={{ whiteSpace: 'nowrap' }}>{syllable.kana}</span>
-                <span style={{ color: '#f50057', whiteSpace: 'nowrap' }}>
-                  {monitor}
-                </span>
-              </div>
-            );
-          })}
+          {wordSyllable.map((syllable, syllableIndex) =>
+            syllables(syllable, wordIndex, syllableIndex)
+          )}
           <div style={{ width: 8 }} />
         </div>
       ))}

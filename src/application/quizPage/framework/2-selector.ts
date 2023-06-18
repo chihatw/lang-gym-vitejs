@@ -1,4 +1,3 @@
-import { buildWordPitchStrs } from 'application/utils/utils';
 import { RootState } from 'main';
 import { createSelector } from 'reselect';
 
@@ -18,9 +17,7 @@ export const selectInputPitchStr = createSelector(
     (state, questionId) => questionId,
   ],
   (inputPitchStrs, questionId) => {
-    const inputPitchStr = inputPitchStrs[questionId] || '';
-    const wordPitchStrs = buildWordPitchStrs(inputPitchStr);
-    return { inputPitchStr, wordPitchStrs };
+    return inputPitchStrs[questionId] || '';
   }
 );
 
@@ -47,7 +44,74 @@ export const selectWordDisabled = createSelector(
     (state, { questionId, wordIndex }) => ({ questionId, wordIndex }),
   ],
   (quizQuestions, { questionId, wordIndex }) => {
-    const question = quizQuestions[questionId];
+    const question = quizQuestions.entities[questionId];
     return question ? question.disableds.includes(wordIndex) : true;
   }
+);
+
+export const selectInputSpecialMoraArray = createSelector(
+  [
+    (state: RootState) => state.quizPage.inputSpecialMoraArrays,
+    (state, questionId) => questionId,
+  ],
+  (inputSpecialMoraArrays, questionId) => inputSpecialMoraArrays[questionId]
+);
+
+export const selectSyllable = createSelector(
+  [
+    (state: RootState) => state.quizQuestions.entities,
+    (
+      state,
+      {
+        questionId,
+        wordIndex,
+        syllableIndex,
+      }: {
+        questionId: string;
+        wordIndex: number;
+        syllableIndex: number;
+      }
+    ) => ({
+      questionId,
+      wordIndex,
+      syllableIndex,
+    }),
+  ],
+
+  (quizQuestions, { questionId, wordIndex, syllableIndex }) => {
+    const question = quizQuestions[questionId];
+    if (!question) return null;
+    return Object.values(question.syllables)[wordIndex][syllableIndex];
+  }
+);
+
+export const selectAnsweredSpecialMoraArray = createSelector(
+  [
+    (state: RootState) => state.quizzes,
+    (state: RootState) => state.scorePage.quizId,
+    (state: RootState) => state.scorePage.scoreCreatedAt,
+    (state: RootState) => state.quizScores,
+    (state, index) => index,
+  ],
+  (quizzes, quizId, scoreCreatedAt, quizScores, index) => {
+    const quiz = quizzes[quizId];
+    if (!quiz) return [];
+
+    const score = quiz.scoreIds
+      .map((scoreId) => quizScores[scoreId])
+      .find((score) => score.createdAt === Number(scoreCreatedAt));
+    if (!score) return [];
+
+    return score.rhythmAnswers[index]
+      .split('\n')
+      .map((word) => word.split(','));
+  }
+);
+
+export const selectMonitorSpecialMoraArray = createSelector(
+  [
+    (state: RootState) => state.quizPage.monitorSpecialMoraArrays,
+    (state, questionId) => questionId,
+  ],
+  (monitorSpecialMoraArrays, questionId) => monitorSpecialMoraArrays[questionId]
 );

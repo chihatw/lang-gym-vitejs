@@ -1,15 +1,11 @@
 import { useTheme } from '@mui/material';
-import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { selectArticle } from 'application/articlePage/framework/2-selector';
 
 const Title = () => {
   const theme = useTheme();
-  const { articleId } = useParams();
-  const articles = useSelector((state: RootState) => state.articles);
-
-  const article = useMemo(() => articles[articleId!], [articleId, articles]);
+  const article = useSelector((state: RootState) => selectArticle(state));
 
   if (!article) return <></>;
   return (

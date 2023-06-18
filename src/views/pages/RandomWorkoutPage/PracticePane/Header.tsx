@@ -1,25 +1,11 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 
 import { buildTargetTimeStr } from 'application/randomWorkoutPage/core/2-services';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const Header = () => {
-  const { workoutId } = useSelector(
-    (state: RootState) => state.randomWorkoutPage
-  );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
-
-  const workout = useMemo(
-    () => randomWorkouts[workoutId],
-    [workoutId, randomWorkouts]
-  );
-  const targetTimeStr = useMemo(
-    () => (workout ? buildTargetTimeStr(workout) : ''),
-    [workout]
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
 
   if (!workout) return <></>;
 
@@ -36,7 +22,7 @@ const Header = () => {
         </div>
         <div>
           <span style={{ fontSize: 14 }}>目標時間: </span>
-          <span style={{ fontSize: 20 }}>{targetTimeStr}</span>
+          <span style={{ fontSize: 20 }}>{buildTargetTimeStr(workout)}</span>
         </div>
       </div>
     </>

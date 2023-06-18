@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 
@@ -8,21 +7,14 @@ import Header from './Header';
 import RecPane from './RecPane';
 import CueCard from './CueCard';
 import TimeDisplay from './TimeDisplay';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 function PracticePane() {
   const theme = useTheme();
-
-  const { currentIndex, isRunning, workoutId } = useSelector(
+  const { currentIndex, isRunning } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
-
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
 
   if (!workout) return <></>;
 

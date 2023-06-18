@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { RootState } from 'main';
 
@@ -8,6 +8,12 @@ import Monitor from './Monitor';
 import Selector from './Selector';
 import ToggleSelectorIcon from './ToggleSelectorIcon';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
+
+import { selectInputSpecialMoraArray } from 'application/quizPage/framework/2-selector';
+import {
+  selectQuizQuestion,
+  selectSyllablesArray,
+} from 'application/quizQuestions/framework/2-selector';
 
 const SpecialMoraSelector = ({
   wordIndex,
@@ -21,30 +27,20 @@ const SpecialMoraSelector = ({
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const { syllablesArrays, inputSpecialMoraArrays } = useSelector(
-    (state: RootState) => state.quizPage
+  const question = useSelector((state: RootState) =>
+    selectQuizQuestion(state, questionId)
   );
-
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
-  const syllablesArray = useMemo(
-    () => syllablesArrays[questionId],
-    [questionId, syllablesArrays]
-  );
-
-  const inputSpecialMoraArray = useMemo(
-    () => inputSpecialMoraArrays[questionId],
-    [inputSpecialMoraArrays, questionId]
+  const inputSpecialMoraArray = useSelector((state: RootState) =>
+    selectInputSpecialMoraArray(state, questionId)
   );
 
   const syllable = syllablesArray[wordIndex][syllableIndex];
   const inputSpecialMora = inputSpecialMoraArray[wordIndex][syllableIndex];
 
-  const disabled = question.disableds.includes(wordIndex);
+  const disabled = question && question.disableds.includes(wordIndex);
 
   const [selected, setSelected] = useState(false);
 

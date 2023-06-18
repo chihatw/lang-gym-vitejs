@@ -2,10 +2,11 @@ import 'dayjs/locale/ja';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Button, useTheme } from '@mui/material';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
+import { selectScoreByScoreId } from 'application/quizScores/framework/2-selector';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ja');
@@ -14,11 +15,12 @@ const ScoreRow = ({ scoreId, quizId }: { scoreId: string; quizId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizScores = useSelector((state: RootState) => state.quizScores);
-
-  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
-  const score = useMemo(() => quizScores[scoreId], [scoreId, quizScores]);
+  const quiz = useSelector((state: RootState) =>
+    selectQuizByQuizId(state, quizId)
+  );
+  const score = useSelector((state: RootState) =>
+    selectScoreByScoreId(state, scoreId)
+  );
 
   if (!quiz || !score) return <></>;
 

@@ -9,6 +9,7 @@ import { IQuizScore } from 'application/quizScores/core/0-interface';
 import { string2PitchesArray } from 'application/utils/string2PitchesArray';
 import { pitchesArray2String } from 'application/utils/pitchesArray2String';
 import { KANA_ROMAJI_MAP } from 'application/utils/kanaRomajiMap/kanaRomajiMap';
+import { Dictionary } from '@reduxjs/toolkit';
 
 export const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
   return pitchStr
@@ -162,13 +163,10 @@ export const changePitchesArray = (
 export const calcPoints = (
   quiz: IQuiz,
   quizQuestions: {
-    [id: string]: IQuizQuestion;
+    [id: string]: IQuizQuestion | undefined;
   },
   inputPitchStrs: {
     [questionId: string]: string;
-  },
-  syllablesArrays: {
-    [questionId: string]: ISyllable[][];
   },
   inputSpecialMoraArrays: {
     [questionId: string]: string[][];
@@ -184,7 +182,6 @@ export const calcPoints = (
       points = calcRhythmQuiz(
         quiz.questionIds,
         quizQuestions,
-        syllablesArrays,
         inputSpecialMoraArrays
       );
       break;
@@ -196,13 +193,14 @@ export const calcPoints = (
 
 const calcPitchesQuiz = (
   questionIds: string[],
-  questions: { [questionId: string]: IQuizQuestion },
+  questions: { [questionId: string]: IQuizQuestion | undefined },
   inputPitchStrs: { [questionId: string]: string }
 ) => {
   let points = 0;
 
   for (const questionId of questionIds) {
     const question = questions[questionId];
+    if (!question) continue;
     const inputPitchStr = inputPitchStrs[questionId];
     inputPitchStr.split(' ').forEach((inputWordPitchStr, wordIndex) => {
       // アクセント固定は採点しない
@@ -220,18 +218,17 @@ const calcPitchesQuiz = (
 
 const calcRhythmQuiz = (
   questionIds: string[],
-  questions: { [questionId: string]: IQuizQuestion },
-  syllablesArrays: { [questionIds: string]: ISyllable[][] },
+  questions: Dictionary<IQuizQuestion>,
   inputSpecialMoraArrays: { [questionIds: string]: string[][] }
 ) => {
   let points = 0;
 
   for (const questionId of questionIds) {
     const question = questions[questionId];
-    const syllablesArray = syllablesArrays[questionId];
+    if (!question) continue;
     const inputSpecialMoraArray = inputSpecialMoraArrays[questionId];
 
-    syllablesArray.forEach((wordMora, wordIndex) => {
+    Object.values(question.syllables).forEach((wordMora, wordIndex) => {
       // 特殊拍固定は採点しない
       if (question.disableds.includes(wordIndex)) return;
 

@@ -1,4 +1,6 @@
 export interface IQuizQuestion {
+  quizQuestionId: string;
+  index: number;
   japanese: string; // pitchQuiz で利用
   pitchStr: string; // pitchQuiz で利用
   disableds: number[]; // pitchQuiz, rhythmQuiz の非題化を wordIndex で指定

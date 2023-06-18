@@ -37,7 +37,10 @@ const quizzesMiddleware =
         const unansweredIds = getUnansweredIds(quizzes);
 
         dispatch(quizzesActions.mergeQuizzes(quizzes));
-        dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions));
+        // dispatch(quizQuestionsActions.mergeQuizQuestions(quizQuestions)); // todo will delete
+        dispatch(
+          quizQuestionsActions.setQuizQuestions(Object.values(quizQuestions))
+        );
         dispatch(quizScoresActions.mergeQuizScores(quizScores));
         dispatch(quizListActions.setQuizIds({ answeredIds, unansweredIds }));
 
@@ -135,7 +138,7 @@ const quizzesMiddleware =
         const inputPitchStrs: { [questionId: string]: string } = {};
         if (quiz.type === QUIZ_TIPE.articleAccents) {
           for (const questionId of quiz.questionIds) {
-            const question = quizQuestions[questionId];
+            const question = quizQuestions.entities[questionId];
             const inputPitchStr = question
               ? buildInputPitchStr(question.pitchStr, question.disableds)
               : '';
@@ -149,7 +152,7 @@ const quizzesMiddleware =
           {};
         if (quiz.type === QUIZ_TIPE.articleRhythms) {
           for (const questionId of quiz.questionIds) {
-            const question = quizQuestions[questionId];
+            const question = quizQuestions.entities[questionId];
             const {
               syllablesArray,
               inputSpecialMoraArray,
@@ -183,7 +186,7 @@ const quizzesMiddleware =
         const {
           quizId,
           inputPitchStrs,
-          syllablesArrays,
+          // syllablesArrays,
           inputSpecialMoraArrays,
         } = (getState() as RootState).quizPage;
         const quizzes = (getState() as RootState).quizzes;
@@ -198,9 +201,9 @@ const quizzesMiddleware =
 
         const points = calcPoints(
           quiz,
-          quizQuestions,
+          quizQuestions.entities,
           inputPitchStrs,
-          syllablesArrays,
+          // syllablesArrays,
           inputSpecialMoraArrays
         );
 

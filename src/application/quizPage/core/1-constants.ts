@@ -3,7 +3,6 @@ import { IQuizPage } from './0-interface';
 export const initialState: IQuizPage = {
   quizId: '',
   inputPitchStrs: {},
-  syllablesArrays: {},
   inputSpecialMoraArrays: {},
   monitorSpecialMoraArrays: {},
 };

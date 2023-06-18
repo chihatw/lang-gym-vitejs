@@ -1,31 +1,24 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const CueCard = React.memo(() => {
-  const { currentIndex, workoutId } = useSelector(
+  const { currentIndex } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );
 
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
 
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
+  if (!workout) return <></>;
 
-  const label = useMemo(() => {
-    if (!workout) return '';
+  const label = () => {
     const cue = workout.cues.find(
       (item) => item.id === workout.cueIds[currentIndex]
     );
     return cue?.label || '';
-  }, [workout, currentIndex]);
-
-  if (!workout) return <></>;
+  };
 
   return (
     <div
@@ -36,7 +29,7 @@ const CueCard = React.memo(() => {
         height: 160,
       }}
     >
-      <div>{label}</div>
+      <div>{label()}</div>
     </div>
   );
 });

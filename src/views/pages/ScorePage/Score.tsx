@@ -1,9 +1,12 @@
 import { css, keyframes } from '@emotion/css';
 import { useTheme } from '@mui/material';
-import { useMemo } from 'react';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import {
+  selectQuiz,
+  selectScore,
+} from 'application/scorePage/framework/2-selector';
 
 const barberAnimation = keyframes`
   0% {
@@ -16,21 +19,8 @@ const barberAnimation = keyframes`
 
 const Score = () => {
   const theme = useTheme();
-  const { quizId, scoreCreatedAt } = useSelector(
-    (state: RootState) => state.scorePage
-  );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizScores = useSelector((state: RootState) => state.quizScores);
-
-  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
-  const score = useMemo(() => {
-    if (!quiz) return null;
-    return (
-      quiz.scoreIds
-        .map((scoreId) => quizScores[scoreId])
-        .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
-    );
-  }, [scoreCreatedAt, quiz]);
+  const quiz = useSelector((state: RootState) => selectQuiz(state));
+  const score = useSelector((state: RootState) => selectScore(state));
 
   if (!quiz || !score) return <></>;
 

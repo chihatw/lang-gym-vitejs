@@ -1,19 +1,13 @@
-import { useMemo } from 'react';
 import AssignmentAudioPlayer from './AssignmentAudioPlayer';
 import MicTogglePane from './MicTogglePane';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
+import { selectAssignmentAudioBuffer } from 'application/articlePage/framework/2-selector';
 
 const AssignmentPitches = ({ sentenceId }: { sentenceId: string }) => {
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const assignmentAudioBuffer = useSelector((state: RootState) =>
+    selectAssignmentAudioBuffer(state, sentenceId)
   );
-
-  const assignmentAudioBuffer = useMemo(() => {
-    const path = ASSIGNMENTS_STORAGE_PATH + sentenceId;
-    return fetchedAudioBuffers[path];
-  }, [sentenceId, fetchedAudioBuffers]);
 
   // assignmentAudioBuffer がある場合は、プレイヤーを表示
   if (!!assignmentAudioBuffer) {

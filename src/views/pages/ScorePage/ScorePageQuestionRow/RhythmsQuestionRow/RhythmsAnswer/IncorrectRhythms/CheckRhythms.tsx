@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'main';
+import { selectAnsweredSpecialMoraArray } from 'application/scorePage/framework/2-selector';
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
 
 const CheckRhythms = ({
   index,
@@ -12,39 +13,11 @@ const CheckRhythms = ({
   questionId: string;
 }) => {
   const theme = useTheme();
-  const { quizId, scoreCreatedAt } = useSelector(
-    (state: RootState) => state.scorePage
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizScores = useSelector((state: RootState) => state.quizScores);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
-  const score = useMemo(
-    () =>
-      quiz
-        ? quiz.scoreIds
-            .map((scoreId) => quizScores[scoreId])
-            .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
-        : null,
-    [scoreCreatedAt, quiz]
-  );
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
-  );
-
-  const syllablesArray = useMemo(
-    () => Object.values(question.syllables),
-    [question]
-  );
-
-  const answeredSpecialMoraArray = useMemo(
-    () =>
-      score
-        ? score.rhythmAnswers[index].split('\n').map((word) => word.split(','))
-        : [],
-    []
+  const answeredSpecialMoraArray = useSelector((state: RootState) =>
+    selectAnsweredSpecialMoraArray(state, index)
   );
 
   return (

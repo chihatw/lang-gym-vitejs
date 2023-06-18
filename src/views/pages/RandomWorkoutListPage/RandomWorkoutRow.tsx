@@ -1,5 +1,4 @@
 import Delete from '@mui/icons-material/Delete';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardContent, IconButton, useTheme } from '@mui/material';
@@ -8,30 +7,22 @@ import { RootState } from 'main';
 
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
 import { randomWorkoutsActions } from 'application/randomWorkouts/framework/0-reducer';
+import {
+  selectAudioBuffer,
+  selectRandomWorkout,
+} from 'application/randomWorkoutList/framework/2-selector';
 
 const RandomWorkoutRow = ({ workoutId }: { workoutId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const randomWorkout = useSelector((state: RootState) =>
+    selectRandomWorkout(state, workoutId)
   );
 
-  const randomWorkout = useMemo(
-    () => randomWorkouts[workoutId],
-    [workoutId, randomWorkouts]
-  );
-
-  const audioBuffer = useMemo(
-    () =>
-      randomWorkout && randomWorkout.storagePath
-        ? fetchedAudioBuffers[randomWorkout.storagePath]
-        : null,
-    [randomWorkout, fetchedAudioBuffers]
+  const audioBuffer = useSelector((state: RootState) =>
+    selectAudioBuffer(state, workoutId)
   );
 
   const openWorkoutPage = () => {

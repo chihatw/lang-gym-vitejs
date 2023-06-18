@@ -1,15 +1,18 @@
+import { useSelector } from 'react-redux';
 import { Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import DateDisplay from './DateDisplay';
-import ScoreList from './ScoreList';
-import { useSelector } from 'react-redux';
+
 import { RootState } from 'main';
-import { useMemo } from 'react';
+
+import ScoreList from './ScoreList';
+import DateDisplay from './DateDisplay';
+import { selectQuizByQuizId } from 'application/quizzes/framework/2-selector';
 
 const QuizCard = ({ quizId }: { quizId: string }) => {
   const navigate = useNavigate();
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
+  const quiz = useSelector((state: RootState) =>
+    selectQuizByQuizId(state, quizId)
+  );
 
   if (!quiz) return <></>;
 

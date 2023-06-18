@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { css, keyframes } from '@emotion/css';
 
@@ -7,6 +6,7 @@ import PlayCircleRounded from '@mui/icons-material/PlayCircleRounded';
 import StopCircleRounded from '@mui/icons-material/StopCircleRounded';
 
 import { RootState } from 'main';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const rotate = keyframes`
   0%  {
@@ -19,26 +19,19 @@ const rotate = keyframes`
 `;
 
 function IconSwitch() {
-  const { currentIndex, isRunning, workoutId } = useSelector(
+  const { currentIndex, isRunning } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
 
-  const hasNext = useMemo(
-    () => (workout ? currentIndex !== workout.cueIds.length - 1 : false),
-    [workout, currentIndex]
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
+
+  if (!workout) return <></>;
 
   if (!isRunning) {
     return <PlayCircleRounded sx={{ fontSize: 120 }} />;
   }
-  if (hasNext) {
+
+  if (currentIndex !== workout.cueIds.length - 1) {
     return (
       <ChangeCircleIcon
         className={css`

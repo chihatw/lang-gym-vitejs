@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Container, Modal, useTheme } from '@mui/material';
 
@@ -11,6 +11,7 @@ import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framewor
 import { RANDOM_WORKOUT_STORAGE_PATH } from 'application/randomWorkouts/core/1-constants';
 import CheckPaneRow from './CheckPaneRow';
 import TimeDisplay from '../PracticePane/TimeDisplay';
+import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const CheckPane = React.memo(() => {
   const theme = useTheme();
@@ -20,17 +21,12 @@ const CheckPane = React.memo(() => {
   const { workoutId } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
+
   const { recordedBlob, recordedAudioBuffer } = useSelector(
     (state: RootState) => state.audio
   );
 
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
+  const workout = useSelector((state: RootState) => selectWorkout(state));
 
   const abandonRecordedBlob = () => {
     dispatch(randomWorkoutPageActions.abandonRecordedAudioBuffer());

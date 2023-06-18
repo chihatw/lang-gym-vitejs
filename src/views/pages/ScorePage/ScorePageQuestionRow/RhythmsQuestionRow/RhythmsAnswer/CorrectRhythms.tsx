@@ -1,16 +1,13 @@
-import { useMemo } from 'react';
-
 import { useSelector } from 'react-redux';
+
 import { RootState } from 'main';
 
-const CorrectRhythms = ({ questionId }: { questionId: string }) => {
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
+import { selectSyllablesArray } from 'application/quizQuestions/framework/2-selector';
 
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
+const CorrectRhythms = ({ questionId }: { questionId: string }) => {
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
-  const syllablesArray = Object.values(question.syllables);
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>

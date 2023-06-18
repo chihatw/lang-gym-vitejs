@@ -1,12 +1,13 @@
+import { useSelector } from 'react-redux';
 import { Divider, useTheme } from '@mui/material';
 
-import CorrectAnswer from '../../commons/CorrectAnswer';
-
-import { useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { useMemo } from 'react';
-import SentencePitchLine from 'views/components/SentencePitchLine';
+
+import CorrectAnswer from '../../commons/CorrectAnswer';
 import PitchLine from 'views/components/PitchLine';
+import { selectScore } from 'application/scorePage/framework/2-selector';
+import SentencePitchLine from 'views/components/SentencePitchLine';
+import { selectQuizQuestion } from 'application/quizQuestions/framework/2-selector';
 
 const AccentsAnswer = ({
   index,
@@ -17,28 +18,12 @@ const AccentsAnswer = ({
 }) => {
   const theme = useTheme();
 
-  const { quizId, scoreCreatedAt } = useSelector(
-    (state: RootState) => state.scorePage
-  );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizScores = useSelector((state: RootState) => state.quizScores);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
-  const score = useMemo(() => {
-    if (!quiz) return null;
-    return (
-      quiz.scoreIds
-        .map((scoreId) => quizScores[scoreId])
-        .find((score) => score.createdAt === Number(scoreCreatedAt)) || null
-    );
-  }, [scoreCreatedAt, quiz]);
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId]
+  const score = useSelector((state: RootState) => selectScore(state));
+  const question = useSelector((state: RootState) =>
+    selectQuizQuestion(state, questionId)
   );
 
-  if (!score) return <></>;
+  if (!score || !question) return <></>;
 
   const answer = score.pitchAnswers[index];
 

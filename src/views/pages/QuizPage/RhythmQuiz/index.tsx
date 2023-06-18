@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'main';
@@ -6,31 +5,21 @@ import { RootState } from 'main';
 import RhythmMonitor from './RhythmMonitor';
 import SpecialMoraSelector from './SpecialMoraSelector';
 import AudioBufferSpeackerButton from 'views/components/AudioBufferSpeackerButton';
+import { selectQuizAudioBuffer } from 'application/quizPage/framework/2-selector';
+import {
+  selectQuizQuestion,
+  selectSyllablesArray,
+} from 'application/quizQuestions/framework/2-selector';
 
 const RhythmQuiz = ({ questionId }: { questionId: string }) => {
-  const { quizId, syllablesArrays } = useSelector(
-    (state: RootState) => state.quizPage
+  const audioBuffer = useSelector((state: RootState) =>
+    selectQuizAudioBuffer(state)
   );
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const question = useSelector((state: RootState) =>
+    selectQuizQuestion(state, questionId)
   );
-
-  const quiz = useMemo(() => quizzes[quizId], [quizId, quizzes]);
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
-  );
-
-  const audioBuffer = useMemo(() => {
-    if (!quiz) return null;
-    return fetchedAudioBuffers[quiz.downloadURL] || null;
-  }, [quiz, fetchedAudioBuffers]);
-
-  const syllablesArray = useMemo(
-    () => syllablesArrays[questionId],
-    [questionId, syllablesArrays]
+  const syllablesArray = useSelector((state: RootState) =>
+    selectSyllablesArray(state, questionId)
   );
 
   if (!question || !syllablesArray) return <></>;

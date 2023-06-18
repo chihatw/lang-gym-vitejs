@@ -1,9 +1,10 @@
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react';
 
 import { RootState } from 'main';
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
 import AccentsAnswer from './AccentsAnswer';
+import { selectQuizAudioBuffer } from 'application/scorePage/framework/2-selector';
+import { selectQuizQuestion } from 'application/quizQuestions/framework/2-selector';
 
 function AccentsQuestionRow({
   questionId,
@@ -12,22 +13,14 @@ function AccentsQuestionRow({
   questionId: string;
   index: number;
 }) {
-  const { quizId } = useSelector((state: RootState) => state.scorePage);
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const question = useSelector((state: RootState) =>
+    selectQuizQuestion(state, questionId)
+  );
+  const audioBuffer = useSelector((state: RootState) =>
+    selectQuizAudioBuffer(state)
   );
 
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
-  );
-  const audioBuffer = useMemo(() => {
-    if (!quiz) return null;
-    return fetchedAudioBuffers[quiz.downloadURL] || null;
-  }, [quiz, fetchedAudioBuffers]);
+  if (!question) return <></>;
   return (
     <>
       {!!audioBuffer && (

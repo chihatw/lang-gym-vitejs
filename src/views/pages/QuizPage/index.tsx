@@ -1,5 +1,5 @@
 import { Container } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -60,4 +60,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default React.memo(QuizPage);

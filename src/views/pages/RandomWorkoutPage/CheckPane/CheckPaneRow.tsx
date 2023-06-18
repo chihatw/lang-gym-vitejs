@@ -1,29 +1,14 @@
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Divider } from '@mui/material';
 
 import { RootState } from 'main';
 import SentencePitchLine from 'views/components/SentencePitchLine';
+import { selectPitchStr } from 'application/randomWorkoutPage/framework/2-selector';
 
 function CheckPaneRow({ cueId }: { cueId: string }) {
-  const { workoutId } = useSelector(
-    (state: RootState) => state.randomWorkoutPage
+  const pitchStr = useSelector((state: RootState) =>
+    selectPitchStr(state, cueId)
   );
-  const randomWorkouts = useSelector(
-    (state: RootState) => state.randomWorkouts
-  );
-
-  const workout = useMemo(
-    () => randomWorkouts[workoutId!],
-    [workoutId, randomWorkouts]
-  );
-
-  const pitchStr = useMemo(() => {
-    if (!workout) return '';
-    const cue = workout.cues.find((item) => item.id === cueId);
-    if (!cue) return '';
-    return cue.pitchStr;
-  }, [workout, cueId]);
 
   if (!pitchStr) return <></>;
 

@@ -1,11 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Container } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { RootState } from 'main';
-import AudioBufferSpeackerButton from 'views/components/AudioBufferSpeackerButton';
+
 import RhythmsAnswer from './RhythmsAnswer';
+import { selectQuizQuestion } from 'application/quizQuestions/framework/2-selector';
+import { selectQuizAudioBuffer } from 'application/scorePage/framework/2-selector';
+import AudioBufferSpeackerButton from 'views/components/AudioBufferSpeackerButton';
 
 function RhythmsQuestionRow({
   questionId,
@@ -14,22 +14,15 @@ function RhythmsQuestionRow({
   questionId: string;
   index: number;
 }) {
-  const { quizId } = useSelector((state: RootState) => state.scorePage);
-  const quizzes = useSelector((state: RootState) => state.quizzes);
-  const quizQuestions = useSelector((state: RootState) => state.quizQuestions);
-  const { fetchedAudioBuffers } = useSelector(
-    (state: RootState) => state.audio
+  const question = useSelector((state: RootState) =>
+    selectQuizQuestion(state, questionId)
+  );
+  const audioBuffer = useSelector((state: RootState) =>
+    selectQuizAudioBuffer(state)
   );
 
-  const quiz = useMemo(() => quizzes[quizId!] || null, [quizId, quizzes]);
-  const question = useMemo(
-    () => quizQuestions[questionId] || null,
-    [questionId, quizQuestions]
-  );
-  const audioBuffer = useMemo(() => {
-    if (!quiz) return null;
-    return fetchedAudioBuffers[quiz.downloadURL] || null;
-  }, [quiz, fetchedAudioBuffers]);
+  if (!question) return <></>;
+
   return (
     <div>
       {!!audioBuffer && (

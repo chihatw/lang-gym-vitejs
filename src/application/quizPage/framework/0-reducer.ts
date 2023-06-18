@@ -25,7 +25,6 @@ const quizPageSlice = createSlice({
       }
     ) => {
       state.inputPitchStrs = payload.inputPitchStrs;
-      state.syllablesArrays = payload.syllablesArrays;
       state.inputSpecialMoraArrays = payload.inputSpecialMoraArrays;
       state.monitorSpecialMoraArrays = payload.monitorSpecialMoraArrays;
     },
@@ -42,17 +41,12 @@ const quizPageSlice = createSlice({
       }
     ) => {
       const targetInputPitchStr = state.inputPitchStrs[questionId];
-
       const updatedPitchStr: string = changePitchesArray(
         targetInputPitchStr,
         wordIndex,
         moraIndex
       );
-
-      state.inputPitchStrs = {
-        ...state.inputPitchStrs,
-        [questionId]: updatedPitchStr,
-      };
+      state.inputPitchStrs[questionId] = updatedPitchStr;
     },
     setSyllableSpecialMora: (
       state,
