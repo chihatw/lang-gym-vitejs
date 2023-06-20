@@ -10,8 +10,9 @@ import {
   createMediaRecorder,
   startRecording,
 } from 'application/audioBuffers/core/2-services';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
+import { recordedAudioActions } from 'application/recordedAudio/framework/0-reducer';
 
 const RecButton = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const RecButton = () => {
       mediaRecorder,
       (blob: Blob, audioBuffer: AudioBuffer) => {
         dispatch(
-          audioActions.setBlobAndAudioBuffer({
+          recordedAudioActions.setRecordedAudio({
             recordedBlob: blob,
             recordedAudioBuffer: audioBuffer,
           })

@@ -8,7 +8,7 @@ import { RootState } from 'main';
 
 import PlayRecordedAudioButton from './PlayRecordedAudioButton';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { selectRecordedSentence } from 'application/articlePage/framework/2-selector';
 import { ASSIGNMENTS_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 
@@ -19,8 +19,8 @@ const CheckPane = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { recordedAudioBuffer, recordedBlob } = useSelector(
-    (state: RootState) => state.audioBuffers
+  const { audioBuffer: recordedAudioBuffer, blob: recordedBlob } = useSelector(
+    (state: RootState) => state.recordedAudio
   );
   const playedRecordedAudio = useSelector(
     (state: RootState) => state.ariclePage.playedRecordedAudio
@@ -44,7 +44,7 @@ const CheckPane = ({
 
     const path = ASSIGNMENTS_STORAGE_PATH + recordedSentence.id;
     dispatch(
-      audioActions.saveAudioBuffer({
+      audioBuffersActions.saveAudioBuffer({
         id: path,
         audioBuffer: recordedAudioBuffer,
       })

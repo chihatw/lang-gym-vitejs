@@ -6,7 +6,7 @@ import { articlesActions } from './0-reducer';
 import { topPageActions } from 'application/topPage/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { sentencesActions } from 'application/sentences/framework/0-reducer';
 import { ARTILCE_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 
@@ -116,7 +116,9 @@ const articlesMiddleware =
         // fetch済みのarticleIdの場合、audioBuffer と Sentences を取得
         if (articleIds.includes(articleId)) {
           dispatch(
-            audioActions.getAudioBufferStart(ARTILCE_STORAGE_PATH + articleId)
+            audioBuffersActions.getAudioBufferStart(
+              ARTILCE_STORAGE_PATH + articleId
+            )
           );
           dispatch(sentencesActions.getSentencesStart(articleId));
           dispatch(articlePageActions.setArticleId(articleId));
@@ -134,7 +136,9 @@ const articlesMiddleware =
 
         // articleがあれば、articleIdの場合、audioBuffer と Sentences を取得
         dispatch(
-          audioActions.getAudioBufferStart(ARTILCE_STORAGE_PATH + article.id)
+          audioBuffersActions.getAudioBufferStart(
+            ARTILCE_STORAGE_PATH + article.id
+          )
         );
         dispatch(sentencesActions.getSentencesStart(article.id));
         break;

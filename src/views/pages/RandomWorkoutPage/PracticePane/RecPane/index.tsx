@@ -5,7 +5,6 @@ import { useEffect, useRef } from 'react';
 import { RootState } from 'main';
 
 import IconSwitch from './IconSwitch';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import {
   startRecording,
@@ -13,6 +12,7 @@ import {
   createMediaRecorder,
 } from 'application/audioBuffers/core/2-services';
 import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
+import { recordedAudioActions } from 'application/recordedAudio/framework/0-reducer';
 
 const RecPane = () => {
   const dispatch = useDispatch();
@@ -54,7 +54,7 @@ const RecPane = () => {
       mediaRecorder,
       (blob: Blob, audioBuffer: AudioBuffer) => {
         dispatch(
-          audioActions.setBlobAndAudioBuffer({
+          recordedAudioActions.setRecordedAudio({
             recordedBlob: blob,
             recordedAudioBuffer: audioBuffer,
           })

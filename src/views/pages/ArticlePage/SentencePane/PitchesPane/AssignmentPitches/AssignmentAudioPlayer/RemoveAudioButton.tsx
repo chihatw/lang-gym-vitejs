@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { ASSIGNMENTS_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 import { useDispatch } from 'react-redux';
 
@@ -10,7 +10,7 @@ const RemoveAudioButton = ({ sentenceId }: { sentenceId: string }) => {
   const handleDelete = () => {
     if (window.confirm('音声ファイルを削除しますか')) {
       const path = ASSIGNMENTS_STORAGE_PATH + sentenceId;
-      dispatch(audioActions.removeFetchedAudioBuffer(path));
+      dispatch(audioBuffersActions.removeFetchedAudioBuffer(path));
     }
   };
   return (

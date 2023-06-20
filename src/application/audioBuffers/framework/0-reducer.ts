@@ -10,10 +10,7 @@ const audioBufferAdapter = createEntityAdapter<{
 
 const audioSlice = createSlice({
   name: 'audioBuffers',
-  initialState: audioBufferAdapter.getInitialState<{
-    recordedBlob: Blob | undefined;
-    recordedAudioBuffer: AudioBuffer | undefined;
-  }>({ recordedBlob: undefined, recordedAudioBuffer: undefined }),
+  initialState: audioBufferAdapter.getInitialState(),
   reducers: {
     getAudioBufferStart: (state, { payload }: { payload: string }) => state,
     getAudioBuffersStart: (state, { payload }: { payload: string[] }) => state,
@@ -41,23 +38,10 @@ const audioSlice = createSlice({
     removeFetchedAudioBuffer: (state, { payload }: { payload: string }) => {
       audioBufferAdapter.removeOne(state, payload);
     },
-    setBlobAndAudioBuffer: (
-      state,
-      {
-        payload: { recordedBlob, recordedAudioBuffer },
-      }: { payload: { recordedBlob: Blob; recordedAudioBuffer: AudioBuffer } }
-    ) => {
-      state.recordedBlob = recordedBlob;
-      state.recordedAudioBuffer = recordedAudioBuffer;
-    },
-    resetRecordedAudio: (state) => {
-      state.recordedBlob = undefined;
-      state.recordedAudioBuffer = undefined;
-    },
   },
 });
 
-export const audioActions = audioSlice.actions;
+export const audioBuffersActions = audioSlice.actions;
 
 export default audioSlice.reducer;
 

@@ -3,7 +3,7 @@ import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
 import { randomWorkoutsActions } from './0-reducer';
 import { randomWorkoutListActions } from 'application/randomWorkoutList/framework/0-reducer';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { RANDOM_WORKOUT_STORAGE_PATH } from '../core/1-constants';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import { buildCueIds, calcBpm, miliSecondsToSeconds } from '../core/2-services';
@@ -32,13 +32,13 @@ const randomWorkoutsMiddleware =
           .map((workout) => workout.storagePath)
           .filter((i) => i);
 
-        dispatch(audioActions.getAudioBuffersStart(paths));
+        dispatch(audioBuffersActions.getAudioBuffersStart(paths));
         return;
       }
       case 'randomWorkouts/clearStoragePath': {
         const workoutId = action.payload as string;
         const path = RANDOM_WORKOUT_STORAGE_PATH + workoutId;
-        dispatch(audioActions.removeFetchedAudioBuffer(path));
+        dispatch(audioBuffersActions.removeFetchedAudioBuffer(path));
         await services.api.randomWorkouts.clearStoragePath(workoutId);
         return;
       }

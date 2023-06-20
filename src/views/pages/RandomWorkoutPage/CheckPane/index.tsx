@@ -12,7 +12,7 @@ import {
 import { RootState } from 'main';
 
 import AudioBufferSlider from 'views/components/AudioBufferSlider';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import { RANDOM_WORKOUT_STORAGE_PATH } from 'application/randomWorkouts/core/1-constants';
 import CheckPaneRow from './CheckPaneRow';
@@ -28,8 +28,8 @@ const CheckPane = React.memo(() => {
     (state: RootState) => state.randomWorkoutPage
   );
 
-  const { recordedBlob, recordedAudioBuffer } = useSelector(
-    (state: RootState) => state.audioBuffers
+  const { blob: recordedBlob, audioBuffer: recordedAudioBuffer } = useSelector(
+    (state: RootState) => state.recordedAudio
   );
 
   const workout = useSelector((state: RootState) => selectWorkout(state));
@@ -44,7 +44,7 @@ const CheckPane = React.memo(() => {
     // workoutId １つに対して、１つの stroragePath しかないので、上書きになる
     const path = RANDOM_WORKOUT_STORAGE_PATH + workoutId;
     dispatch(
-      audioActions.saveAudioBuffer({
+      audioBuffersActions.saveAudioBuffer({
         id: path,
         audioBuffer: recordedAudioBuffer,
       })

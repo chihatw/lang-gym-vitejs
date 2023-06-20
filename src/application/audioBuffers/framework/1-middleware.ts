@@ -1,7 +1,8 @@
 import { AnyAction, Middleware } from '@reduxjs/toolkit';
-import { audioActions } from './0-reducer';
+import { audioBuffersActions } from './0-reducer';
 import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
+import { recordedAudioActions } from 'application/recordedAudio/framework/0-reducer';
 
 const audioMiddleWare =
   (services: Services): Middleware =>
@@ -22,7 +23,7 @@ const audioMiddleWare =
         const gotAudioBuffer =
           await services.api.audioBuffers.fetchStorageAudioBuffer(path);
         dispatch(
-          audioActions.mergeFetchedAudioBuffers({
+          audioBuffersActions.mergeFetchedAudioBuffers({
             [path]: {
               id: path,
               audioBuffer: gotAudioBuffer || undefined,
@@ -59,18 +60,17 @@ const audioMiddleWare =
           })
         );
 
-        dispatch(audioActions.mergeFetchedAudioBuffers(gotAudioBuffers));
+        dispatch(audioBuffersActions.mergeFetchedAudioBuffers(gotAudioBuffers));
         return;
       }
       case 'audioBuffers/saveAudioBuffer': {
         const path = action.payload.id as string;
-        const recordedBlob = (getState() as RootState).audioBuffers
-          .recordedBlob;
+        const recordedBlob = (getState() as RootState).recordedAudio.blob;
 
         if (!recordedBlob) return;
 
         await services.api.audioBuffers.uploadStorageByPath(recordedBlob, path);
-        dispatch(audioActions.resetRecordedAudio());
+        dispatch(recordedAudioActions.resetRecordedAudio());
         return;
       }
       case 'audioBuffers/removeFetchedAudioBuffer': {
@@ -79,7 +79,7 @@ const audioMiddleWare =
         return;
       }
       case 'ranomWorkoutPage/abandomRecordedAudioBuffer': {
-        dispatch(audioActions.resetRecordedAudio());
+        dispatch(recordedAudioActions.resetRecordedAudio());
         return;
       }
       default:

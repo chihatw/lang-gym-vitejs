@@ -7,7 +7,7 @@ import { RootState } from 'main';
 import { quizzesActions } from './0-reducer';
 import { getAnsweredIds, getUnansweredIds } from '../core/2-services';
 import { scorePageActions } from 'application/scorePage/framework/0-reducer';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import {
@@ -59,7 +59,7 @@ const quizzesMiddleware =
           );
           const quiz = quizzes[quizId];
           if (!!quiz && quiz.downloadURL) {
-            dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+            dispatch(audioBuffersActions.getAudioBufferStart(quiz.downloadURL));
           }
           return;
         }
@@ -79,7 +79,7 @@ const quizzesMiddleware =
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
-          dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+          dispatch(audioBuffersActions.getAudioBufferStart(quiz.downloadURL));
         }
         return;
       }
@@ -94,7 +94,7 @@ const quizzesMiddleware =
           dispatch(quizPageActions.setQuizId(quizId));
           const quiz = quizzes[quizId];
           if (!!quiz && quiz.downloadURL) {
-            dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+            dispatch(audioBuffersActions.getAudioBufferStart(quiz.downloadURL));
           }
           return;
         }
@@ -112,7 +112,7 @@ const quizzesMiddleware =
         dispatch(quizQuestionsActions.addQuizQuestions(quizQuestions));
 
         if (!!quiz && quiz.downloadURL) {
-          dispatch(audioActions.getAudioBufferStart(quiz.downloadURL));
+          dispatch(audioBuffersActions.getAudioBufferStart(quiz.downloadURL));
         }
         return;
       }

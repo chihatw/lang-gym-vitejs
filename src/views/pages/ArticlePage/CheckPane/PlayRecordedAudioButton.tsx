@@ -15,7 +15,7 @@ function PlayRecordedAudioButton() {
   const dispatch = useDispatch();
   const sourceNodeRef = useRef<AudioBufferSourceNode | undefined>(undefined);
   const recordedAudioBuffer = useSelector(
-    (state: RootState) => state.audioBuffers.recordedAudioBuffer
+    (state: RootState) => state.recordedAudio.audioBuffer
   );
   const playedRecordedAudio = useSelector(
     (state: RootState) => state.ariclePage.playedRecordedAudio

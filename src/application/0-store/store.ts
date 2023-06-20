@@ -8,13 +8,13 @@ import { Services } from 'infrastructure/services';
 const serializableCheck = {
   ignoredActions: [
     'audioBuffers/saveAudioBuffer',
-    'audioBuffers/setBlobAndAudioBuffer',
+    'recordedAudio/setRecordedAudio',
     'audioBuffers/mergeFetchedAudioBuffers',
   ],
   ignoredPaths: [
     'audioBuffers.entities',
-    'audioBuffers.recordedBlob',
-    'audioBuffers.recordedAudioBuffer',
+    'recordedAudio.blob',
+    'recordedAudio.audioBuffer',
   ],
 };
 

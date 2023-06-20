@@ -4,7 +4,7 @@ import { RootState } from 'main';
 import { sentencesActions } from './0-reducer';
 
 import { getSentenceIds } from '../core/2-services';
-import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
 import { ASSIGNMENTS_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 
 const sentencesMiddleware =
@@ -24,7 +24,7 @@ const sentencesMiddleware =
           const paths = sentenceIds.map(
             (sentenceId) => ASSIGNMENTS_STORAGE_PATH + sentenceId
           );
-          dispatch(audioActions.getAudioBuffersStart(paths));
+          dispatch(audioBuffersActions.getAudioBuffersStart(paths));
           return;
         }
 
@@ -41,7 +41,7 @@ const sentencesMiddleware =
           const paths = sentenceIds.map(
             (sentenceId) => ASSIGNMENTS_STORAGE_PATH + sentenceId
           );
-          dispatch(audioActions.getAudioBuffersStart(paths));
+          dispatch(audioBuffersActions.getAudioBuffersStart(paths));
         }
         break;
       }
