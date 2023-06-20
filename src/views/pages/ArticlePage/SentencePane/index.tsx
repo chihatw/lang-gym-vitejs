@@ -6,22 +6,20 @@ import Chinese from './Chinese';
 import Original from './Original';
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 import { selectSentenceById } from 'application/sentences/framework/0-reducer';
+import {
+  selectArticle,
+  selectAudioBuffer,
+} from 'application/articlePage/framework/2-selector';
 
 const SentencePane = ({ sentenceId }: { sentenceId: string }) => {
-  const { articleId } = useSelector((state: RootState) => state.ariclePage);
-  const article = useSelector(
-    (state: RootState) => state.articles.entities[articleId]
-  );
+  const article = useSelector((state: RootState) => selectArticle(state));
   const sentence = useSelector((state: RootState) =>
     selectSentenceById(state, sentenceId)
   );
-  const audioBuffer = useSelector((state: RootState) => {
-    const { fetchedAudioBuffers } = state.audio;
-    const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path];
-  });
+  const audioBuffer = useSelector((state: RootState) =>
+    selectAudioBuffer(state)
+  );
 
   if (!article || !sentence) return <></>;
 

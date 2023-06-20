@@ -25,7 +25,7 @@ const userMiddleware =
             password
           );
         if (authUser) {
-          dispatch(authUserActions.setLoginUser(authUser));
+          dispatch(authUserActions.setLoginUser(authUser.uid));
           dispatch(signInFormActions.signInSuccess());
         } else if (!!emailErrMsg || !!passwordErrMsg) {
           dispatch(

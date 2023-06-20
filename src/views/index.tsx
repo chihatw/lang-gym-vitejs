@@ -33,7 +33,9 @@ const App = () => {
         // currentUid は localStorage から受け取る
         const currentUid =
           localStorage.getItem(CURRENT_UID_LOCAL_STORAGE_KEY) || user.uid;
-        dispatch(authUserActions.setUser({ loginUser: user, currentUid }));
+        dispatch(
+          authUserActions.setUser({ loginUserUid: user.uid, currentUid })
+        );
       } else {
         localStorage.setItem(CURRENT_UID_LOCAL_STORAGE_KEY, '');
         dispatch(authUserActions.removeUser());

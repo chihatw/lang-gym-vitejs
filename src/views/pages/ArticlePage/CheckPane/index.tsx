@@ -44,7 +44,10 @@ const CheckPane = ({
 
     const path = ASSIGNMENTS_STORAGE_PATH + recordedSentence.id;
     dispatch(
-      audioActions.saveAudioBuffer({ path, audioBuffer: recordedAudioBuffer })
+      audioActions.saveAudioBuffer({
+        id: path,
+        audioBuffer: recordedAudioBuffer,
+      })
     );
     dispatch(articlePageActions.resetRecordedAudio());
   };

@@ -12,7 +12,7 @@ const audioMiddleWare =
     switch (action.type) {
       case 'audio/getAudioBufferStart': {
         const path = action.payload as string;
-        const { fetchedAudioBuffers } = (getState() as RootState).audio;
+        const fetchedAudioBuffers = (getState() as RootState).audio.entities;
 
         const paths = Object.keys(fetchedAudioBuffers);
 
@@ -24,7 +24,10 @@ const audioMiddleWare =
         );
         dispatch(
           audioActions.mergeFetchedAudioBuffers({
-            [path]: gotAudioBuffer || undefined,
+            [path]: {
+              id: path,
+              audioBuffer: gotAudioBuffer || undefined,
+            },
           })
         );
 
@@ -32,19 +35,27 @@ const audioMiddleWare =
       }
       case 'audio/getAudioBuffersStart': {
         const paths = action.payload as string[];
-        const { fetchedAudioBuffers } = (getState() as RootState).audio;
+        const fetchedAudioBuffers = (getState() as RootState).audio.entities;
 
         const fetchedPaths = Object.keys(fetchedAudioBuffers);
 
         // audioBuffers の取得
-        const audioBuffers: { [path: string]: AudioBuffer | undefined } = {};
+        const audioBuffers: {
+          [id: string]: {
+            id: string;
+            audioBuffer: AudioBuffer | undefined;
+          };
+        } = {};
         await Promise.all(
           paths.map(async (path) => {
             // path がすでに存在すれば、スキップ
             if (!fetchedPaths.includes(path)) {
               const gotAudioBuffer =
                 await services.api.audio.fetchStorageAudioBuffer(path);
-              audioBuffers[path] = gotAudioBuffer;
+              audioBuffers[path] = {
+                id: path,
+                audioBuffer: gotAudioBuffer,
+              };
             }
           })
         );

@@ -44,7 +44,10 @@ const CheckPane = React.memo(() => {
     // workoutId １つに対して、１つの stroragePath しかないので、上書きになる
     const path = RANDOM_WORKOUT_STORAGE_PATH + workoutId;
     dispatch(
-      audioActions.saveAudioBuffer({ path, audioBuffer: recordedAudioBuffer })
+      audioActions.saveAudioBuffer({
+        id: path,
+        audioBuffer: recordedAudioBuffer,
+      })
     );
 
     dispatch(randomWorkoutPageActions.saveRecordedAudioBuffer(workoutId));

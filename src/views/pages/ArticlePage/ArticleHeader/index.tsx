@@ -6,35 +6,22 @@ import AudioBufferSlider from 'views/components/AudioBufferSlider';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
-import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
-import { getSentenceIds } from 'application/sentences/core/2-services';
+import {
+  selectArticle,
+  selectAudioBuffer,
+  selectArticleBufferStartAndEnd,
+} from 'application/articlePage/framework/2-selector';
 
 const ArticleHeader = () => {
-  const { articleId } = useSelector((state: RootState) => state.ariclePage);
-  const article = useSelector(
-    (state: RootState) => state.articles.entities[articleId]
+  const article = useSelector((state: RootState) => selectArticle(state));
+
+  const { start, end } = useSelector((state: RootState) =>
+    selectArticleBufferStartAndEnd(state)
   );
 
-  const sentenceIds = useSelector((state: RootState) =>
-    getSentenceIds(articleId, Object.values(state.sentences.entities))
+  const audioBuffer = useSelector((state: RootState) =>
+    selectAudioBuffer(state)
   );
-
-  const { start, end } = useSelector((state: RootState) => {
-    try {
-      return {
-        start: state.sentences.entities[sentenceIds[0]]!.start,
-        end: state.sentences.entities[sentenceIds.slice(-1)[0]]!.end,
-      };
-    } catch (e) {
-      return { start: 0, end: 0 };
-    }
-  });
-
-  const audioBuffer = useSelector((state: RootState) => {
-    const { fetchedAudioBuffers } = state.audio;
-    const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path];
-  });
 
   if (!article) return <></>;
 

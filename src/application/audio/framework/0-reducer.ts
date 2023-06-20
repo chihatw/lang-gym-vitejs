@@ -1,31 +1,47 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { initialState } from '../core/1-constants';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { RootState } from 'main';
+
+const audioAdapter = createEntityAdapter<{
+  id: string;
+  audioBuffer: AudioBuffer | undefined;
+}>({
+  selectId: (audio) => audio.id,
+});
 
 const audioSlice = createSlice({
   name: 'audio',
-  initialState: initialState,
+  initialState: audioAdapter.getInitialState<{
+    recordedBlob: Blob | undefined;
+    recordedAudioBuffer: AudioBuffer | undefined;
+  }>({ recordedBlob: undefined, recordedAudioBuffer: undefined }),
   reducers: {
     getAudioBufferStart: (state, { payload }: { payload: string }) => state,
     getAudioBuffersStart: (state, { payload }: { payload: string[] }) => state,
     mergeFetchedAudioBuffers: (
       state,
-      { payload }: { payload: { [path: string]: AudioBuffer | undefined } }
+      {
+        payload,
+      }: {
+        payload: {
+          [id: string]: {
+            id: string;
+            audioBuffer: AudioBuffer | undefined;
+          };
+        };
+      }
     ) => {
-      state.fetchedAudioBuffers = { ...state.fetchedAudioBuffers, ...payload };
+      audioAdapter.upsertMany(state, payload);
     },
     saveAudioBuffer: (
       state,
-      { payload }: { payload: { path: string; audioBuffer: AudioBuffer } }
+      { payload }: { payload: { id: string; audioBuffer: AudioBuffer } }
     ) => {
-      state.fetchedAudioBuffers = {
-        ...state.fetchedAudioBuffers,
-        [payload.path]: payload.audioBuffer,
-      };
+      audioAdapter.upsertOne(state, payload);
     },
     removeFetchedAudioBuffer: (state, { payload }: { payload: string }) => {
-      const fetchedAudioBuffers = { ...state.fetchedAudioBuffers };
+      const fetchedAudioBuffers = { ...state.entities };
       delete fetchedAudioBuffers[payload];
-      state.fetchedAudioBuffers = fetchedAudioBuffers;
+      state.entities = fetchedAudioBuffers;
     },
     setBlobAndAudioBuffer: (
       state,
@@ -46,3 +62,7 @@ const audioSlice = createSlice({
 export const audioActions = audioSlice.actions;
 
 export default audioSlice.reducer;
+
+export const { selectById: selectAudioById } = audioAdapter.getSelectors(
+  (state: RootState) => state.audio
+);

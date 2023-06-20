@@ -5,15 +5,15 @@ import { useEffect } from 'react';
 import SentencePane from './SentencePane';
 import ArticleHeader from './ArticleHeader';
 
-import SkeletonPage from '../../components/SkeletonPage';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
-import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
 import CheckPane from './CheckPane';
-import { getSentenceIds } from 'application/sentences/core/2-services';
-import { selectArticle } from 'application/articlePage/framework/2-selector';
+import {
+  selectArticle,
+  selectAudioBuffer,
+  selectSentenceIds,
+} from 'application/articlePage/framework/2-selector';
 
 const ArticlePage = () => {
   const navigate = useNavigate();
@@ -28,13 +28,11 @@ const ArticlePage = () => {
 
   const article = useSelector((state: RootState) => selectArticle(state));
   const sentenceIds = useSelector((state: RootState) =>
-    getSentenceIds(String(articleId), Object.values(state.sentences.entities))
+    selectSentenceIds(state)
   );
-  const audioBuffer = useSelector((state: RootState) => {
-    const { fetchedAudioBuffers } = state.audio;
-    const path = ARTILCE_STORAGE_PATH + articleId;
-    return fetchedAudioBuffers[path];
-  });
+  const audioBuffer = useSelector((state: RootState) =>
+    selectAudioBuffer(state)
+  );
 
   useEffect(() => {
     return () => {
