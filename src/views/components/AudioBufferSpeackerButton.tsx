@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material';
 import {
   createSourceNode,
   pauseSourceNode,
-} from 'application/audio/core/2-services';
+} from 'application/audioBuffers/core/2-services';
 import { useRef, useState } from 'react';
 
 function AudioBufferSpeackerButton({

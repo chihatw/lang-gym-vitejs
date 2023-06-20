@@ -6,9 +6,9 @@ import { articlesActions } from './0-reducer';
 import { topPageActions } from 'application/topPage/framework/0-reducer';
 import { articleListActions } from 'application/articleList/framework/0-reducer';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
-import { ARTILCE_STORAGE_PATH } from 'application/audio/core/1-constants';
-import { audioActions } from 'application/audio/framework/0-reducer';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { sentencesActions } from 'application/sentences/framework/0-reducer';
+import { ARTILCE_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 
 const articlesMiddleware =
   (services: Services): Middleware =>

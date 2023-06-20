@@ -5,7 +5,7 @@ import { IconButton } from '@mui/material';
 import {
   pauseSourceNode,
   playAudioBufferAndSetSourceNode,
-} from 'application/audio/core/2-services';
+} from 'application/audioBuffers/core/2-services';
 import { RootState } from 'main';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ function PlayRecordedAudioButton() {
   const dispatch = useDispatch();
   const sourceNodeRef = useRef<AudioBufferSourceNode | undefined>(undefined);
   const recordedAudioBuffer = useSelector(
-    (state: RootState) => state.audio.recordedAudioBuffer
+    (state: RootState) => state.audioBuffers.recordedAudioBuffer
   );
   const playedRecordedAudio = useSelector(
     (state: RootState) => state.ariclePage.playedRecordedAudio

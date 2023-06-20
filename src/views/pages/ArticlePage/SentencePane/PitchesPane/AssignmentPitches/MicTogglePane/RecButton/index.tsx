@@ -9,8 +9,8 @@ import {
   clearMediaRecorder,
   createMediaRecorder,
   startRecording,
-} from 'application/audio/core/2-services';
-import { audioActions } from 'application/audio/framework/0-reducer';
+} from 'application/audioBuffers/core/2-services';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 
 const RecButton = () => {

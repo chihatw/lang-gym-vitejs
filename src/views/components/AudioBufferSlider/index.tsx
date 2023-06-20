@@ -5,7 +5,7 @@ import {
   createSourceNode,
   pauseSourceNode,
   updateElapsedTime,
-} from 'application/audio/core/2-services';
+} from 'application/audioBuffers/core/2-services';
 import { useEffect, useRef, useState, useMemo, useCallback, memo } from 'react';
 import TimePane from './TimePane';
 

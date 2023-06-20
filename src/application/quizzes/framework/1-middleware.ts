@@ -7,7 +7,7 @@ import { RootState } from 'main';
 import { quizzesActions } from './0-reducer';
 import { getAnsweredIds, getUnansweredIds } from '../core/2-services';
 import { scorePageActions } from 'application/scorePage/framework/0-reducer';
-import { audioActions } from 'application/audio/framework/0-reducer';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
 import { QUIZ_TIPE } from 'application/quizPage/core/1-constants';
 import {

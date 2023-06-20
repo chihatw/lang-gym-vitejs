@@ -1,7 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
-import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
-import { audioActions } from 'application/audio/framework/0-reducer';
+
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { ASSIGNMENTS_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 import { useDispatch } from 'react-redux';
 
 const RemoveAudioButton = ({ sentenceId }: { sentenceId: string }) => {

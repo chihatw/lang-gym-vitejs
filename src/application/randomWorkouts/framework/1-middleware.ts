@@ -3,7 +3,7 @@ import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
 import { randomWorkoutsActions } from './0-reducer';
 import { randomWorkoutListActions } from 'application/randomWorkoutList/framework/0-reducer';
-import { audioActions } from 'application/audio/framework/0-reducer';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { RANDOM_WORKOUT_STORAGE_PATH } from '../core/1-constants';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import { buildCueIds, calcBpm, miliSecondsToSeconds } from '../core/2-services';
@@ -124,7 +124,6 @@ const randomWorkoutsMiddleware =
         dispatch(
           randomWorkoutsActions.setStoragePath({ workoutId, storagePath })
         );
-
         await services.api.randomWorkouts.saveRecordedAudioBuffer({
           workoutId,
           storagePath,

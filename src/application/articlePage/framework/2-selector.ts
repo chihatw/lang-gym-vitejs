@@ -1,8 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
+
 import {
   ARTILCE_STORAGE_PATH,
   ASSIGNMENTS_STORAGE_PATH,
-} from 'application/audio/core/1-constants';
+} from 'application/audioBuffers/infrastructure/api';
 import { getSentenceIds } from 'application/sentences/core/2-services';
 import { RootState } from 'main';
 
@@ -55,25 +56,25 @@ export const selectRecordedSentence = createSelector(
 
 export const selectAssignmentAudioBuffer = createSelector(
   [
-    (state: RootState) => state.audio.entities,
+    (state: RootState) => state.audioBuffers.entities,
     (state, sentenceId) => sentenceId,
   ],
-  (fetchedAudioBuffers, sentenceId) => {
+  (audioBuffers, sentenceId) => {
     const path = ASSIGNMENTS_STORAGE_PATH + sentenceId;
-    return fetchedAudioBuffers[path]?.audioBuffer;
+    return audioBuffers[path]?.audioBuffer;
   }
 );
 
 export const selectAudioBuffer = createSelector(
   [
-    (state: RootState) => state.audio.entities,
+    (state: RootState) => state.audioBuffers.entities,
     (state: RootState) => state.ariclePage.articleId,
   ],
-  (fetchedAudioBuffers, articleId) => {
+  (audioBuffers, articleId) => {
     if (!articleId) return;
 
     const path = ARTILCE_STORAGE_PATH + articleId;
-    const target = fetchedAudioBuffers[path];
+    const target = audioBuffers[path];
     if (!target) return;
 
     return target.audioBuffer;

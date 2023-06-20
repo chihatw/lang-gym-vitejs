@@ -7,6 +7,9 @@ import {
 import { blobToAudioBuffer } from '../core/2-services';
 import { storage } from 'infrastructure/firebase';
 
+export const ARTILCE_STORAGE_PATH = 'articles/';
+export const ASSIGNMENTS_STORAGE_PATH = 'assignments/';
+
 export const uploadStorageByPath = async (blob: Blob, path: string) => {
   const storageRef = ref(storage, path);
   // Blob 経由でファイルをアップロード

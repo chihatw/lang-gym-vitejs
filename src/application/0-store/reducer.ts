@@ -7,7 +7,7 @@ import articleList from 'application/articleList/framework/0-reducer';
 import topPage from 'application/topPage/framework/0-reducer';
 import ariclePage from 'application/articlePage/framework/0-reducer';
 import sentences from 'application/sentences/framework/0-reducer';
-import audio from 'application/audio/framework/0-reducer';
+import audioBuffers from 'application/audioBuffers/framework/0-reducer';
 import updateEmailForm from 'application/updateEmailForm/framework/0-reducer';
 import updatePasswordForm from 'application/updatePasswordForm/framework/0-reducer';
 import quizList from 'application/quizList/framework/0-reducer';
@@ -19,6 +19,7 @@ import quizPage from 'application/quizPage/framework/0-reducer';
 import randomWorkouts from 'application/randomWorkouts/framework/0-reducer';
 import randomWorkoutList from 'application/randomWorkoutList/framework/0-reducer';
 import randomWorkoutPage from 'application/randomWorkoutPage/framework/0-reducer';
+import recordedAudio from 'application/recordedAudio/framework/0-reducer';
 
 export default {
   authUser,
@@ -32,7 +33,7 @@ export default {
   topPage,
   ariclePage,
   sentences,
-  audio,
+  audioBuffers,
   quizzes,
   quizList,
   quizScores,
@@ -42,4 +43,5 @@ export default {
   randomWorkouts,
   randomWorkoutList,
   randomWorkoutPage,
+  recordedAudio,
 };

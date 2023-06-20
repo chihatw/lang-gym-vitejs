@@ -2,9 +2,10 @@ import { AnyAction, Middleware } from '@reduxjs/toolkit';
 import { Services } from 'infrastructure/services';
 import { RootState } from 'main';
 import { sentencesActions } from './0-reducer';
-import { ASSIGNMENTS_STORAGE_PATH } from 'application/audio/core/1-constants';
+
 import { getSentenceIds } from '../core/2-services';
-import { audioActions } from 'application/audio/framework/0-reducer';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
+import { ASSIGNMENTS_STORAGE_PATH } from 'application/audioBuffers/infrastructure/api';
 
 const sentencesMiddleware =
   (services: Services): Middleware =>

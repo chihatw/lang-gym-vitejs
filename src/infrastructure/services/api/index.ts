@@ -2,7 +2,7 @@ import authUser from './authUser';
 import users from './users';
 import articles from './articles';
 import sentences from './sentences';
-import audio from './audio';
+import audioBuffers from './audioBuffers';
 import quizzes from './quizzes';
 import randomWorkouts from './randomWorkouts';
 
@@ -11,7 +11,7 @@ export default {
   users,
   articles,
   sentences,
-  audio,
+  audioBuffers,
   quizzes,
   randomWorkouts,
 };

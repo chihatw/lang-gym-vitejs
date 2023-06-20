@@ -5,13 +5,13 @@ import { useEffect, useRef } from 'react';
 import { RootState } from 'main';
 
 import IconSwitch from './IconSwitch';
-import { audioActions } from 'application/audio/framework/0-reducer';
+import { audioActions } from 'application/audioBuffers/framework/0-reducer';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import {
   startRecording,
   clearMediaRecorder,
   createMediaRecorder,
-} from 'application/audio/core/2-services';
+} from 'application/audioBuffers/core/2-services';
 import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
 const RecPane = () => {

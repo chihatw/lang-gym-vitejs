@@ -10,18 +10,17 @@ const audioMiddleWare =
   async (action: AnyAction) => {
     next(action);
     switch (action.type) {
-      case 'audio/getAudioBufferStart': {
+      case 'audioBuffers/getAudioBufferStart': {
         const path = action.payload as string;
-        const fetchedAudioBuffers = (getState() as RootState).audio.entities;
+        const audioBuffers = (getState() as RootState).audioBuffers.entities;
 
-        const paths = Object.keys(fetchedAudioBuffers);
+        const paths = Object.keys(audioBuffers);
 
         // path がすでに存在すれば、終了
         if (paths.includes(path)) break;
 
-        const gotAudioBuffer = await services.api.audio.fetchStorageAudioBuffer(
-          path
-        );
+        const gotAudioBuffer =
+          await services.api.audioBuffers.fetchStorageAudioBuffer(path);
         dispatch(
           audioActions.mergeFetchedAudioBuffers({
             [path]: {
@@ -33,14 +32,14 @@ const audioMiddleWare =
 
         return;
       }
-      case 'audio/getAudioBuffersStart': {
+      case 'audioBuffers/getAudioBuffersStart': {
         const paths = action.payload as string[];
-        const fetchedAudioBuffers = (getState() as RootState).audio.entities;
+        const audioBuffers = (getState() as RootState).audioBuffers.entities;
 
-        const fetchedPaths = Object.keys(fetchedAudioBuffers);
+        const fetchedPaths = Object.keys(audioBuffers);
 
         // audioBuffers の取得
-        const audioBuffers: {
+        const gotAudioBuffers: {
           [id: string]: {
             id: string;
             audioBuffer: AudioBuffer | undefined;
@@ -51,8 +50,8 @@ const audioMiddleWare =
             // path がすでに存在すれば、スキップ
             if (!fetchedPaths.includes(path)) {
               const gotAudioBuffer =
-                await services.api.audio.fetchStorageAudioBuffer(path);
-              audioBuffers[path] = {
+                await services.api.audioBuffers.fetchStorageAudioBuffer(path);
+              gotAudioBuffers[path] = {
                 id: path,
                 audioBuffer: gotAudioBuffer,
               };
@@ -60,22 +59,23 @@ const audioMiddleWare =
           })
         );
 
-        dispatch(audioActions.mergeFetchedAudioBuffers(audioBuffers));
+        dispatch(audioActions.mergeFetchedAudioBuffers(gotAudioBuffers));
         return;
       }
-      case 'audio/saveAudioBuffer': {
-        const path = action.payload.path as string;
-        const { recordedBlob } = (getState() as RootState).audio;
+      case 'audioBuffers/saveAudioBuffer': {
+        const path = action.payload.id as string;
+        const recordedBlob = (getState() as RootState).audioBuffers
+          .recordedBlob;
 
         if (!recordedBlob) return;
 
-        await services.api.audio.uploadStorageByPath(recordedBlob, path);
+        await services.api.audioBuffers.uploadStorageByPath(recordedBlob, path);
         dispatch(audioActions.resetRecordedAudio());
         return;
       }
-      case 'audio/removeFetchedAudioBuffer': {
+      case 'audioBuffers/removeFetchedAudioBuffer': {
         const path = action.payload as string;
-        await services.api.audio.deleteStorageByPath(path);
+        await services.api.audioBuffers.deleteStorageByPath(path);
         return;
       }
       case 'ranomWorkoutPage/abandomRecordedAudioBuffer': {

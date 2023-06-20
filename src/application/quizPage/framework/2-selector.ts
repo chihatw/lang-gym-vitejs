@@ -24,15 +24,15 @@ export const selectQuizAudioBuffer = createSelector(
   [
     (state: RootState) => state.quizzes.entities,
     (state: RootState) => state.quizPage.quizId,
-    (state: RootState) => state.audio.entities,
+    (state: RootState) => state.audioBuffers.entities,
   ],
-  (quizzes, quizId, fetchedAudioBuffers) => {
+  (quizzes, quizId, audioBuffers) => {
     const quiz = Object.values(quizzes).find(
       (quiz) => quiz && quiz.id === String(quizId)
     );
 
     if (!quiz) return;
-    return fetchedAudioBuffers[quiz.downloadURL]?.audioBuffer;
+    return audioBuffers[quiz.downloadURL]?.audioBuffer;
   }
 );
 
