@@ -1,9 +1,5 @@
 export interface IAudioBuffer {
-  fetchedAudioBuffers: {
-    [id: string]: {
-      // id = path
-      id: string;
-      audioBuffer: AudioBuffer | undefined;
-    };
-  };
+  // id = path
+  id: string;
+  audioBuffer: AudioBuffer | undefined;
 }

@@ -1,10 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'main';
+import { IAudioBuffer } from '../core/0-interface';
 
-const audioBufferAdapter = createEntityAdapter<{
-  id: string;
-  audioBuffer: AudioBuffer | undefined;
-}>({
+const audioBufferAdapter = createEntityAdapter<IAudioBuffer>({
   selectId: (audioBuffer) => audioBuffer.id,
 });
 
@@ -19,12 +17,7 @@ const audioSlice = createSlice({
       {
         payload,
       }: {
-        payload: {
-          [id: string]: {
-            id: string;
-            audioBuffer: AudioBuffer | undefined;
-          };
-        };
+        payload: { [id: string]: IAudioBuffer };
       }
     ) => {
       audioBufferAdapter.upsertMany(state, payload);
