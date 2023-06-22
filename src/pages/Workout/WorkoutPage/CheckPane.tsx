@@ -5,8 +5,9 @@ import { INITIAL_CUE, RandomWorkout } from '../../../Model';
 import TimeDisplay from './TimeDisplay';
 import BlobSlider from '../../../components/BlobSlider';
 import string2PitchesArray from 'string2pitches-array';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
+
 import { WorkoutFormState } from './Model';
+import { SentencePitchLine } from '../../../components/SentencePitchLine';
 
 const CheckPane = React.memo(
   ({
@@ -75,8 +76,6 @@ const CheckPane = React.memo(
                 style={{
                   display: 'grid',
                   rowGap: 8,
-                  height: 320,
-                  overflowY: 'scroll',
                   background: 'white',
                   borderRadius: 8,
                 }}

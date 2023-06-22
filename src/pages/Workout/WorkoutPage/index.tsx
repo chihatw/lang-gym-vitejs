@@ -39,6 +39,7 @@ import CueCard from './CueCard';
 import CheckPane from './CheckPane';
 import { uploadStorage } from '../../../repositories/storage';
 import { INITIAL_WORKOUT_FORM_STATE, WorkoutFormState } from './Model';
+import OpeningScene from './OpeningScene';
 
 const reducer = (state: WorkoutFormState, action: WorkoutFormState) => action;
 
@@ -52,10 +53,16 @@ const WorkoutPage = () => {
     reducer,
     INITIAL_WORKOUT_FORM_STATE
   );
+
   const [blob, setBlob] = useState<Blob | null>(null); // mediaRecorder のコールバックに使うので、独立させる
   const [workout, setWorkout] = useState(INITIAL_RANDOM_WORKOUT);
   const [miliSeconds, setMiliSeconds] = useState(0); // requestAnimationFrame のコールバックに使うので、独立させる
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [showOpening, setShowOpening] = useState(false);
+
+  useEffect(() => {
+    setShowOpening(state.auth.uid === '6uzpa2xAxebOsrchccTgAkMdaKq1');
+  }, [state.auth.uid]);
 
   const loopIdRef = useRef(0);
   const startAtRef = useRef(0);
@@ -260,6 +267,8 @@ const WorkoutPage = () => {
 
   if (!state.auth.uid || !workoutId) return <Navigate to='/login' />;
 
+  if (showOpening)
+    return <OpeningScene handleCloseOpening={() => setShowOpening(false)} />;
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />

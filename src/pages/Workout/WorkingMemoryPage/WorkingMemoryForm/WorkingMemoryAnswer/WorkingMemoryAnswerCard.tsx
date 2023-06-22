@@ -1,7 +1,7 @@
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
 import Check from '@mui/icons-material/Check';
 import React from 'react';
 import string2PitchesArray from 'string2pitches-array';
+import { SentencePitchLine } from '../../../../../components/SentencePitchLine';
 
 const WorkingMemoryAnswerCard = ({
   label,

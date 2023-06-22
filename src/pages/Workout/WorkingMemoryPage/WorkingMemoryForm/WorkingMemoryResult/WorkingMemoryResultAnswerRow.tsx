@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { SentencePitchLine } from '@chihatw/lang-gym-h.ui.sentence-pitch-line';
+
 import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 import PlayArrow from '@mui/icons-material/PlayArrow';
@@ -12,6 +12,7 @@ import { AppContext } from '../../../../../App';
 import { useParams } from 'react-router-dom';
 import { WorkingMemory } from '../../../../../Model';
 import { setWorkingMemory } from '../../../../../services/workingMemory';
+import { SentencePitchLine } from '../../../../../components/SentencePitchLine';
 
 const WorkingMemoryResultAnswerRow = ({
   state,
