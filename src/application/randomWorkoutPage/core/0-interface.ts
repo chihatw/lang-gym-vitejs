@@ -5,4 +5,5 @@ export interface IRandomWorkoutPage {
   isRunning: boolean;
   isChecking: boolean;
   initializing: boolean;
+  showOpeningPane: boolean;
 }

@@ -11,6 +11,9 @@ const randomWorkoutPageSlice = createSlice({
     setWorkoutId: (state, { payload }: { payload: string }) => {
       state.workoutId = payload;
     },
+    setShowOpeningPane: (state, { payload }: { payload: boolean }) => {
+      state.showOpeningPane = payload;
+    },
     startRecording: (state) => {
       state.isRunning = true;
     },

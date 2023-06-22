@@ -7,3 +7,5 @@ export const initialState: IAuthUser = {
 };
 
 export const CURRENT_UID_LOCAL_STORAGE_KEY = 'currentUid@lang-gym';
+
+export const GUEST_UID = '6uzpa2xAxebOsrchccTgAkMdaKq1';

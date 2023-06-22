@@ -8,6 +8,7 @@ import RecPane from './RecPane';
 import CueCard from './CueCard';
 import TimeDisplay from './TimeDisplay';
 import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
+import { useEffect } from 'react';
 
 function PracticePane() {
   const theme = useTheme();
@@ -15,6 +16,10 @@ function PracticePane() {
     (state: RootState) => state.randomWorkoutPage
   );
   const workout = useSelector((state: RootState) => selectWorkout(state));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!workout) return <></>;
 

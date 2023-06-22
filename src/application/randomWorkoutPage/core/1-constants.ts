@@ -7,4 +7,5 @@ export const initialState: IRandomWorkoutPage = {
   isRunning: false,
   isChecking: false,
   initializing: true,
+  showOpeningPane: false,
 };
