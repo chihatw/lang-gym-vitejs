@@ -268,7 +268,14 @@ const WorkoutPage = () => {
   if (!state.auth.uid || !workoutId) return <Navigate to='/login' />;
 
   if (showOpening)
-    return <OpeningScene handleCloseOpening={() => setShowOpening(false)} />;
+    return (
+      <OpeningScene
+        handleCloseOpening={() => {
+          setShowOpening(false);
+          window.scrollTo(0, 0);
+        }}
+      />
+    );
   return (
     <Container maxWidth='sm'>
       <div style={{ height: 48 }} />
@@ -284,9 +291,10 @@ const WorkoutPage = () => {
             workout.cueIds.length ? formState.currentIndex + 1 : 0
           }/${workout.cueIds.length}`}</div>
           <TimeDisplay miliSeconds={miliSeconds} />
-          <div style={{ height: 320 }}>
+          <div style={{ height: 160 }}>
             {formState.isRunning && (
               <CueCard
+                height={160}
                 currentIndex={formState.currentIndex}
                 workout={workout}
               />
