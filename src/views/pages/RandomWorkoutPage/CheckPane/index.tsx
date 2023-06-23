@@ -74,85 +74,81 @@ const CheckPane = React.memo(() => {
     );
 
   return (
-    <Modal open={true}>
-      <div
-        style={{
-          width: '100dvw',
-          minHeight: '100dvh',
-          background: '#fafafa',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Container maxWidth='sm'>
-          <div style={{ display: 'grid', rowGap: 16 }}>
-            <TimeDisplay />
-            <div
-              style={{
-                ...(theme.typography as any).mRounded300,
-                fontSize: 48,
-                marginTop: -32,
-                marginBottom: -16,
-                textAlign: 'center',
-              }}
-            >
-              <span style={{ fontSize: 16 }}>BPM: </span>
-              <span>{workout.resultBpm}</span>
+    <div
+      style={{
+        width: '100dvw',
+        minHeight: '100dvh',
+        background: '#fafafa',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Container maxWidth='sm'>
+        <div style={{ height: 48 }} />
+        <div style={{ display: 'grid', rowGap: 16 }}>
+          <TimeDisplay />
+          <div
+            style={{
+              ...(theme.typography as any).mRounded300,
+              fontSize: 48,
+              marginTop: -32,
+              marginBottom: -16,
+              textAlign: 'center',
+            }}
+          >
+            <span style={{ fontSize: 16 }}>BPM: </span>
+            <span>{workout.resultBpm}</span>
+          </div>
+          <div
+            style={{
+              color: '#52a2aa',
+              textAlign: 'center',
+              padding: '8px 0',
+              userSelect: 'none',
+            }}
+          >
+            録音をチェックしてください
+          </div>
+          <AudioBufferSlider
+            audioBuffer={recordedAudioBuffer}
+            start={0}
+            end={recordedAudioBuffer.duration}
+          />
+          <div
+            style={{
+              display: 'grid',
+              rowGap: 8,
+              background: 'white',
+              borderRadius: 8,
+            }}
+          >
+            <div style={{ padding: '24px 0' }}>
+              {workout.cueIds.map((cueId, index) => (
+                <CheckPaneRow key={index} cueId={cueId} />
+              ))}
             </div>
-            <div
-              style={{
-                color: '#52a2aa',
-                textAlign: 'center',
-                padding: '8px 0',
-                userSelect: 'none',
-              }}
-            >
-              録音をチェックしてください
-            </div>
-            <AudioBufferSlider
-              audioBuffer={recordedAudioBuffer}
-              start={0}
-              end={recordedAudioBuffer.duration}
-            />
-            <div
-              style={{
-                display: 'grid',
-                rowGap: 8,
-                height: 320,
-                overflowY: 'scroll',
-                background: 'white',
-                borderRadius: 8,
-              }}
-            >
-              <div style={{ padding: '24px 0' }}>
-                {workout.cueIds.map((cueId, index) => (
-                  <CheckPaneRow key={index} cueId={cueId} />
-                ))}
-              </div>
-              <div style={{ display: 'grid', rowGap: 16 }}>
-                <Button
-                  onClick={saveRecordedBlob}
-                  variant='contained'
-                  color='primary'
-                  sx={{ color: 'white' }}
-                >
-                  きれいに読めました
-                </Button>
-                <Button
-                  onClick={abandonRecordedBlob}
-                  variant='outlined'
-                  color='primary'
-                >
-                  もう一度録音します
-                </Button>
-              </div>
-              <div style={{ height: 180 }} />
+            <div style={{ display: 'grid', rowGap: 16 }}>
+              <Button
+                onClick={saveRecordedBlob}
+                variant='contained'
+                color='primary'
+                sx={{ color: 'white' }}
+              >
+                きれいに読めました
+              </Button>
+              <Button
+                onClick={abandonRecordedBlob}
+                variant='outlined'
+                color='primary'
+              >
+                もう一度録音します
+              </Button>
             </div>
           </div>
-        </Container>
-      </div>
-    </Modal>
+        </div>
+      </Container>
+    </div>
   );
 });
 
