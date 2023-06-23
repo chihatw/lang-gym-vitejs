@@ -11,6 +11,7 @@ const randomWorkoutListSlice = createSlice({
     setWorkoutIds: (state, { payload }: { payload: string[] }) => {
       state.workoutIds = payload;
     },
+    resetState: () => initialState,
   },
 });
 

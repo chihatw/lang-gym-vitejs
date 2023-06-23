@@ -9,7 +9,7 @@ import CheckPane from './CheckPane';
 import PracticePane from './PracticePane';
 import { randomWorkoutPageActions } from 'application/randomWorkoutPage/framework/0-reducer';
 import { GUEST_UID } from 'application/authUser/core/1-constants';
-import OpeningScene from './OpeningPane';
+import OpeningPane from './OpeningPane';
 
 const RandomWorkoutPage = () => {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ const RandomWorkoutPage = () => {
     return <CheckPane />;
   }
 
-  if (showOpeningPane) return <OpeningScene />;
+  if (showOpeningPane) return <OpeningPane />;
 
   return (
     <Container maxWidth='sm'>
