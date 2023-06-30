@@ -1,5 +1,5 @@
-import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { css } from '@emotion/css';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
@@ -7,15 +7,15 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import { useEffect, useState } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { RootState } from 'main';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FooterQuizPane from './FooterQuizPane';
 
 const PageFooter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
 
   const [value, setValue] = useState(-1);
 
@@ -66,7 +66,7 @@ const PageFooter = () => {
     path && navigate(path);
   };
 
-  if (!loginUser.uid) return <></>;
+  if (!loginUserUid) return <></>;
 
   return (
     <BottomNavigation

@@ -1,18 +1,18 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { MenuItem, Select } from '@mui/material';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { RootState } from 'main';
 
-import { userListActions } from 'application/userList/framework/0-reducer';
 import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
+import { userListActions } from 'application/userList/framework/0-reducer';
 import { selectAllUsers } from 'application/users/framework/0-reducer';
 
 function SelectUserPane() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
   const { initializing, selectedUid } = useSelector(
     (state: RootState) => state.userList
   );
@@ -20,17 +20,17 @@ function SelectUserPane() {
 
   // userIds の取得
   useEffect(() => {
-    if (!loginUser.uid) return;
+    if (!loginUserUid) return;
     if (!initializing) return;
 
     // currentUid は localStorage から受け取る
     const currentUid =
-      localStorage.getItem(CURRENT_UID_LOCAL_STORAGE_KEY) || loginUser.uid;
+      localStorage.getItem(CURRENT_UID_LOCAL_STORAGE_KEY) || loginUserUid;
 
     dispatch(userListActions.initiate(currentUid));
-  }, [initializing, loginUser]);
+  }, [initializing, loginUserUid]);
 
-  if (loginUser.uid !== import.meta.env.VITE_ADMIN_UID) return <></>;
+  if (loginUserUid !== import.meta.env.VITE_ADMIN_UID) return <></>;
   return (
     <Select
       sx={{ color: 'white' }}

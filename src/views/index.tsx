@@ -1,26 +1,26 @@
 import React, { useEffect } from 'react';
 
-import { auth } from '../infrastructure/firebase';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
+import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
 import ArticleListPage from 'views/pages/ArticleListPage';
 import ArticlePage from 'views/pages/ArticlePage';
 import UnAnsweredQuizListPage from 'views/pages/UnAnsweredQuizListPage';
-import AnsweredQuizListPage from 'views/pages/AnsweredQuizListPage';
+import { auth } from '../infrastructure/firebase';
 
+import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
+import { authUserActions } from 'application/authUser/framework/0-reducer';
+import { RootState } from 'main';
+import { useDispatch, useSelector } from 'react-redux';
+import AccountPage from 'views/pages/AccountPage';
 import QuizPage from 'views/pages/QuizPage';
 import RandomWorkoutListPage from 'views/pages/RandomWorkoutListPage';
 import RandomWorkoutPage from 'views/pages/RandomWorkoutPage';
-import AccountPage from 'views/pages/AccountPage';
+import SignInPage from 'views/pages/SingInPage';
 import UpdateEmailPage from 'views/pages/UpdateEmailPage';
 import UpdatePasswordPage from 'views/pages/UpdatePasswordPage';
-import SignInPage from 'views/pages/SingInPage';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'main';
-import { authUserActions } from 'application/authUser/framework/0-reducer';
-import TopPage from './pages/TopPage';
-import { CURRENT_UID_LOCAL_STORAGE_KEY } from 'application/authUser/core/1-constants';
 import ScorePage from './pages/ScorePage';
+import TopPage from './pages/TopPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -117,17 +117,17 @@ const App = () => {
 export default App;
 
 function PrivateRoute({ element }: { element: React.ReactElement }) {
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
 
-  if (!loginUser.uid) {
+  if (!loginUserUid) {
     return <Navigate to='/login' />;
   }
   return element;
 }
 
 function OnlyUnAuthorizedRoute({ element }: { element: React.ReactElement }) {
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
-  if (loginUser.uid) {
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
+  if (loginUserUid) {
     return <Navigate to='/' />;
   }
   return element;

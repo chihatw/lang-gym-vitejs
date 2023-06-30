@@ -3,9 +3,9 @@ import { RootState } from 'main';
 import { useSelector } from 'react-redux';
 
 const Copyright = () => {
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
 
-  if (!loginUser.uid) return <></>;
+  if (!loginUserUid) return <></>;
   return (
     <div>
       <div

@@ -1,19 +1,19 @@
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { RootState } from 'main';
 
+import HeaderQuizPane from './HeaderQuizPane';
 import LabelButton from './LabelButton';
 import SelectUserPane from './SelectUserPane';
-import HeaderQuizPane from './HeaderQuizPane';
 
 function PrivatePane() {
-  const { loginUser } = useSelector((state: RootState) => state.authUser);
+  const { loginUserUid } = useSelector((state: RootState) => state.authUser);
 
   const navigate = useNavigate();
 
-  if (!loginUser.uid) return <></>;
+  if (!loginUserUid) return <></>;
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>

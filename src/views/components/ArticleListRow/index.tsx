@@ -1,24 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { Card, CardContent, useTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
+import { selectArticleRowProps } from 'application/articleList/framework/2-selector';
 import { RootState } from 'main';
 
 const ArticleListRow = ({ articleId }: { articleId: string }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { title, year, day, month } = useSelector((state: RootState) => {
-    const article = state.articles.entities[articleId];
-    if (!article) {
-      return { title: '', year: 0, month: 0, day: 0 };
-    }
-    const date = new Date(article.createdAt);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    return { title: article.title, year, month, day };
-  });
+  const { title, year, day, month } = useSelector((state: RootState) =>
+    selectArticleRowProps(state, articleId)
+  );
 
   if (!title) return <></>;
 
