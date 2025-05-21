@@ -1,13 +1,13 @@
 import {
+  DocumentData,
   collection,
   doc,
-  DocumentData,
   getDoc,
   getDocs,
   query,
-  where,
   updateDoc,
-} from 'firebase/firestore';
+  where,
+} from '@firebase/firestore';
 
 import { db } from 'infrastructure/firebase';
 import { IRandomWorkout } from '../core/0-interface';

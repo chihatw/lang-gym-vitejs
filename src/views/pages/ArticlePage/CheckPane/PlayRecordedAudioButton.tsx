@@ -1,7 +1,8 @@
-import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import PlayCircleRoundedIcon from '@mui/icons-material/PlayCircleRounded';
+import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 
 import { IconButton } from '@mui/material';
+import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import {
   pauseSourceNode,
   playAudioBufferAndSetSourceNode,
@@ -9,7 +10,6 @@ import {
 import { RootState } from 'main';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 
 function PlayRecordedAudioButton() {
   const dispatch = useDispatch();
@@ -52,7 +52,6 @@ function PlayRecordedAudioButton() {
       pause();
       return;
     }
-
     play();
   };
 

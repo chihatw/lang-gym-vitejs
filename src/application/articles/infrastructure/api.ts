@@ -1,15 +1,15 @@
 import {
   DocumentData,
   collection,
+  doc,
+  getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
-  where,
-  limit,
   startAfter,
-  getDoc,
-  doc,
-} from 'firebase/firestore';
+  where,
+} from '@firebase/firestore';
 import { db } from 'infrastructure/firebase';
 
 import { IArticle } from '../core/0-interface';

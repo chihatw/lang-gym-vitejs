@@ -3,16 +3,15 @@ import StopCircleRoundedIcon from '@mui/icons-material/StopCircleRounded';
 import { IconButton } from '@mui/material';
 import { useRef } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'main';
+import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import {
   clearMediaRecorder,
   createMediaRecorder,
   startRecording,
 } from 'application/audioBuffers/core/2-services';
-import { audioBuffersActions } from 'application/audioBuffers/framework/0-reducer';
-import { articlePageActions } from 'application/articlePage/framework/0-reducer';
 import { recordedAudioActions } from 'application/recordedAudio/framework/0-reducer';
+import { RootState } from 'main';
+import { useDispatch, useSelector } from 'react-redux';
 
 const RecButton = () => {
   const dispatch = useDispatch();

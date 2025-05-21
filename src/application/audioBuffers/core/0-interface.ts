@@ -1,5 +1,4 @@
 export interface IAudioBuffer {
-  // id = path
-  id: string;
+  id: string; // path を代入
   audioBuffer: AudioBuffer | undefined;
 }

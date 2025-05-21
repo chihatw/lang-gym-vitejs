@@ -6,9 +6,9 @@ import {
   pauseSourceNode,
   updateElapsedTime,
 } from 'application/audioBuffers/core/2-services';
-import { useEffect, useRef, useState, useMemo, useCallback, memo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TimePane from './TimePane';
-
+// todo AudioBufferSlider
 const AudioBufferSlider = memo(
   ({
     end,

@@ -4,13 +4,13 @@ import {
   getDocs,
   query,
   where,
-} from 'firebase/firestore';
+} from '@firebase/firestore';
 import { ISentence } from '../core/0-interface';
 
 import { db } from 'infrastructure/firebase';
 
-import { pitchesArray2String } from 'application/utils/pitchesArray2String';
 import { accentsForPitchesArray } from 'application/utils/accentsForPitchesArray';
+import { pitchesArray2String } from 'application/utils/pitchesArray2String';
 
 const COLLECTION = 'sentences';
 
