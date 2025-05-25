@@ -1,10 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { IUser } from '../core/0-interface';
 import { RootState } from 'main';
+import { IUser } from '../core/0-interface';
 
-const userAdapter = createEntityAdapter<IUser>({
-  selectId: (user) => user.uid,
-});
+const userAdapter = createEntityAdapter<IUser>();
 
 const usersSlice = createSlice({
   name: 'user',

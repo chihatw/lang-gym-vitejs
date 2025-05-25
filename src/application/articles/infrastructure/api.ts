@@ -28,15 +28,16 @@ export const fetchArtice = async (
     return;
   }
 
-  const article = buildArticle(docSnapshot);
-
-  if (article.uid !== uid) {
+  // uidチェックはbuildArticle前にdoc.data()から直接参照
+  const docData = docSnapshot.data();
+  if (docData.uid !== uid) {
     console.log(
-      `%cincorrect uid article.uid: ${article.uid}, user.uid: ${uid}`,
+      `%cincorrect uid article.uid: ${docData.uid}, user.uid: ${uid}`,
       'color:red'
     );
     return;
   }
+  const article = buildArticle(docSnapshot);
 
   return article;
 };
@@ -72,7 +73,6 @@ const buildArticle = (doc: DocumentData) => {
   const { uid, title, createdAt, isShowAccents } = doc.data();
   const article: IArticle = {
     id: doc.id,
-    uid: uid || '',
     title: title || '',
     createdAt: createdAt || 0,
     isShowAccents: isShowAccents || false,

@@ -1,11 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { IArticle } from '../core/0-interface';
 import { RootState } from 'main';
+import { IArticle } from '../core/0-interface';
 
-const articleAdapter = createEntityAdapter<IArticle>({
-  selectId: (article) => article.id,
-  sortComparer: (a, b) => b.createdAt - a.createdAt,
-});
+const articleAdapter = createEntityAdapter<IArticle>();
 
 const articlesSlice = createSlice({
   name: 'articles',

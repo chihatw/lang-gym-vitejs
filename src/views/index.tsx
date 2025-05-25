@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from 'views/Layout';
@@ -50,64 +50,119 @@ const App = () => {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route index element={<PrivateRoute element={<TopPage />} />} />
-
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <TopPage />
+              </PrivateRoute>
+            }
+          />
           <Route path='/article'>
             <Route
               path='list'
-              element={<PrivateRoute element={<ArticleListPage />} />}
+              element={
+                <PrivateRoute>
+                  <ArticleListPage />
+                </PrivateRoute>
+              }
             />
             <Route
               path=':articleId'
-              element={<PrivateRoute element={<ArticlePage />} />}
+              element={
+                <PrivateRoute>
+                  <ArticlePage />
+                </PrivateRoute>
+              }
             />
           </Route>
-
           <Route path='/quiz'>
-            <Route path='list'>
-              <Route
-                path='unanswered'
-                element={<PrivateRoute element={<UnAnsweredQuizListPage />} />}
-              />
-              <Route
-                path='answered'
-                element={<PrivateRoute element={<AnsweredQuizListPage />} />}
-              />
-            </Route>
+            <Route
+              path='list/unanswered'
+              element={
+                <PrivateRoute>
+                  <UnAnsweredQuizListPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path='list/answered'
+              element={
+                <PrivateRoute>
+                  <AnsweredQuizListPage />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route path='/score'>
             <Route
               path=':quizId/score/:scoreId'
-              element={<PrivateRoute element={<ScorePage />} />}
-            />
-            <Route
-              path=':quizId'
-              element={<PrivateRoute element={<QuizPage />} />}
+              element={
+                <PrivateRoute>
+                  <ScorePage />
+                </PrivateRoute>
+              }
             />
           </Route>
-
-          <Route path='workout'>
+          <Route
+            path='/quiz/:quizId'
+            element={
+              <PrivateRoute>
+                <QuizPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path='/workout'>
             <Route
               path='list'
-              element={<PrivateRoute element={<RandomWorkoutListPage />} />}
+              element={
+                <PrivateRoute>
+                  <RandomWorkoutListPage />
+                </PrivateRoute>
+              }
             />
             <Route
               path=':workoutId'
-              element={<PrivateRoute element={<RandomWorkoutPage />} />}
+              element={
+                <PrivateRoute>
+                  <RandomWorkoutPage />
+                </PrivateRoute>
+              }
             />
           </Route>
           <Route path='/account'>
-            <Route index element={<PrivateRoute element={<AccountPage />} />} />
+            <Route
+              index
+              element={
+                <PrivateRoute>
+                  <AccountPage />
+                </PrivateRoute>
+              }
+            />
             <Route
               path={'mail'}
-              element={<PrivateRoute element={<UpdateEmailPage />} />}
+              element={
+                <PrivateRoute>
+                  <UpdateEmailPage />
+                </PrivateRoute>
+              }
             />
             <Route
               path={`password`}
-              element={<PrivateRoute element={<UpdatePasswordPage />} />}
+              element={
+                <PrivateRoute>
+                  <UpdatePasswordPage />
+                </PrivateRoute>
+              }
             />
           </Route>
           <Route
             path='/login'
-            element={<OnlyUnAuthorizedRoute element={<SignInPage />} />}
+            element={
+              <OnlyUnAuthorizedRoute>
+                <SignInPage />
+              </OnlyUnAuthorizedRoute>
+            }
           />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
@@ -117,19 +172,23 @@ const App = () => {
 };
 export default App;
 
-function PrivateRoute({ element }: { element: React.ReactElement }) {
+// JSXコンポーネントとして使えるようにexport
+export function PrivateRoute({
+  children,
+}: {
+  children: React.ReactElement;
+}): React.ReactElement {
   const { loginUserUid } = useSelector((state: RootState) => state.authUser);
-
-  if (!loginUserUid) {
-    return <Navigate to='/login' />;
-  }
-  return element;
+  if (!loginUserUid) return <Navigate to='/login' />;
+  return children;
 }
 
-function OnlyUnAuthorizedRoute({ element }: { element: React.ReactElement }) {
+export function OnlyUnAuthorizedRoute({
+  children,
+}: {
+  children: React.ReactElement;
+}): React.ReactElement {
   const { loginUserUid } = useSelector((state: RootState) => state.authUser);
-  if (loginUserUid) {
-    return <Navigate to='/' />;
-  }
-  return element;
+  if (loginUserUid) return <Navigate to='/' />;
+  return children;
 }

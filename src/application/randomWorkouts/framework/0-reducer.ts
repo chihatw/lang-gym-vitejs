@@ -1,10 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { IRandomWorkout } from '../core/0-interface';
 import { RootState } from 'main';
+import { IRandomWorkout } from '../core/0-interface';
 
-const randomWorkoutAdapter = createEntityAdapter<IRandomWorkout>({
-  selectId: (workout) => workout.id,
-});
+const randomWorkoutAdapter = createEntityAdapter<IRandomWorkout>();
 
 const randomWorkoutsSlice = createSlice({
   name: 'randomWorkouts',

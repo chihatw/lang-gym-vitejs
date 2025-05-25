@@ -1,10 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { ISentence } from '../core/0-interface';
 import { RootState } from 'main';
+import { ISentence } from '../core/0-interface';
 
-const sentenceAdapter = createEntityAdapter<ISentence>({
-  selectId: (sentence) => sentence.id,
-});
+const sentenceAdapter = createEntityAdapter<ISentence>();
 
 const sentencesSlice = createSlice({
   name: 'sentences',

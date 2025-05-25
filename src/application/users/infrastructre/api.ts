@@ -16,7 +16,7 @@ export const fetchUsers = async () => {
   querySnapshot.forEach((doc) => {
     const { displayname } = doc.data();
     users.push({
-      uid: doc.id,
+      id: doc.id, // uid→id
       displayName: displayname,
     });
   });

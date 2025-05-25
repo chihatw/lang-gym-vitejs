@@ -2,9 +2,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'main';
 import { IAudioBuffer } from '../core/0-interface';
 
-const audioBufferAdapter = createEntityAdapter<IAudioBuffer>({
-  selectId: (audioBuffer) => audioBuffer.id,
-});
+const audioBufferAdapter = createEntityAdapter<IAudioBuffer>();
 
 const audioSlice = createSlice({
   name: 'audioBuffers',

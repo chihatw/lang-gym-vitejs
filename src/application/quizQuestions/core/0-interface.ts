@@ -1,5 +1,5 @@
 export interface IQuizQuestion {
-  quizQuestionId: string;
+  id: string; // 旧quizQuestionId
   index: number;
   japanese: string; // pitchQuiz で利用
   pitchStr: string; // pitchQuiz で利用
@@ -14,3 +14,4 @@ export interface ISyllable {
   longVowel: string;
   specialMora: string;
 }
+// 既存のquizQuestionIdプロパティをidに統一

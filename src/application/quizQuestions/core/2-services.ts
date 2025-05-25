@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { IQuizQuestion } from './0-interface';
 
 export function addTempIdAndSortByIndex(questions: {
-  [index: number]: Omit<IQuizQuestion, 'quizQuestionId' | 'index'>;
+  [index: number]: Omit<IQuizQuestion, 'id' | 'index'>;
 }) {
   let questionIds: string[] = [];
   const questionAddedIds: IQuizQuestion[] = [];
@@ -10,7 +10,7 @@ export function addTempIdAndSortByIndex(questions: {
     const tempId = nanoid(8);
     questionAddedIds.push({
       ...question,
-      quizQuestionId: tempId,
+      id: tempId,
       index: Number(index),
     });
     questionIds[Number(index)] = tempId;

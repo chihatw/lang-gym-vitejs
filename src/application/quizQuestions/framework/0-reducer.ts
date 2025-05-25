@@ -1,10 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { IQuizQuestion } from '../core/0-interface';
 import { RootState } from 'main';
+import { IQuizQuestion } from '../core/0-interface';
 
-const quizQuestionAdapter = createEntityAdapter<IQuizQuestion>({
-  selectId: (quizQuestion) => quizQuestion.quizQuestionId,
-});
+const quizQuestionAdapter = createEntityAdapter<IQuizQuestion>();
 
 const quizQuestionsSlice = createSlice({
   name: 'quizQuestions',

@@ -45,7 +45,7 @@ function SelectUserPane() {
     >
       {users.map((user, index) => {
         return (
-          <MenuItem value={user.uid} key={index}>
+          <MenuItem value={user.id} key={index}>
             <div>{user.displayName}</div>
           </MenuItem>
         );

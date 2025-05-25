@@ -81,5 +81,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 export type RootState = ReturnType<typeof store.getState>;
-export type AppStore = ReturnType<typeof configureStore>;
+export type AppStore = typeof store;
 export type AppDispatch = typeof store.dispatch;

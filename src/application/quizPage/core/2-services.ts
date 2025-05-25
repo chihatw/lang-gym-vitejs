@@ -3,13 +3,12 @@ import {
   ISyllable,
 } from 'application/quizQuestions/core/0-interface';
 
-import { IQuiz } from 'application/quizzes/core/0-interface';
-import { QUIZ_TIPE } from './1-constants';
 import { IQuizScore } from 'application/quizScores/core/0-interface';
-import { string2PitchesArray } from 'application/utils/string2PitchesArray';
-import { pitchesArray2String } from 'application/utils/pitchesArray2String';
+import { IQuiz } from 'application/quizzes/core/0-interface';
 import { KANA_ROMAJI_MAP } from 'application/utils/kanaRomajiMap/kanaRomajiMap';
-import { Dictionary } from '@reduxjs/toolkit';
+import { pitchesArray2String } from 'application/utils/pitchesArray2String';
+import { string2PitchesArray } from 'application/utils/string2PitchesArray';
+import { QUIZ_TIPE } from './1-constants';
 
 export const buildInputPitchStr = (pitchStr: string, disableds: number[]) => {
   return pitchStr
@@ -218,7 +217,7 @@ const calcPitchesQuiz = (
 
 const calcRhythmQuiz = (
   questionIds: string[],
-  questions: Dictionary<IQuizQuestion>,
+  questions: { [questionId: string]: IQuizQuestion | undefined },
   inputSpecialMoraArrays: { [questionIds: string]: string[][] }
 ) => {
   let points = 0;

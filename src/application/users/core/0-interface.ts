@@ -1,4 +1,5 @@
 export interface IUser {
-  uid: string;
+  id: string; // 旧uid
   displayName: string;
 }
+// 既存のuidプロパティをidに統一
