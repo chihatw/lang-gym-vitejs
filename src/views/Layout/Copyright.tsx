@@ -1,4 +1,4 @@
-import { Hidden } from '@mui/material';
+import { Box } from '@mui/material';
 import { RootState } from 'main';
 import { useSelector } from 'react-redux';
 
@@ -27,9 +27,9 @@ const Copyright = () => {
           &copy; {new Date().getFullYear()} 原田日語小房
         </span>
       </div>
-      <Hidden smUp>
+      <Box display={{ xs: 'block', sm: 'none' }}>
         <div style={{ height: 56 }} />
-      </Hidden>
+      </Box>
     </div>
   );
 };

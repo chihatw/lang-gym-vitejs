@@ -1,24 +1,14 @@
+import { createTheme, ThemeProvider } from '@mui/material';
+import { configureStore } from 'application/0-store/store';
+import services from 'infrastructure/services';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createTheme, ThemeProvider } from '@mui/material';
-import { TypographyOptions } from '@mui/material/styles/createTypography';
-import App from './views';
-import './index.css';
-import services from 'infrastructure/services';
-import { configureStore } from 'application/0-store/store';
 import { Provider } from 'react-redux';
+import './index.css';
+import App from './views';
 
-interface ExtendedTypographyOptions extends TypographyOptions {
-  lato: React.CSSProperties;
-  lato100: React.CSSProperties;
-  lato700: React.CSSProperties;
-  lato900: React.CSSProperties;
-  notoSerifJP: React.CSSProperties;
-  notoSerifJP300: React.CSSProperties;
-  mPlusRounded: React.CSSProperties;
-  mPlusRounded300: React.CSSProperties;
-  mPlusRounded500: React.CSSProperties;
-}
+interface ExtendedTypographyOptions
+  extends Record<string, React.CSSProperties> {}
 
 const theme = createTheme({
   palette: {
@@ -70,7 +60,7 @@ const theme = createTheme({
       fontFamily: '"M PLUS Rounded 1c", sans-serif',
       fontWeight: 500,
     },
-  } as ExtendedTypographyOptions,
+  } as any,
 });
 
 if (import.meta.env.PROD) {
