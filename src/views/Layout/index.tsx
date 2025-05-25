@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import React from 'react';
+import * as React from 'react';
 
 import Copyright from './Copyright';
 import PageFooter from './PageFooter';

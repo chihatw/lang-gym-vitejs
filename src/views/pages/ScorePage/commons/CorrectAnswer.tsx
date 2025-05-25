@@ -1,5 +1,5 @@
 import CheckIcon from '@mui/icons-material/Check';
-import React from 'react';
+import * as React from 'react';
 
 const CorrectAnswer = ({ children }: { children: React.ReactNode }) => {
   return (

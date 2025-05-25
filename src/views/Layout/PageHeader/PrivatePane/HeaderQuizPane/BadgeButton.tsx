@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { Badge, Button, useTheme } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
 const BadgeButton: React.FC<{
   label: string;

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
@@ -19,7 +19,7 @@ import CheckPaneRow from './CheckPaneRow';
 import TimeDisplay from '../PracticePane/TimeDisplay';
 import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
-const CheckPane = React.memo(() => {
+const CheckPane = memo(() => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();

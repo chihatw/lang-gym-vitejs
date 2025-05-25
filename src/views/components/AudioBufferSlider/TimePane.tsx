@@ -1,4 +1,3 @@
-import React from 'react';
 import Time from './Time';
 
 function TimePane({

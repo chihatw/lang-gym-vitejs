@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
 const Japanese: React.FC<{ japanese: string }> = ({ japanese }) => {
   const theme = useTheme();

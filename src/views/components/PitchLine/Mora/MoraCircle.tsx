@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { green, height, width } from '../constants';
 
 const MoraCircle: React.FC<{ isHigh: boolean; isMute?: boolean }> = ({

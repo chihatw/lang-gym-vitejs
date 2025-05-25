@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import MoraSeparater from './MoraSeparater';
 
 const Sokuon = () => (
@@ -7,4 +7,4 @@ const Sokuon = () => (
   </div>
 );
 
-export default React.memo(Sokuon);
+export default memo(Sokuon);

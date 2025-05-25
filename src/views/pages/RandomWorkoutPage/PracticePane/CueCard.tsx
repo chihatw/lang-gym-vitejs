@@ -1,10 +1,10 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'main';
 import { selectWorkout } from 'application/randomWorkoutPage/framework/2-selector';
 
-const CueCard = React.memo(() => {
+const CueCard = memo(() => {
   const { currentIndex } = useSelector(
     (state: RootState) => state.randomWorkoutPage
   );

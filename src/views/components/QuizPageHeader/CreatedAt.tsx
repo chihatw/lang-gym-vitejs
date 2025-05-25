@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
 
 const CreatedAt = ({ createdAt }: { createdAt: number }) => {
   const theme = useTheme();

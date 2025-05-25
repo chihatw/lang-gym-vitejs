@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'main';
@@ -60,4 +60,4 @@ const WordPitch = ({
   );
 };
 
-export default React.memo(WordPitch);
+export default memo(WordPitch);

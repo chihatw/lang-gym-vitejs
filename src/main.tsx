@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import { configureStore } from 'application/0-store/store';
 import services from 'infrastructure/services';
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import './index.css';

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import PitchLine from '../PitchLine';
 
 import { buildWordPitchStrs } from 'application/utils/utils';
@@ -13,4 +13,4 @@ const SentencePitchLine = ({ pitchStr }: { pitchStr: string }) => {
   return <div style={{ display: 'flex', flexWrap: 'wrap' }}>{pitchLines}</div>;
 };
 
-export default React.memo(SentencePitchLine);
+export default memo(SentencePitchLine);

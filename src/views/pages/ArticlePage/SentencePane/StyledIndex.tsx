@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
 const Index: React.FC<{ label: number }> = ({ label }) => {
   const theme = useTheme();

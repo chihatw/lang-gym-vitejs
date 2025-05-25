@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 const MoraSeparater = ({ isAccent }: { isAccent?: boolean }) => {
   return (
@@ -14,4 +14,4 @@ const MoraSeparater = ({ isAccent }: { isAccent?: boolean }) => {
   );
 };
 
-export default React.memo(MoraSeparater);
+export default memo(MoraSeparater);

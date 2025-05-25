@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import Kana from './Kana';
 import Sokuon from './Sokuon';
 import TouchIcon from './TouchIcon';
@@ -41,4 +41,4 @@ const MoraPitch = ({
   );
 };
 
-export default React.memo(MoraPitch);
+export default memo(MoraPitch);

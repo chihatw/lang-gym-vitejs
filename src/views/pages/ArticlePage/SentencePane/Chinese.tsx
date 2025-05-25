@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
 const Chinese: React.FC<{ chinese: string }> = ({ chinese }) => {
   const theme = useTheme();

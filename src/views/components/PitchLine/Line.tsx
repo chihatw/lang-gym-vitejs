@@ -1,4 +1,3 @@
-import React from 'react';
 import { green, height, highPos, lowPos, width } from './constants';
 
 const Line = ({

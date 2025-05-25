@@ -1,5 +1,4 @@
 import { IconButton, useTheme } from '@mui/material';
-import React from 'react';
 
 const Monitor = ({ specialMora }: { specialMora: string }) => {
   const theme = useTheme();

@@ -1,6 +1,6 @@
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import { Button, useTheme } from '@mui/material';
-import React from 'react';
+import * as React from 'react';
 
 const LogoButton: React.FC<{ handleClick?: () => void }> = ({
   handleClick,

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material';
 
@@ -68,4 +68,4 @@ const PitchQuiz = ({ questionId }: { questionId: string }) => {
   );
 };
 
-export default React.memo(PitchQuiz);
+export default memo(PitchQuiz);

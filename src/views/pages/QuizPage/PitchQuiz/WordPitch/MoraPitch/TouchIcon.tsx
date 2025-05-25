@@ -2,7 +2,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import { IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
-import React, { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import MoraSeparater from './MoraSeparater';
 import { quizPageActions } from 'application/quizPage/framework/0-reducer';
@@ -59,4 +59,4 @@ const TouchIcon = ({
   );
 };
 
-export default React.memo(TouchIcon);
+export default memo(TouchIcon);

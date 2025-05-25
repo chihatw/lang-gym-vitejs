@@ -1,6 +1,5 @@
 import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import { IconButton } from '@mui/material';
-import React from 'react';
 
 const ToggleSelectorIcon = ({
   disabled,

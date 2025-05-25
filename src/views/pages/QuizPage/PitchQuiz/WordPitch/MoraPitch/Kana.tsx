@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import React from 'react';
+import { memo } from 'react';
 
 const Kana = ({ kana }: { kana: string }) => {
   const theme = useTheme();
@@ -19,4 +19,4 @@ const Kana = ({ kana }: { kana: string }) => {
   );
 };
 
-export default React.memo(Kana);
+export default memo(Kana);

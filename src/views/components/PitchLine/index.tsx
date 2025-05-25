@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 import Line from './Line';
 import Mora from './Mora';
@@ -63,4 +63,4 @@ const PitchLine = ({ wordPitchStr }: { wordPitchStr: string }) => {
   );
 };
 
-export default React.memo(PitchLine);
+export default memo(PitchLine);

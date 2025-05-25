@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { useTheme } from '@mui/material';
 
 const QuestionIndex = ({ index }: { index: number }) => {
@@ -15,4 +15,4 @@ const QuestionIndex = ({ index }: { index: number }) => {
   );
 };
 
-export default React.memo(QuestionIndex);
+export default memo(QuestionIndex);

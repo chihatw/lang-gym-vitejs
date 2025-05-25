@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, useTheme } from '@mui/material';
-import React, { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'main';
@@ -46,9 +46,9 @@ const QuizPageFooter = () => {
   );
 };
 
-export default React.memo(QuizPageFooter);
+export default memo(QuizPageFooter);
 
-const ButtonLabel = React.memo(
+const ButtonLabel = memo(
   ({ label, color }: { label: string; color: string }) => {
     const theme = useTheme();
     return (
