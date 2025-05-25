@@ -3,7 +3,7 @@ import {
   getDownloadURL,
   ref,
   uploadBytes,
-} from '@firebase/storage';
+} from 'firebase/storage';
 import { storage } from 'infrastructure/firebase';
 import { blobToAudioBuffer } from '../core/2-services';
 

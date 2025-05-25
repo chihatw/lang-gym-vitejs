@@ -9,7 +9,7 @@ import {
   query,
   startAfter,
   where,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import { db } from 'infrastructure/firebase';
 
 import { IArticle } from '../core/0-interface';

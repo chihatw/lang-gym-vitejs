@@ -4,7 +4,7 @@ import {
   getDocs,
   query,
   where,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import { ISentence } from '../core/0-interface';
 
 import { db } from 'infrastructure/firebase';

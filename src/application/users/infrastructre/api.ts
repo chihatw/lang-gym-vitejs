@@ -1,4 +1,4 @@
-import { collection, getDocs, query } from '@firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 
 import { db } from 'infrastructure/firebase';
 import { IUser } from '../core/0-interface';

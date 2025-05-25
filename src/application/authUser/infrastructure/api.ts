@@ -1,4 +1,4 @@
-import * as firebaseAuth from '@firebase/auth';
+import * as firebaseAuth from 'firebase/auth';
 import { auth } from 'infrastructure/firebase';
 
 export const signInWithEmailAndPassword = async (

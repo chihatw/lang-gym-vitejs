@@ -7,7 +7,7 @@ import {
   query,
   updateDoc,
   where,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 
 import { db } from 'infrastructure/firebase';
 import { IRandomWorkout } from '../core/0-interface';
